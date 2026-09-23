@@ -1,24 +1,343 @@
-<!DOCTYPE html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex"><title>Scarecrow Hunt &mdash; test index</title></head>
-<body><h1>Scarecrow pages (test only)</h1><ul><li><a href="s01.html">#1 Community Foundation of Howard County, Inc.</a></li>
-<li><a href="s02.html">#2 The Coterie</a></li>
-<li><a href="s03.html">#3 Indiana Underdog Martial Arts</a></li>
-<li><a href="s04.html">#4 Pix Pots Pottery</a></li>
-<li><a href="s05.html">#5 IUK SNAHP</a></li>
-<li><a href="s06.html">#6 Kokomo Area Lions</a></li>
-<li><a href="s07.html">#7 UpCreations (Urban Outreach)</a></li>
-<li><a href="s08.html">#8 Community First Bank of Indiana</a></li>
-<li><a href="s09.html">#9 Kokomo Tribune</a></li>
-<li><a href="s10.html">#10 Oscar&#x27;s Pizza</a></li>
-<li><a href="s11.html">#11 Dechert Law Office</a></li>
-<li><a href="s12.html">#12 SUTE</a></li>
-<li><a href="s13.html">#13 First Farmers Bank &amp; Trust</a></li>
-<li><a href="s14.html">#14 The Hardie Group Real Estate Company</a></li>
-<li><a href="s15.html">#15 Tip Top Car Washes</a></li>
-<li><a href="s16.html">#16 Fired Arts Studio</a></li>
-<li><a href="s17.html">#17 Lucky Raven Tattoo Lounge</a></li>
-<li><a href="s18.html">#18 PF Hendricks LLC</a></li>
-<li><a href="s19.html">#19 Crossroads Community Church</a></li>
-<li><a href="s20.html">#20 YMCA of Kokomo</a></li>
-<li><a href="s21.html">#21 Bohemian Tattoo</a></li></ul></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thank You to Our First Friday Scarecrow Scavenger Hunt Sponsors!</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #141414;
+      color: #f5f0e6;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      color: #f5b301;
+      margin-bottom: .5rem;
+    }
+
+    .sub {
+      text-align: center;
+      opacity: .85;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .sub strong {
+      color: #f5b301;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      display: block;
+      background: #1e1e1e;
+      border: 2px solid #333;
+      border-radius: 14px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-4px);
+      border-color: #f5b301;
+      box-shadow: 0 8px 24px rgba(245, 179, 1, .25);
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 140px;
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      padding: .5rem;
+    }
+
+    .logo-wrap img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .name {
+      display: block;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: .5rem;
+      color: #fff;
+    }
+
+    .trivia {
+      display: block;
+      font-size: .95rem;
+      line-height: 1.5;
+      opacity: .8;
+      margin-bottom: 1rem;
+    }
+
+    .visit {
+      display: inline-block;
+      background: #f5b301;
+      color: #141414;
+      font-weight: 700;
+      padding: .5rem 1rem;
+      border-radius: 999px;
+      font-size: .95rem;
+    }
+
+    .presented {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 2px solid #f5b301;
+      border-radius: 14px;
+      background: #1e1e1e;
+    }
+
+    .presented a {
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .presented img {
+      height: 110px;
+      width: auto;
+      border-radius: 8px;
+      margin-bottom: .75rem;
+    }
+
+    .presented .by {
+      display: block;
+      font-size: .85rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: .85;
+      margin-bottom: .4rem;
+      color: #f5b301;
+    }
+
+    .presented .org {
+      display: block;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #f5b301;
+    }
+
+    .presented .cent {
+      display: block;
+      font-size: .95rem;
+      opacity: .85;
+      margin-top: .3rem;
+      color: #f5f0e6;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      opacity: .6;
+      font-size: .9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="presented">
+      <a href="https://www.kaaonline.org" target="_blank" rel="noopener">
+        <span class="by">Presented by</span>
+        <img src="logos/kaa-logo.png" alt="Kokomo Art Association logo">
+        <span class="org">Kokomo Art Association</span>
+        <span class="cent">Celebrating 100 years of art in Kokomo &mdash; 1926&ndash;2026</span>
+      </a>
+    </div>
+    <h1>Thank You to Our First Friday Sponsors!</h1>
+    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible. <strong>Tap any logo to visit their
+        website.</strong></p>
+    <div class="grid">
+
+      <a class="card" href="https://www.cfhoward.org/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-01.png" alt="Community Foundation of Howard County, Inc. logo"
+            loading="lazy"></span>
+        <span class="name">Community Foundation of Howard County</span>
+        <span class="trivia">Formed as a nonprofit public charity in March 1991, the Foundation funds local grants and
+          scholarships — its grantmaking has even commissioned new music for the Howard County Music Festival.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="http://www.kokomocoterie.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-02.png" alt="The Coterie logo" loading="lazy"></span>
+        <span class="name">The Coterie</span>
+        <span class="trivia">A second-floor downtown spot at 107 W. Sycamore St. blending a craft beer and cocktail
+          lounge with burgers and live music.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://gruelmartialarts.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-03.png" alt="Indiana Underdog Martial Arts logo"
+            loading="lazy"></span>
+        <span class="name">Indiana Underdog Martial Arts</span>
+        <span class="trivia">Led by Terry Gruel — a 3-time USKA world champion (2002–04) whose school has trained 17
+          world champions — with programs from Brazilian Jiu-Jitsu to karate starting at age 3.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.pixpots.com" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-04.png" alt="Pix Pots Pottery logo" loading="lazy"></span>
+        <span class="name">Pix Pots Pottery</span>
+        <span class="trivia">A Kokomo studio handcrafting ceramics — unique mugs, bowls, and custom decal mugs.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://kokomo.iu.edu/nursing-allied-health/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-05.png"
+            alt="IUK School of Nursing and Allied Health Professions logo" loading="lazy"></span>
+        <span class="name">IUK SNAHP</span>
+        <span class="trivia">Indiana University Kokomo's School of Nursing and Allied Health Professions trains nurses,
+          radiologic technologists, occupational therapy assistants, medical coders, and more — its students wear the
+          traditional red IU scrubs at their induction ceremony.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.lionsclubs.org" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-06.png" alt="Kokomo Area Lions Club logo" loading="lazy"></span>
+        <span class="name">Kokomo Area Lions</span>
+        <span class="trivia">Kokomo's club is part of Lions Clubs International, the world's largest service club
+          organization, with local records dating to December 1969. (Official local site pending — linking the parent
+          org for now.)</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.kokomourbanoutreach.org" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-07.png" alt="UpCreations (Kokomo Urban Outreach) logo"
+            loading="lazy"></span>
+        <span class="name">UpCreations</span>
+        <span class="trivia">UP Creations is one of Kokomo Urban Outreach's youth work activities, where participants
+          craft and sell home décor — 'UP' stands for unleashing potential, passion, and purpose.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.cfbindiana.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-08.png" alt="Community First Bank of Indiana logo"
+            loading="lazy"></span>
+        <span class="name">Community First Bank of Indiana</span>
+        <span class="trivia">Established February 3, 2003 and headquartered in Kokomo — its CommuniTee Giveback Program
+          matches up to $500 in donations to local causes.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.kokomotribune.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-09.png" alt="Kokomo Tribune logo" loading="lazy"></span>
+        <span class="name">Kokomo Tribune</span>
+        <span class="trivia">Founded October 30, 1850 as the Howard Tribune, it's one of Indiana's oldest newspapers —
+          its motto is 'Positively, Part of Your Life.'</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.oscars.pizza/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-10.png" alt="Oscar's Pizza logo" loading="lazy"></span>
+        <span class="name">Oscar's Pizza</span>
+        <span class="trivia">Serves pizza plus calzones, stromboli, breadsticks, and salads — with listings calling out
+          its Detroit-style and creative specialty pies.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="http://www.dechertlawoffice.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-11.png" alt="Dechert Law Office logo" loading="lazy"></span>
+        <span class="name">Dechert Law Office</span>
+        <span class="trivia">A general-practice law firm at 217 N. Main St. in downtown Kokomo, concentrating in
+          criminal law, family law, and personal injury.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.sutebbq.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-12.png" alt="SUTE Korean BBQ House logo" loading="lazy"></span>
+        <span class="name">SUTE</span>
+        <span class="trivia">Owner Sean Park relocated his family from Korea to Kokomo to open it, blending Korean
+          traditions with East-meets-West dishes like ribeye bulgogi and kimchi sliders.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.ffbt.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-13.png" alt="First Farmers Bank & Trust logo"
+            loading="lazy"></span>
+        <span class="name">First Farmers Bank & Trust</span>
+        <span class="trivia">Roots trace back to 1885, when it opened as Mark Tully's Exchange Bank in Converse, Indiana
+          — today it serves more than 60,000 clients across Indiana and Illinois.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://thehardiegroup.com" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-14.png" alt="The Hardie Group Real Estate Company logo"
+            loading="lazy"></span>
+        <span class="name">The Hardie Group</span>
+        <span class="trivia">A family-run Kokomo realty owned by Kevin and Nancy Hardie — 'family, tradition and pride
+          are what The Hardie Group is all about.'</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.tiptopcarwashes.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-15.png" alt="Tip Top Car Washes logo" loading="lazy"></span>
+        <span class="name">Tip Top Car Washes</span>
+        <span class="trivia">Every wash comes with free vacuums — and the company invites sponsorship requests from
+          local schools, nonprofits, and community causes.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="http://www.firedartsstudio.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-16.png" alt="Fired Arts Studio logo" loading="lazy"></span>
+        <span class="name">Fired Arts Studio</span>
+        <span class="trivia">A family arts center offering pottery painting, canvas painting, and mosaics — no
+          experience required.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.facebook.com/luckyraventattoolounge/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-17.png" alt="Lucky Raven Tattoo Lounge logo" loading="lazy"></span>
+        <span class="name">Lucky Raven Tattoo Lounge</span>
+        <span class="trivia">Began as Devon Wooldridge's one-person private studio at Fade Salon, then expanded into a
+          larger collaborative shop with multiple artists. (Facebook is the shop's official online presence.)</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://pfhendricks.com" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-18.png" alt="P.F. Hendricks & Co. logo" loading="lazy"></span>
+        <span class="name">P.F. Hendricks & Co.</span>
+        <span class="trivia">Founded in 2015 by sisters and named for their mother, Patricia Faye Hendricks — nearly
+          every brand they stock is Fair Trade Certified, eco-friendly, or socially responsible.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://ecrossroads.org/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-19.png" alt="Crossroads Community Church logo"
+            loading="lazy"></span>
+        <span class="name">Crossroads Community Church</span>
+        <span class="trivia">A non-denominational Kokomo church with two campuses — Downtown at 116 N. Main St. and
+          South — and a mission of helping people take 'their next step with Christ.'</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://www.kokomoymca.org" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-20.png" alt="YMCA of Kokomo logo" loading="lazy"></span>
+        <span class="name">YMCA of Kokomo</span>
+        <span class="trivia">Serving Kokomo since 1875 — it runs a downtown facility plus a 52-acre day camp.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+      <a class="card" href="https://bohemiantattooclub.com/" target="_blank" rel="noopener">
+        <span class="logo-wrap"><img src="logos/logo-21.png" alt="The Bohemian Tattoo Club & Gallery logo"
+            loading="lazy"></span>
+        <span class="name">Bohemian Tattoo</span>
+        <span class="trivia">An artist-owned custom tattoo studio with an in-house gallery showing original artwork by
+          its artists.</span>
+        <span class="visit">Visit official site&nbsp;&nearr;</span>
+      </a>
+    </div>
+    <footer>First Friday Scarecrow Scavenger Hunt &mdash; Kokomo Art Association &times; Fired Arts Studio</footer>
+  </div>
+</body>
+
+</html>
