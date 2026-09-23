@@ -7,41 +7,131 @@
 <title>Scarecrow #19 &mdash; First Friday Scavenger Hunt</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
   body {
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #1c1030; color: #fff; min-height: 100vh;
+    background: #150c28; color: #fff; min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 28px 20px;
+    text-align: center; padding: 28px 20px; overflow-x: hidden; position: relative;
   }
-  .kicker { color: #ffb347; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  #fog { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: .85; }
+  .moon { position: fixed; top: 5%; right: 8%; width: 84px; height: 84px; border-radius: 50%;
+    background: radial-gradient(circle at 38% 35%, #fff8e1, #f5d67b 55%, #d9a441 100%);
+    box-shadow: 0 0 60px 18px rgba(245,214,123,.35), 0 0 140px 40px rgba(245,214,123,.12);
+    z-index: 0; animation: moon-halo 6s ease-in-out infinite; pointer-events: none; }
+  @keyframes moon-halo {
+    50% { box-shadow: 0 0 80px 26px rgba(245,214,123,.45), 0 0 160px 50px rgba(245,214,123,.16); }
+  }
+  .batfly { position: fixed; top: 12%; left: -60px; font-size: 30px; z-index: 0; opacity: .85;
+    animation: fly 26s linear infinite; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
+    pointer-events: none; }
+  .batfly.b2 { top: 24%; animation-duration: 38s; animation-delay: -15s; font-size: 22px; }
+  .batfly.b3 { top: 6%; animation-duration: 47s; animation-delay: -30s; font-size: 18px; opacity: .6; }
+  @keyframes fly {
+    0% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(30vw) translateY(-26px); }
+    50% { transform: translateX(60vw) translateY(12px); }
+    75% { transform: translateX(90vw) translateY(-20px); }
+    100% { transform: translateX(118vw) translateY(0); }
+  }
+  main { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+  .kicker { color: #ffb347; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+    text-shadow: 0 0 18px rgba(255,179,71,.6); }
   .num { color: #c9b8e8; font-size: 15px; margin-bottom: 26px; }
   .label { color: #ffb347; font-size: 17px; letter-spacing: 1px; text-transform: uppercase; }
-  h1 { font-size: 30px; line-height: 1.2; margin: 8px 0 22px; }
-  .logo-box {
-    margin: 0 auto 30px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .logo-box img { max-width: 240px; max-height: 140px; object-fit: contain; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 8px 0 22px; max-width: 420px; }
+  /* ---- procedural haunted logo frame (any logo size) ---- */
+  .logo-frame { position: relative; display: inline-flex; align-items: center; justify-content: center;
+    padding: 16px; margin: 0 auto 30px; border-radius: 16px;
+    background: radial-gradient(circle at 50% 28%, #2a1a4d, #150d2a 72%);
+    box-shadow: 0 0 28px rgba(255,123,28,.30), inset 0 0 22px rgba(0,0,0,.6); }
+  .logo-frame::before { content: ""; position: absolute; inset: -4px; border-radius: 20px; z-index: -1;
+    background: conic-gradient(from var(--fa, 0deg), #ff7b1c, #8a3ffc, #ffd166, #ff7b1c);
+    animation: frame-spin 8s linear infinite; }
+  @property --fa { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+  @keyframes frame-spin { to { --fa: 360deg; } }
+  .logo-frame img { max-width: min(240px, 68vw); max-height: 140px; object-fit: contain; display: block; }
+  .logo-frame .bat { position: absolute; top: -17px; font-size: 22px; z-index: 2;
+    animation: bat-bob 2.6s ease-in-out infinite; filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)); }
+  .logo-frame .bat.b1 { left: 10px; }
+  .logo-frame .bat.b2 { right: 10px; animation-delay: -1.3s; }
+  @keyframes bat-bob { 50% { transform: translateY(-7px); } }
   .letter {
     font-size: min(44vw, 190px); font-weight: 800; line-height: 1;
     color: #ffd166; margin: 10px 0 30px;
-    text-shadow: 0 4px 0 #b3541e, 0 8px 24px rgba(0,0,0,.5);
+    text-shadow: 0 4px 0 #b3541e, 0 8px 24px rgba(0,0,0,.5), 0 0 44px rgba(255,177,71,.55);
+    animation: letter-pop .7s cubic-bezier(.2,1.6,.4,1) both .25s, letter-flicker 4s ease-in-out 1.2s infinite;
+  }
+  @keyframes letter-pop {
+    from { transform: scale(.2) rotate(-8deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  @keyframes letter-flicker {
+    0%, 100% { text-shadow: 0 4px 0 #b3541e, 0 8px 24px rgba(0,0,0,.5), 0 0 44px rgba(255,177,71,.55); }
+    50% { text-shadow: 0 4px 0 #b3541e, 0 8px 24px rgba(0,0,0,.5), 0 0 74px rgba(255,177,71,.9); }
   }
   .foot { color: #c9b8e8; font-size: 14px; line-height: 1.6; max-width: 340px; }
   .credit { margin-top: 22px; font-size: 13px; color: #8f7fb8; }
   .credit a { color: #ffd166; }
+  @media (prefers-reduced-motion: reduce) {
+    #fog { display: none; }
+    .moon, .batfly, .letter, .logo-frame::before, .logo-frame .bat { animation: none !important; }
+  }
 </style>
 </head>
 <body>
-  <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
-  <p class="num">Scarecrow #19 of 21</p>
-  <p class="label">Sponsored by</p>
-  <h1>Crossroads Community Church</h1>
-  <div class="logo-box"><img src="logos/logo-19.png" alt="Crossroads Community Church logo" onerror="this.remove()"></div>
-  <p class="label">Your letter is</p>
-  <div class="letter">A</div>
-  <p class="foot">Write it in slot #19 of your passport. Collect all 21 letters, then turn in your passport at Artworks Gallery to enter the gift basket drawing!</p>
-  <p class="credit">Presented by the <a href="https://www.kaaonline.org">Kokomo Art Association</a></p>
-  <script data-goatcounter="https://kmberry1989.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+  <canvas id="fog" aria-hidden="true"></canvas>
+  <div class="moon" aria-hidden="true"></div>
+  <div class="batfly" aria-hidden="true">&#x1f987;</div>
+  <div class="batfly b2" aria-hidden="true">&#x1f987;</div>
+  <div class="batfly b3" aria-hidden="true">&#x1f987;</div>
+  <main>
+    <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
+    <p class="num">Scarecrow #19 of 21</p>
+    <p class="label">Sponsored by</p>
+    <h1>Crossroads Community Church</h1>
+    <div class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-19.png" alt="Crossroads Community Church logo" onerror="this.remove()"></div>
+    <p class="label">Your letter is</p>
+    <div class="letter">A</div>
+    <p class="foot">Write it in slot #19 of your passport. Collect all 21 letters, then turn in your passport at Artworks Gallery to enter the gift basket drawing!</p>
+    <p class="credit">Presented by the <a href="https://www.kaaonline.org">Kokomo Art Association</a></p>
+  </main>
+<script>
+(function(){
+  "use strict";
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var cv = document.getElementById("fog"), ctx = cv.getContext("2d");
+  var W, H, DPR;
+  function size(){ DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    W = cv.width = Math.floor(innerWidth * DPR); H = cv.height = Math.floor(innerHeight * DPR); }
+  size(); addEventListener("resize", size);
+  var blobs = [], embers = [], i;
+  for (i = 0; i < 7; i++) blobs.push({ x: Math.random(), y: .22 + Math.random() * .62,
+    r: .22 + Math.random() * .3, vx: (Math.random() - .5) * .0006,
+    hue: Math.random() < .7 ? "150,90,220" : "255,140,60", a: .05 + Math.random() * .06 });
+  for (i = 0; i < 34; i++) embers.push({ x: Math.random(), y: Math.random(), s: 1 + Math.random() * 2.2,
+    vy: -(.0004 + Math.random() * .0012), vx: (Math.random() - .5) * .0004, ph: Math.random() * 6.28 });
+  var t = 0;
+  function frame(){
+    t += .016; ctx.clearRect(0, 0, W, H);
+    var maxD = Math.max(W, H), j, b, e, g, bx, by, br, tw;
+    for (j = 0; j < blobs.length; j++){ b = blobs[j];
+      b.x += b.vx; if (b.x < -.4) b.x = 1.4; if (b.x > 1.4) b.x = -.4;
+      bx = b.x * W; by = (b.y + Math.sin(t * .3 + j) * .02) * H; br = b.r * maxD;
+      g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+      g.addColorStop(0, "rgba(" + b.hue + "," + b.a + ")"); g.addColorStop(1, "rgba(" + b.hue + ",0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx, by, br, 0, 6.283); ctx.fill(); }
+    for (j = 0; j < embers.length; j++){ e = embers[j];
+      e.y += e.vy; e.x += e.vx + Math.sin(t * 2 + e.ph) * .0003;
+      if (e.y < -.02){ e.y = 1.02; e.x = Math.random(); }
+      tw = .5 + .5 * Math.sin(t * 3 + e.ph);
+      ctx.fillStyle = "rgba(255," + (150 + Math.floor(60 * tw)) + ",80," + (.25 + .5 * tw).toFixed(2) + ")";
+      ctx.beginPath(); ctx.arc(e.x * W, e.y * H, e.s * DPR, 0, 6.283); ctx.fill(); }
+    if (!document.hidden) requestAnimationFrame(frame); else setTimeout(frame, 500);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+<script data-goatcounter="https://kmberry1989.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>

@@ -1,343 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Thank You to Our First Friday Scarecrow Scavenger Hunt Sponsors!</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: #141414;
-      color: #f5f0e6;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      padding: 2rem 1rem 4rem;
-    }
-
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: clamp(1.6rem, 4vw, 2.6rem);
-      color: #f5b301;
-      margin-bottom: .5rem;
-    }
-
-    .sub {
-      text-align: center;
-      opacity: .85;
-      margin-bottom: 2rem;
-      font-size: 1.05rem;
-    }
-
-    .sub strong {
-      color: #f5b301;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .card {
-      display: block;
-      background: #1e1e1e;
-      border: 2px solid #333;
-      border-radius: 14px;
-      padding: 1.25rem;
-      text-decoration: none;
-      color: inherit;
-      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
-    }
-
-    .card:hover,
-    .card:focus-visible {
-      transform: translateY(-4px);
-      border-color: #f5b301;
-      box-shadow: 0 8px 24px rgba(245, 179, 1, .25);
-    }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 140px;
-      background: #fff;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      padding: .5rem;
-    }
-
-    .logo-wrap img {
-      max-height: 100%;
-      max-width: 100%;
-      object-fit: contain;
-    }
-
-    .name {
-      display: block;
-      font-weight: 700;
-      font-size: 1.1rem;
-      margin-bottom: .5rem;
-      color: #fff;
-    }
-
-    .trivia {
-      display: block;
-      font-size: .95rem;
-      line-height: 1.5;
-      opacity: .8;
-      margin-bottom: 1rem;
-    }
-
-    .visit {
-      display: inline-block;
-      background: #f5b301;
-      color: #141414;
-      font-weight: 700;
-      padding: .5rem 1rem;
-      border-radius: 999px;
-      font-size: .95rem;
-    }
-
-    .presented {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      border: 2px solid #f5b301;
-      border-radius: 14px;
-      background: #1e1e1e;
-    }
-
-    .presented a {
-      display: inline-block;
-      text-decoration: none;
-    }
-
-    .presented img {
-      height: 110px;
-      width: auto;
-      border-radius: 8px;
-      margin-bottom: .75rem;
-    }
-
-    .presented .by {
-      display: block;
-      font-size: .85rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      opacity: .85;
-      margin-bottom: .4rem;
-      color: #f5b301;
-    }
-
-    .presented .org {
-      display: block;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #f5b301;
-    }
-
-    .presented .cent {
-      display: block;
-      font-size: .95rem;
-      opacity: .85;
-      margin-top: .3rem;
-      color: #f5f0e6;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      opacity: .6;
-      font-size: .9rem;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thank You to Our First Friday Scarecrow Scavenger Hunt Sponsors!</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d0718; color: #f5f0e6; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         padding: 2rem 1rem 4rem; min-height: 100vh; overflow-x: hidden; }
+  body.no-webgl { background: radial-gradient(ellipse at 50% 120%, #3a1240 0%, #150a28 55%, #0d0718 100%); }
+  #shader { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .batfly { position: fixed; top: 10%; left: -60px; font-size: 30px; z-index: 0; opacity: .7;
+    animation: fly 30s linear infinite; pointer-events: none; }
+  .batfly.b2 { top: 20%; animation-duration: 44s; animation-delay: -18s; font-size: 22px; }
+  @keyframes fly {
+    0% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(30vw) translateY(-26px); }
+    50% { transform: translateX(60vw) translateY(12px); }
+    75% { transform: translateX(90vw) translateY(-20px); }
+    100% { transform: translateX(118vw) translateY(0); }
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  h1.spooky { text-align: center; font-size: clamp(1.6rem, 4vw, 2.6rem); color: #f5b301; margin-bottom: .5rem;
+    text-shadow: 0 0 24px rgba(245,179,1,.55), 0 2px 0 #7a3b00;
+    animation: title-flicker 5s ease-in-out infinite; }
+  @keyframes title-flicker {
+    0%, 91%, 94%, 96%, 100% { opacity: 1; }
+    92% { opacity: .55; } 93% { opacity: 1; } 95% { opacity: .72; }
+  }
+  .sub { text-align: center; opacity: .85; margin-bottom: 2rem; font-size: 1.05rem; }
+  .sub strong { color: #f5b301; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+  .card { display: block; background: rgba(20,12,34,.88); border: 2px solid #3a2a5a; border-radius: 14px;
+           padding: 1.25rem; text-decoration: none; color: inherit; backdrop-filter: blur(2px);
+           transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+           animation: card-in .7s cubic-bezier(.2,.9,.3,1) backwards; animation-delay: var(--d, 0s); }
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(28px) scale(.98); }
+    to { opacity: 1; transform: none; }
+  }
+  .card:hover, .card:focus-visible { transform: translateY(-4px); border-color: #f5b301;
+           box-shadow: 0 8px 24px rgba(245,179,1,.25); }
+  /* ---- procedural haunted logo frame (any logo size) ---- */
+  .logo-frame { position: relative; display: flex; align-items: center; justify-content: center;
+    min-height: 150px; padding: 14px; margin-bottom: 1rem; border-radius: 14px;
+    background: radial-gradient(circle at 50% 28%, #2a1a4d, #150d2a 72%);
+    box-shadow: 0 0 26px rgba(255,123,28,.28), inset 0 0 22px rgba(0,0,0,.6); }
+  .logo-frame::before { content: ""; position: absolute; inset: -4px; border-radius: 18px; z-index: -1;
+    background: conic-gradient(from var(--fa, 0deg), #ff7b1c, #8a3ffc, #ffd166, #ff7b1c);
+    animation: frame-spin 8s linear infinite; }
+  @property --fa { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+  @keyframes frame-spin { to { --fa: 360deg; } }
+  .logo-frame img { max-height: 120px; max-width: 100%; object-fit: contain; display: block; }
+  .logo-frame .bat { position: absolute; top: -15px; font-size: 20px; z-index: 2;
+    animation: bat-bob 2.6s ease-in-out infinite; filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)); }
+  .logo-frame .bat.b1 { left: 8px; }
+  .logo-frame .bat.b2 { right: 8px; animation-delay: -1.3s; }
+  @keyframes bat-bob { 50% { transform: translateY(-7px); } }
+  .name { display: block; font-weight: 700; font-size: 1.1rem; margin-bottom: .5rem; color: #fff; }
+  .trivia { display: block; font-size: .95rem; line-height: 1.5; opacity: .8; margin-bottom: 1rem; }
+  .visit { display: inline-block; background: #f5b301; color: #141414; font-weight: 700;
+            padding: .5rem 1rem; border-radius: 999px; font-size: .95rem; }
+  .presented { text-align: center; margin-bottom: 2rem; padding: 1.75rem 1.5rem 1.5rem;
+               border: 2px solid #f5b301; border-radius: 14px; background: rgba(20,12,34,.88);
+               box-shadow: 0 0 34px rgba(245,179,1,.18); }
+  .presented a { display: inline-block; text-decoration: none; }
+  .presented .logo-frame { margin: 0 auto .9rem; padding: 12px; }
+  .presented .logo-frame img { height: 96px; max-height: 96px; }
+  .presented .by { display: block; font-size: .85rem; letter-spacing: 3px; text-transform: uppercase;
+               opacity: .85; margin-bottom: .6rem; color: #f5b301; }
+  .presented .org { display: block; font-size: 1.3rem; font-weight: 700; color: #f5b301; }
+  .presented .cent { display: block; font-size: .95rem; opacity: .85; margin-top: .3rem; color: #f5f0e6; }
+  footer { text-align: center; margin-top: 3rem; opacity: .6; font-size: .9rem; position: relative; z-index: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    #shader, .batfly { display: none; }
+    .card, h1.spooky, .logo-frame::before, .logo-frame .bat { animation: none !important; }
+  }
+</style>
 </head>
-
 <body>
+  <canvas id="shader" aria-hidden="true"></canvas>
+  <div class="batfly" aria-hidden="true">&#x1f987;</div>
+  <div class="batfly b2" aria-hidden="true">&#x1f987;</div>
   <div class="wrap">
     <div class="presented">
       <a href="https://www.kaaonline.org" target="_blank" rel="noopener">
         <span class="by">Presented by</span>
-        <img src="logos/kaa-logo.png" alt="Kokomo Art Association logo">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/kaa-logo.png" alt="Kokomo Art Association logo"></span>
         <span class="org">Kokomo Art Association</span>
         <span class="cent">Celebrating 100 years of art in Kokomo &mdash; 1926&ndash;2026</span>
       </a>
     </div>
-    <h1>Thank You to Our First Friday Sponsors!</h1>
-    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible. <strong>Tap any logo to visit their
-        website.</strong></p>
+    <h1 class="spooky">&#x1f383; Thank You to Our First Friday Sponsors!</h1>
+    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible. <strong>Tap any logo to visit their website.</strong></p>
     <div class="grid">
-
-      <a class="card" href="https://www.cfhoward.org/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-01.png" alt="Community Foundation of Howard County, Inc. logo"
-            loading="lazy"></span>
+      
+      <a class="card" style="--d:0.06s" href="https://www.cfhoward.org/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-01.png" alt="Community Foundation of Howard County, Inc. logo" loading="lazy"></span>
         <span class="name">Community Foundation of Howard County</span>
-        <span class="trivia">Formed as a nonprofit public charity in March 1991, the Foundation funds local grants and
-          scholarships — its grantmaking has even commissioned new music for the Howard County Music Festival.</span>
+        <span class="trivia">Formed as a nonprofit public charity in March 1991, the Foundation funds local grants and scholarships — its grantmaking has even commissioned new music for the Howard County Music Festival.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="http://www.kokomocoterie.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-02.png" alt="The Coterie logo" loading="lazy"></span>
+      <a class="card" style="--d:0.12s" href="http://www.kokomocoterie.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-02.png" alt="The Coterie logo" loading="lazy"></span>
         <span class="name">The Coterie</span>
-        <span class="trivia">A second-floor downtown spot at 107 W. Sycamore St. blending a craft beer and cocktail
-          lounge with burgers and live music.</span>
+        <span class="trivia">A second-floor downtown spot at 107 W. Sycamore St. blending a craft beer and cocktail lounge with burgers and live music.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://gruelmartialarts.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-03.png" alt="Indiana Underdog Martial Arts logo"
-            loading="lazy"></span>
+      <a class="card" style="--d:0.18s" href="https://gruelmartialarts.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-03.png" alt="Indiana Underdog Martial Arts logo" loading="lazy"></span>
         <span class="name">Indiana Underdog Martial Arts</span>
-        <span class="trivia">Led by Terry Gruel — a 3-time USKA world champion (2002–04) whose school has trained 17
-          world champions — with programs from Brazilian Jiu-Jitsu to karate starting at age 3.</span>
+        <span class="trivia">Led by Terry Gruel — a 3-time USKA world champion (2002–04) whose school has trained 17 world champions — with programs from Brazilian Jiu-Jitsu to karate starting at age 3.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.pixpots.com" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-04.png" alt="Pix Pots Pottery logo" loading="lazy"></span>
+      <a class="card" style="--d:0.24s" href="https://www.pixpots.com" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-04.png" alt="Pix Pots Pottery logo" loading="lazy"></span>
         <span class="name">Pix Pots Pottery</span>
         <span class="trivia">A Kokomo studio handcrafting ceramics — unique mugs, bowls, and custom decal mugs.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://kokomo.iu.edu/nursing-allied-health/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-05.png"
-            alt="IUK School of Nursing and Allied Health Professions logo" loading="lazy"></span>
+      <a class="card" style="--d:0.30s" href="https://kokomo.iu.edu/nursing-allied-health/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-05.png" alt="IUK School of Nursing and Allied Health Professions logo" loading="lazy"></span>
         <span class="name">IUK SNAHP</span>
-        <span class="trivia">Indiana University Kokomo's School of Nursing and Allied Health Professions trains nurses,
-          radiologic technologists, occupational therapy assistants, medical coders, and more — its students wear the
-          traditional red IU scrubs at their induction ceremony.</span>
+        <span class="trivia">Indiana University Kokomo's School of Nursing and Allied Health Professions trains nurses, radiologic technologists, occupational therapy assistants, medical coders, and more — its students wear the traditional red IU scrubs at their induction ceremony.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.lionsclubs.org" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-06.png" alt="Kokomo Area Lions Club logo" loading="lazy"></span>
+      <a class="card" style="--d:0.36s" href="https://www.lionsclubs.org" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-06.png" alt="Kokomo Area Lions Club logo" loading="lazy"></span>
         <span class="name">Kokomo Area Lions</span>
-        <span class="trivia">Kokomo's club is part of Lions Clubs International, the world's largest service club
-          organization, with local records dating to December 1969. (Official local site pending — linking the parent
-          org for now.)</span>
+        <span class="trivia">Kokomo's club is part of Lions Clubs International, the world's largest service club organization, with local records dating to December 1969. (Official local site pending — linking the parent org for now.)</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.kokomourbanoutreach.org" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-07.png" alt="UpCreations (Kokomo Urban Outreach) logo"
-            loading="lazy"></span>
+      <a class="card" style="--d:0.42s" href="https://www.kokomourbanoutreach.org" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-07.png" alt="UpCreations (Kokomo Urban Outreach) logo" loading="lazy"></span>
         <span class="name">UpCreations</span>
-        <span class="trivia">UP Creations is one of Kokomo Urban Outreach's youth work activities, where participants
-          craft and sell home décor — 'UP' stands for unleashing potential, passion, and purpose.</span>
+        <span class="trivia">UP Creations is one of Kokomo Urban Outreach's youth work activities, where participants craft and sell home décor — 'UP' stands for unleashing potential, passion, and purpose.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.cfbindiana.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-08.png" alt="Community First Bank of Indiana logo"
-            loading="lazy"></span>
+      <a class="card" style="--d:0.48s" href="https://www.cfbindiana.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-08.png" alt="Community First Bank of Indiana logo" loading="lazy"></span>
         <span class="name">Community First Bank of Indiana</span>
-        <span class="trivia">Established February 3, 2003 and headquartered in Kokomo — its CommuniTee Giveback Program
-          matches up to $500 in donations to local causes.</span>
+        <span class="trivia">Established February 3, 2003 and headquartered in Kokomo — its CommuniTee Giveback Program matches up to $500 in donations to local causes.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.kokomotribune.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-09.png" alt="Kokomo Tribune logo" loading="lazy"></span>
+      <a class="card" style="--d:0.54s" href="https://www.kokomotribune.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-09.png" alt="Kokomo Tribune logo" loading="lazy"></span>
         <span class="name">Kokomo Tribune</span>
-        <span class="trivia">Founded October 30, 1850 as the Howard Tribune, it's one of Indiana's oldest newspapers —
-          its motto is 'Positively, Part of Your Life.'</span>
+        <span class="trivia">Founded October 30, 1850 as the Howard Tribune, it's one of Indiana's oldest newspapers — its motto is 'Positively, Part of Your Life.'</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.oscars.pizza/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-10.png" alt="Oscar's Pizza logo" loading="lazy"></span>
+      <a class="card" style="--d:0.60s" href="https://www.oscars.pizza/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-10.png" alt="Oscar's Pizza logo" loading="lazy"></span>
         <span class="name">Oscar's Pizza</span>
-        <span class="trivia">Serves pizza plus calzones, stromboli, breadsticks, and salads — with listings calling out
-          its Detroit-style and creative specialty pies.</span>
+        <span class="trivia">Serves pizza plus calzones, stromboli, breadsticks, and salads — with listings calling out its Detroit-style and creative specialty pies.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="http://www.dechertlawoffice.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-11.png" alt="Dechert Law Office logo" loading="lazy"></span>
+      <a class="card" style="--d:0.66s" href="http://www.dechertlawoffice.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-11.png" alt="Dechert Law Office logo" loading="lazy"></span>
         <span class="name">Dechert Law Office</span>
-        <span class="trivia">A general-practice law firm at 217 N. Main St. in downtown Kokomo, concentrating in
-          criminal law, family law, and personal injury.</span>
+        <span class="trivia">A general-practice law firm at 217 N. Main St. in downtown Kokomo, concentrating in criminal law, family law, and personal injury.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.sutebbq.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-12.png" alt="SUTE Korean BBQ House logo" loading="lazy"></span>
+      <a class="card" style="--d:0.72s" href="https://www.sutebbq.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-12.png" alt="SUTE Korean BBQ House logo" loading="lazy"></span>
         <span class="name">SUTE</span>
-        <span class="trivia">Owner Sean Park relocated his family from Korea to Kokomo to open it, blending Korean
-          traditions with East-meets-West dishes like ribeye bulgogi and kimchi sliders.</span>
+        <span class="trivia">Owner Sean Park relocated his family from Korea to Kokomo to open it, blending Korean traditions with East-meets-West dishes like ribeye bulgogi and kimchi sliders.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.ffbt.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-13.png" alt="First Farmers Bank & Trust logo"
-            loading="lazy"></span>
+      <a class="card" style="--d:0.78s" href="https://www.ffbt.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-13.png" alt="First Farmers Bank & Trust logo" loading="lazy"></span>
         <span class="name">First Farmers Bank & Trust</span>
-        <span class="trivia">Roots trace back to 1885, when it opened as Mark Tully's Exchange Bank in Converse, Indiana
-          — today it serves more than 60,000 clients across Indiana and Illinois.</span>
+        <span class="trivia">Roots trace back to 1885, when it opened as Mark Tully's Exchange Bank in Converse, Indiana — today it serves more than 60,000 clients across Indiana and Illinois.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://thehardiegroup.com" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-14.png" alt="The Hardie Group Real Estate Company logo"
-            loading="lazy"></span>
+      <a class="card" style="--d:0.84s" href="https://thehardiegroup.com" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-14.png" alt="The Hardie Group Real Estate Company logo" loading="lazy"></span>
         <span class="name">The Hardie Group</span>
-        <span class="trivia">A family-run Kokomo realty owned by Kevin and Nancy Hardie — 'family, tradition and pride
-          are what The Hardie Group is all about.'</span>
+        <span class="trivia">A family-run Kokomo realty owned by Kevin and Nancy Hardie — 'family, tradition and pride are what The Hardie Group is all about.'</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.tiptopcarwashes.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-15.png" alt="Tip Top Car Washes logo" loading="lazy"></span>
+      <a class="card" style="--d:0.90s" href="https://www.tiptopcarwashes.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-15.png" alt="Tip Top Car Washes logo" loading="lazy"></span>
         <span class="name">Tip Top Car Washes</span>
-        <span class="trivia">Every wash comes with free vacuums — and the company invites sponsorship requests from
-          local schools, nonprofits, and community causes.</span>
+        <span class="trivia">Every wash comes with free vacuums — and the company invites sponsorship requests from local schools, nonprofits, and community causes.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="http://www.firedartsstudio.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-16.png" alt="Fired Arts Studio logo" loading="lazy"></span>
+      <a class="card" style="--d:0.96s" href="http://www.firedartsstudio.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-16.png" alt="Fired Arts Studio logo" loading="lazy"></span>
         <span class="name">Fired Arts Studio</span>
-        <span class="trivia">A family arts center offering pottery painting, canvas painting, and mosaics — no
-          experience required.</span>
+        <span class="trivia">A family arts center offering pottery painting, canvas painting, and mosaics — no experience required.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.facebook.com/luckyraventattoolounge/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-17.png" alt="Lucky Raven Tattoo Lounge logo" loading="lazy"></span>
+      <a class="card" style="--d:1.02s" href="https://www.facebook.com/luckyraventattoolounge/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-17.png" alt="Lucky Raven Tattoo Lounge logo" loading="lazy"></span>
         <span class="name">Lucky Raven Tattoo Lounge</span>
-        <span class="trivia">Began as Devon Wooldridge's one-person private studio at Fade Salon, then expanded into a
-          larger collaborative shop with multiple artists. (Facebook is the shop's official online presence.)</span>
+        <span class="trivia">Began as Devon Wooldridge's one-person private studio at Fade Salon, then expanded into a larger collaborative shop with multiple artists. (Facebook is the shop's official online presence.)</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://pfhendricks.com" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-18.png" alt="P.F. Hendricks & Co. logo" loading="lazy"></span>
+      <a class="card" style="--d:1.08s" href="https://pfhendricks.com" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-18.png" alt="P.F. Hendricks & Co. logo" loading="lazy"></span>
         <span class="name">P.F. Hendricks & Co.</span>
-        <span class="trivia">Founded in 2015 by sisters and named for their mother, Patricia Faye Hendricks — nearly
-          every brand they stock is Fair Trade Certified, eco-friendly, or socially responsible.</span>
+        <span class="trivia">Founded in 2015 by sisters and named for their mother, Patricia Faye Hendricks — nearly every brand they stock is Fair Trade Certified, eco-friendly, or socially responsible.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://ecrossroads.org/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-19.png" alt="Crossroads Community Church logo"
-            loading="lazy"></span>
+      <a class="card" style="--d:1.14s" href="https://ecrossroads.org/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-19.png" alt="Crossroads Community Church logo" loading="lazy"></span>
         <span class="name">Crossroads Community Church</span>
-        <span class="trivia">A non-denominational Kokomo church with two campuses — Downtown at 116 N. Main St. and
-          South — and a mission of helping people take 'their next step with Christ.'</span>
+        <span class="trivia">A non-denominational Kokomo church with two campuses — Downtown at 116 N. Main St. and South — and a mission of helping people take 'their next step with Christ.'</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://www.kokomoymca.org" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-20.png" alt="YMCA of Kokomo logo" loading="lazy"></span>
+      <a class="card" style="--d:1.20s" href="https://www.kokomoymca.org" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-20.png" alt="YMCA of Kokomo logo" loading="lazy"></span>
         <span class="name">YMCA of Kokomo</span>
         <span class="trivia">Serving Kokomo since 1875 — it runs a downtown facility plus a 52-acre day camp.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
-      <a class="card" href="https://bohemiantattooclub.com/" target="_blank" rel="noopener">
-        <span class="logo-wrap"><img src="logos/logo-21.png" alt="The Bohemian Tattoo Club & Gallery logo"
-            loading="lazy"></span>
+      <a class="card" style="--d:1.26s" href="https://bohemiantattooclub.com/" target="_blank" rel="noopener">
+        <span class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-21.png" alt="The Bohemian Tattoo Club & Gallery logo" loading="lazy"></span>
         <span class="name">Bohemian Tattoo</span>
-        <span class="trivia">An artist-owned custom tattoo studio with an in-house gallery showing original artwork by
-          its artists.</span>
+        <span class="trivia">An artist-owned custom tattoo studio with an in-house gallery showing original artwork by its artists.</span>
         <span class="visit">Visit official site&nbsp;&nearr;</span>
       </a>
     </div>
-    <footer>First Friday Scarecrow Scavenger Hunt &mdash; Kokomo Art Association</footer>
+    <footer>First Friday Scarecrow Scavenger Hunt &mdash; Kokomo Art Association &times; Fired Arts Studio</footer>
   </div>
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cv = document.getElementById("shader");
+  var gl = cv.getContext("webgl", {antialias:false}) || cv.getContext("experimental-webgl");
+  if (!gl) { document.body.classList.add("no-webgl"); return; }
+  function size(){ cv.width = Math.max(2, Math.floor(innerWidth * .5));
+                    cv.height = Math.max(2, Math.floor(innerHeight * .5)); }
+  size(); addEventListener("resize", size);
+  function shader(type, src){
+    var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)){ document.body.classList.add("no-webgl"); return null; }
+    return s;
+  }
+  var vs = shader(gl.VERTEX_SHADER, '\nattribute vec2 a_pos;\nvoid main(){ gl_Position = vec4(a_pos, 0., 1.); }\n');
+  var fs = shader(gl.FRAGMENT_SHADER, '\nprecision mediump float;\nuniform vec2 u_res;\nuniform float u_time;\nfloat hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453123); }\nfloat noise(vec2 p){\n  vec2 i = floor(p); vec2 f = fract(p); f = f*f*(3.-2.*f);\n  return mix(mix(hash(i), hash(i+vec2(1.,0.)), f.x),\n             mix(hash(i+vec2(0.,1.)), hash(i+vec2(1.,1.)), f.x), f.y);\n}\nfloat fbm(vec2 p){\n  float v = 0.; float a = .5;\n  for(int i=0;i<5;i++){ v += a*noise(p); p *= 2.03; a *= .5; }\n  return v;\n}\nvoid main(){\n  vec2 uv = gl_FragCoord.xy / u_res;\n  vec2 p = uv; p.x *= u_res.x / u_res.y;\n  float t = u_time * .045;\n  float warp = fbm(p*3.1 + vec2(-t*.7, t*.4));\n  float fog = fbm(p*2.2 + vec2(t, t*.6) + warp*.9);\n  vec3 deep  = vec3(.055,.022,.10);\n  vec3 mid   = vec3(.22,.08,.30);\n  vec3 ember = vec3(.95,.42,.10);\n  vec3 col = mix(deep, mid, smoothstep(.28,.85,fog));\n  col = mix(col, ember, smoothstep(.70,.985,fog)*.5);\n  vec2 m = vec2(.80,.22);\n  float d = length(p - m);\n  col += vec3(1.,.88,.66) * smoothstep(.075,.058,d);\n  col += vec3(.85,.68,.42) * smoothstep(.30,.06,d) * .30;\n  float sp = step(.9975, hash(floor(p*90.) + floor(u_time*3.)*.13));\n  col += vec3(1.,.6,.2) * sp * .35;\n  float v = smoothstep(1.2,.30,length(uv-.5));\n  col *= mix(.5,1.,v);\n  col += (hash(gl_FragCoord.xy + fract(u_time)*7.) - .5) * .035;\n  gl_FragColor = vec4(col, 1.);\n}\n');
+  if (!vs || !fs) return;
+  var prog = gl.createProgram();
+  gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog); gl.useProgram(prog);
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, "a_pos");
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  var uRes = gl.getUniformLocation(prog, "u_res");
+  var uTime = gl.getUniformLocation(prog, "u_time");
+  var t0 = performance.now();
+  function draw(){
+    gl.viewport(0, 0, cv.width, cv.height);
+    gl.uniform2f(uRes, cv.width, cv.height);
+    gl.uniform1f(uTime, (performance.now() - t0) / 1000);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  if (reduce) { draw(); return; }
+  (function loop(){
+    if (!document.hidden) draw();
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
 </body>
-
 </html>
