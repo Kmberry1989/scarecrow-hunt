@@ -50,6 +50,8 @@
   @property --fa { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
   @keyframes frame-spin { to { --fa: 360deg; } }
   .logo-frame img { max-width: min(240px, 68vw); max-height: 140px; object-fit: contain; display: block; }
+  .logo-frame img.on-white { background: #fff; border-radius: 12px; padding: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.35); }
   .logo-frame .bat { position: absolute; top: -17px; font-size: 22px; z-index: 2;
     animation: bat-bob 2.6s ease-in-out infinite; filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)); }
   .logo-frame .bat.b1 { left: 10px; }
@@ -119,7 +121,7 @@
     <p class="num">Scarecrow #8 of 21</p>
     <p class="label">Sponsored by</p>
     <h1>SUTE</h1>
-    <div class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-08.png" alt="SUTE logo" onerror="this.remove()"></div>
+    <div class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img class="on-white" src="logos/logo-08.png" alt="SUTE logo" onerror="this.remove()"></div>
     <p class="label">Your letter is</p>
     <div class="letter">M</div>
     <p class="letter-line">Your letter is M &mdash; write it in blank #16.</p>
