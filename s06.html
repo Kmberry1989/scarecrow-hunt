@@ -40,7 +40,6 @@
   .num { color: #c9b8e8; font-size: 15px; margin-bottom: 26px; }
   .label { color: #ffb347; font-size: 17px; letter-spacing: 1px; text-transform: uppercase; }
   h1 { font-size: 30px; line-height: 1.2; margin: 8px 0 22px; max-width: 420px; }
-  /* ---- procedural haunted logo frame (any logo size) ---- */
   .logo-frame { position: relative; display: inline-flex; align-items: center; justify-content: center;
     padding: 16px; margin: 0 auto 30px; border-radius: 16px;
     background: radial-gradient(circle at 50% 28%, #2a1a4d, #150d2a 72%);
@@ -58,7 +57,7 @@
   @keyframes bat-bob { 50% { transform: translateY(-7px); } }
   .letter {
     font-size: min(44vw, 190px); font-weight: 800; line-height: 1;
-    color: #ffd166; margin: 10px 0 30px;
+    color: #ffd166; margin: 10px 0 6px;
     text-shadow: 0 4px 0 #b3541e, 0 8px 24px rgba(0,0,0,.5), 0 0 44px rgba(255,177,71,.55);
     animation: letter-pop .7s cubic-bezier(.2,1.6,.4,1) both .25s, letter-flicker 4s ease-in-out 1.2s infinite;
   }
@@ -70,7 +69,37 @@
     0%, 100% { text-shadow: 0 4px 0 #b3541e, 0 8px 24px rgba(0,0,0,.5), 0 0 44px rgba(255,177,71,.55); }
     50% { text-shadow: 0 4px 0 #b3541e, 0 8px 24px rgba(0,0,0,.5), 0 0 74px rgba(255,177,71,.9); }
   }
-  .foot { color: #c9b8e8; font-size: 14px; line-height: 1.6; max-width: 340px; }
+  .letter-line { color: #f3e9ff; font-size: 19px; font-weight: 700; margin-bottom: 26px; }
+  .clue-card {
+    margin: 4px 0 20px; padding: 20px 22px; max-width: 440px;
+    border: 2px dashed rgba(255,209,102,.55); border-radius: 16px;
+    background: rgba(24,12,46,.62); box-shadow: 0 0 24px rgba(138,63,252,.18);
+  }
+  .next-card {
+    margin: 4px 0 20px; padding: 20px 22px; max-width: 440px;
+    border: 2px solid rgba(255,179,71,.6); border-radius: 16px;
+    background: rgba(46,24,8,.55); box-shadow: 0 0 24px rgba(255,179,71,.18);
+  }
+  .finale-card {
+    margin: 4px 0 20px; padding: 22px 24px; max-width: 460px;
+    border: 3px solid #ffd166; border-radius: 16px;
+    background: rgba(46,24,8,.66); box-shadow: 0 0 34px rgba(255,209,102,.4);
+  }
+  .paint-card {
+    margin: 4px 0 20px; padding: 18px 22px; max-width: 440px;
+    border: 2px dashed rgba(255,179,71,.7); border-radius: 16px;
+    background: rgba(58,28,60,.6); box-shadow: 0 0 24px rgba(255,123,28,.2);
+  }
+  .clue-label { color: #ffd166; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 12px; }
+  .riddle { font-size: 17px; line-height: 1.7; color: #f3e9ff; font-style: italic;
+    white-space: pre-line; }
+  .next-name { font-size: 21px; font-weight: 800; color: #ffd166; margin: 4px 0 8px; }
+  .next-dir { font-size: 16px; line-height: 1.6; color: #f3e9ff; }
+  .anyorder { color: #c9b8e8; font-size: 14px; font-style: italic; margin: 2px 0 24px; max-width: 380px; }
+  .foot { color: #c9b8e8; font-size: 14px; line-height: 1.7; max-width: 400px; }
+  .foot strong { color: #ffd166; }
+  .share { color: #ffd166; font-size: 15px; font-weight: 700; margin-top: 14px; }
   .credit { margin-top: 22px; font-size: 13px; color: #8f7fb8; }
   .credit a { color: #ffd166; }
   @media (prefers-reduced-motion: reduce) {
@@ -89,11 +118,22 @@
     <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
     <p class="num">Scarecrow #6 of 21</p>
     <p class="label">Sponsored by</p>
-    <h1>Kokomo Area Lions</h1>
-    <div class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-06.png" alt="Kokomo Area Lions logo" onerror="this.remove()"></div>
+    <h1>UpCreations (Urban Outreach)</h1>
+    <div class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img src="logos/logo-06.png" alt="UpCreations (Urban Outreach) logo" onerror="this.remove()"></div>
     <p class="label">Your letter is</p>
-    <div class="letter">N</div>
-    <p class="foot">Write it in slot #6 of your passport. Collect all 21 letters, then turn in your passport at Artworks Gallery to enter the gift basket drawing!</p>
+    <div class="letter">S</div>
+    <p class="letter-line">Your letter is S &mdash; write it in blank #21.</p>
+    <div class="clue-card">
+      <p class="clue-label">&#x1f50d; About this scarecrow</p>
+      <p class="riddle">With paint and purpose, bold and bright,
+This &#x27;crow lifts spirits to new height.
+Made by hands that build and care —
+Scan the tag — there&#x27;s joy to share!</p>
+    </div>
+    <div class="next-card"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">Oscar&#x27;s Pizza</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">A short stroll north on Buckeye.</p></div>
+    <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
+    <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
+    <p class="share">Love this scarecrow? If you like it, share it! &#x1f4f8;</p>
     <p class="credit">Presented by the <a href="https://www.kaaonline.org">Kokomo Art Association</a></p>
   </main>
 <script>
