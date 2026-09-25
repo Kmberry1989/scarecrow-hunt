@@ -108,20 +108,25 @@
     #fog { display: none; }
     .moon, .batfly, .letter, .logo-frame::before, .logo-frame .bat { animation: none !important; }
   }
-</style>
+
+    .bat img{width:38px;height:auto;display:block;}
+    .batfly img{width:48px;height:auto;display:block;filter:drop-shadow(0 0 10px rgba(255,139,58,.35));}
+    .batfly.b2 img{width:36px;}
+    .batfly.b3 img{width:28px;}
+  </style>
 </head>
 <body>
   <canvas id="fog" aria-hidden="true"></canvas>
   <div class="moon" aria-hidden="true"></div>
-  <div class="batfly" aria-hidden="true">&#x1f987;</div>
-  <div class="batfly b2" aria-hidden="true">&#x1f987;</div>
-  <div class="batfly b3" aria-hidden="true">&#x1f987;</div>
+  <div class="batfly" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
+  <div class="batfly b2" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
+  <div class="batfly b3" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
   <main>
     <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
     <p class="num">Scarecrow #20 of 21</p>
     <p class="label">Sponsored by</p>
     <h1>Tip Top Car Washes</h1>
-    <div class="logo-frame"><span class="bat b1">&#x1f987;</span><span class="bat b2">&#x1f987;</span><img class="on-white" src="logos/logo-20.png" alt="Tip Top Car Washes logo" onerror="this.remove()"></div>
+    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-20.png" alt="Tip Top Car Washes logo" onerror="this.remove()"></div>
     <p class="label">Your letter is</p>
     <div class="letter">I</div>
     <p class="letter-line">Your letter is I &mdash; write it in blank #9.</p>
