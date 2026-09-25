@@ -383,7 +383,7 @@
     footer strong { color: var(--ink); }
     .source-note { text-align: right; }
 
-    .scarecrow-icon, .turnin-icon, .start-icon { background: transparent !important; border: 0 !important; }
+    .scarecrow-icon, .turnin-icon { background: transparent !important; border: 0 !important; }
     .pin-shell {
       position: relative;
       width: 34px;
@@ -405,7 +405,7 @@
       background: #ff7a1a;
       box-shadow: inset 0 0 0 2px rgba(255,255,255,.25);
     }
-    .star-shell, .flag-shell {
+    .star-shell {
       width: 42px;
       height: 42px;
       display: grid;
@@ -417,11 +417,6 @@
       color: #ffd84a;
       font-size: 32px;
       text-shadow: 0 0 0 #513500, 0 0 9px rgba(245,197,24,.55);
-    }
-    .flag-shell {
-      color: #ff8b3a;
-      font-size: 30px;
-      text-shadow: 0 2px 0 #351104, 0 0 9px rgba(255,122,26,.45);
     }
 
     .leaflet-popup-content-wrapper, .leaflet-popup-tip {
@@ -509,7 +504,7 @@
 
     <aside class="notice" role="note">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 21V4m0 0h11l-2.5 3L16 10H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Begin at the First Friday Welcome Booth on Courthouse Square. Scan the QR code at each scarecrow and let its riddle lead you onward. Turn in your completed passport at Artworks Gallery, 210 N. Main St.</span>
+      <span>Start at any scarecrow — there’s no wrong place to begin. Scan each QR code to collect its letter, then turn in your finished passport at Artworks Gallery (210 N Main St) or Fired Arts Studio (111 W Sycamore St).</span>
     </aside>
 
     <section class="toolbar" aria-label="Map controls">
@@ -550,14 +545,13 @@
     </section>
 
     <div class="legend" aria-label="Map legend">
-      <span><i class="legend-flag" aria-hidden="true">⚑</i> Welcome Booth start</span>
+      
       <span><i class="legend-dot" aria-hidden="true"></i> Scarecrow location</span>
       <span><i class="legend-star" aria-hidden="true">★</i> Passport turn-in</span>
     </div>
 
     <footer>
       <div><strong>Presented by the Kokomo Art Association</strong><br />Celebrating 100 years of art in Kokomo · 1926–2026</div>
-      <div class="source-note">Locations updated September 24, 2026<br />Pins sourced from Rochelle Berry’s “2026 KAA Scarecrows” Google Maps list; two provisional business-address pins await exact placement confirmation</div>
     </footer>
   </main>
 
@@ -591,7 +585,6 @@
       ];
 
       var extraMarkers = [
-        {kind:"start", title:"First Friday Welcome Booth", address:"Courthouse Square Info Hub", lat:40.48645, lng:-86.13260},
         {kind:"turnin", title:"Artworks Gallery", address:"210 N. Main St.", lat:40.48781, lng:-86.13088}
       ];
 
@@ -616,19 +609,15 @@
       }
 
       function popupHtml(place) {
-        var locationNote = place.source === "provisional"
-          ? "<div class=\"popup-note\">Provisional pin · exact scarecrow placement subject to change</div>"
-          : place.source === "fallback" ? "<div class=\"popup-note\">Location approximate</div>" : "";
+        var locationNote = "";
         return "<div class=\"popup-title\">" + escapeHtml(place.sponsor) + "</div>" +
           locationNote +
           "<a class=\"popup-directions\" href=\"" + directionsUrl(place) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Get directions ↗</a>";
       }
 
       function extraPopupHtml(place) {
-        var kicker = place.kind === "start" ? "Hunt start" : "Passport turn-in";
-        var detail = place.kind === "start"
-          ? "<div class=\"popup-riddle\"><strong>Your first riddle</strong><p>Welcome, hunter! The hunt begins right here —<br>Your first scarecrow is close, never fear!<br>Walk west on Sycamore where neighbors all meet:<br>Find the Community Foundation at 215 West Sycamore Street!</p></div>"
-          : "<div class=\"popup-note\">Submit your completed passport and cast your People’s Choice vote.</div>";
+        var kicker = "Passport turn-in";
+        var detail = "<div class=\"popup-note\">Submit your finished passport here to enter the Mystery Prize Basket drawing.</div>";
         return "<div class=\"popup-kicker\">" + kicker + "</div>" +
           "<div class=\"popup-title\">" + escapeHtml(place.title) + "</div>" +
           "<div class=\"popup-address\">" + escapeHtml(place.address) + "</div>" +
@@ -654,7 +643,6 @@
           button.innerHTML =
             "<span class=\"location-copy\"><strong>" + escapeHtml(place.sponsor) + "</strong>" +
             "<span>" + escapeHtml(place.address) + "</span>" +
-            (place.source === "provisional" ? "<span class=\"badge tbd\">Provisional · subject to change</span>" : "") +
             "</span>" +
             "<svg class=\"row-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
           button.setAttribute("aria-label", "Show " + place.sponsor + " on the map");
@@ -709,10 +697,9 @@
         });
 
         extraMarkers.forEach(function (place) {
-          var isStart = place.kind === "start";
-          var icon = L.divIcon({
-            className:isStart ? "start-icon" : "turnin-icon",
-            html:isStart ? "<div class=\"flag-shell\" aria-hidden=\"true\">⚑</div>" : "<div class=\"star-shell\" aria-hidden=\"true\">★</div>",
+                    var icon = L.divIcon({
+            className:"turnin-icon",
+            html:"<div class=\"star-shell\" aria-hidden=\"true\">★</div>",
             iconSize:[42,42],
             iconAnchor:[21,21],
             popupAnchor:[0,-22]
