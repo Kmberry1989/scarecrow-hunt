@@ -196,7 +196,13 @@ Scan the tag with just a blink!</p>
 <style>
   .letter-bank-title { color:#c9b8e8; font-size:14px; margin:22px 0 10px; text-align:center; }
   .letter-bank { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-width:470px; margin:0 auto; }
-  .lb-word { display:flex; gap:6px; }
+  .lb-word { display:flex; gap:6px; flex:0 0 auto; }
+  @media (max-width: 400px) {
+    .lb-cell { width:30px; height:40px; font-size:18px; }
+    .lb-cell.lb-empty { font-size:12px; }
+    .lb-word { gap:4px; }
+    .letter-bank { gap:8px; }
+  }
   .lb-cell { width:36px; height:46px; display:flex; align-items:center; justify-content:center;
     border:2px solid rgba(255,209,102,.45); border-radius:8px;
     font-size:21px; font-weight:800; color:#ffd166; background:rgba(255,209,102,.06); }

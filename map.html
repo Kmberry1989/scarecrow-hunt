@@ -367,7 +367,12 @@
       font-size: .85rem; font-weight: 800;
     }
     .letter-bank { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: .65rem; align-items: center; }
-    .bank-word { display: inline-flex; gap: .3rem; }
+    .bank-word { display: inline-flex; gap: .3rem; flex: 0 0 auto; }
+    @media (max-width: 400px) {
+      .letter-bank .bank-slot { width: 1.45rem; height: 1.45rem; font-size: .72rem; }
+      .letter-bank { gap: .45rem; }
+      .bank-word { gap: .22rem; }
+    }
     .letter-bank .bank-slot {
       width: 1.7rem; height: 1.7rem; display: inline-flex; align-items: center; justify-content: center;
       border: 1px dashed var(--muted); border-radius: .45rem;
