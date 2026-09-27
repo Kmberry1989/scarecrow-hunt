@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Scarecrow #16 &mdash; First Friday Scavenger Hunt</title>
+<title>Scarecrow #20 &mdash; First Friday Scavenger Hunt</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -208,22 +208,22 @@
   <div class="batfly b3" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
   <main>
     <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
-    <p class="num">Scarecrow #16 of 21</p>
+    <p class="num">Scarecrow #20 of 21</p>
     <p class="label">Sponsored by</p>
-    <h1>Pix Pots Pottery</h1>
-    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-16.png" alt="Pix Pots Pottery logo" onerror="this.remove()"></div>
+    <h1>Tip Top Car Washes</h1>
+    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-20.png" alt="Tip Top Car Washes logo" onerror="this.remove()"></div>
     <p class="label letter-label">Your letter is</p>
-    <div class="letter">U</div>
-    <p class="brought-by">Brought to you by <a href="https://www.pixpots.com" target="_blank" rel="noopener">Pix Pots Pottery</a></p>
-    <p class="letter-line">Write it in blank #16.</p>
+    <div class="letter">O</div>
+    <p class="brought-by">Brought to you by <a href="https://www.tiptopcarwashes.com/" target="_blank" rel="noopener">Tip Top Car Washes</a></p>
+    <p class="letter-line">Write it in blank #20.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
-      <p class="riddle">Spinning clay both smooth and round,
-The muddiest &#x27;crow in all of town!
-His pots are perfect, don&#x27;t you think?
-Scan the tag with just a blink!</p>
+      <p class="riddle">Scrub-a-dub with soap and spray,
+This bubbly &#x27;crow loves wash day!
+Sudsy, shiny, squeaky clean —
+Scan the tag — he&#x27;s quite the scene!</p>
     </div>
-    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">IUK SNAHP</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">East on Sycamore to Union St.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
+    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=116+N+Main+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">Crossroads Community Church</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">North on Main, across from the courthouse.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
     <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
     <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
     <p class="share"><button type="button" id="shareBtn">&#x1f4f8; Love this scarecrow? Tap to share the hunt!</button></p>
@@ -290,9 +290,7 @@ Scan the tag with just a blink!</p>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
 (function () {
   try {
-    var m = location.pathname.match(/s(\d{2})\.html$/i);
-    if (!m) return;
-    var stop = m[1];
+    var stop = "20"; /* embedded: page served at an unguessable URL */
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
     var VKEY = "kokomoScarecrowsVisitedV2";
@@ -344,7 +342,7 @@ Scan the tag with just a blink!</p>
 (function () {
   var btn = document.getElementById("shareBtn");
   if (!btn) return;
-  var text = "I found the Pix Pots Pottery scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
+  var text = "I found the Tip Top Car Washes scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
   var url = "https://kokomoscarecrows.com/";
   var note = document.getElementById("shareNote");
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }

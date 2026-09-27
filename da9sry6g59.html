@@ -290,9 +290,7 @@ Scan the tag and be on your way!</p>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
 (function () {
   try {
-    var m = location.pathname.match(/s(\d{2})\.html$/i);
-    if (!m) return;
-    var stop = m[1];
+    var stop = "10"; /* embedded: page served at an unguessable URL */
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
     var VKEY = "kokomoScarecrowsVisitedV2";

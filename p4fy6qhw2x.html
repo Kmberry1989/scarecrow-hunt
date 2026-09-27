@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Scarecrow #12 &mdash; First Friday Scavenger Hunt</title>
+<title>Scarecrow #17 &mdash; First Friday Scavenger Hunt</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -50,8 +50,6 @@
   @property --fa { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
   @keyframes frame-spin { to { --fa: 360deg; } }
   .logo-frame img { max-width: min(140px, 40vw); max-height: 78px; object-fit: contain; display: block; }
-  .logo-frame img.on-white { background: #fff; border-radius: 12px; padding: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.35); }
   .logo-frame .bat { position: absolute; top: -17px; font-size: 22px; z-index: 2;
     animation: bat-bob 2.6s ease-in-out infinite; filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)); }
   .logo-frame .bat.b1 { left: 10px; }
@@ -208,22 +206,22 @@
   <div class="batfly b3" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
   <main>
     <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
-    <p class="num">Scarecrow #12 of 21</p>
+    <p class="num">Scarecrow #17 of 21</p>
     <p class="label">Sponsored by</p>
-    <h1>Community First Bank of Indiana</h1>
-    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-12.png" alt="Community First Bank of Indiana logo" onerror="this.remove()"></div>
+    <h1>IUK SNAHP (Nursing &amp; Allied Health)</h1>
+    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img src="logos/logo-17.png" alt="IUK SNAHP (Nursing &amp; Allied Health) logo" onerror="this.remove()"></div>
     <p class="label letter-label">Your letter is</p>
-    <div class="letter">T</div>
-    <p class="brought-by">Brought to you by <a href="https://www.cfbindiana.com/" target="_blank" rel="noopener">Community First Bank of Indiana</a></p>
-    <p class="letter-line">Write it in blank #12.</p>
+    <div class="letter">D</div>
+    <p class="brought-by">Brought to you by <a href="https://kokomo.iu.edu/nursing-allied-health/" target="_blank" rel="noopener">IUK SNAHP (Nursing &amp;amp; Allied Health)</a></p>
+    <p class="letter-line">Write it in blank #17.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
-      <p class="riddle">With vaults of coins and bills so neat,
-This money &#x27;crow can&#x27;t be beat!
-He&#x27;ll keep your treasure safe and sound —
-Scan the tag — your letter&#x27;s found!</p>
+      <p class="riddle">With gentle hands and healing art,
+This caregiver &#x27;crow has a giant heart!
+Feeling great? Then celebrate —
+Scan the tag — you&#x27;re doing great!</p>
     </div>
-    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=111+W+Sycamore+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">Fired Arts Studio</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">Back east on Sycamore — time for a paint break!</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
+    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=114+N+Union+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">YMCA of Kokomo</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">Just north on Union St.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
     <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
     <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
     <p class="share"><button type="button" id="shareBtn">&#x1f4f8; Love this scarecrow? Tap to share the hunt!</button></p>
@@ -290,9 +288,7 @@ Scan the tag — your letter&#x27;s found!</p>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
 (function () {
   try {
-    var m = location.pathname.match(/s(\d{2})\.html$/i);
-    if (!m) return;
-    var stop = m[1];
+    var stop = "17"; /* embedded: page served at an unguessable URL */
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
     var VKEY = "kokomoScarecrowsVisitedV2";
@@ -344,7 +340,7 @@ Scan the tag — your letter&#x27;s found!</p>
 (function () {
   var btn = document.getElementById("shareBtn");
   if (!btn) return;
-  var text = "I found the Community First Bank of Indiana scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
+  var text = "I found the IUK SNAHP (Nursing & Allied Health) scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
   var url = "https://kokomoscarecrows.com/";
   var note = document.getElementById("shareNote");
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }

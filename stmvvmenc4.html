@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Scarecrow #7 &mdash; First Friday Scavenger Hunt</title>
+<title>Scarecrow #9 &mdash; First Friday Scavenger Hunt</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -50,6 +50,8 @@
   @property --fa { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
   @keyframes frame-spin { to { --fa: 360deg; } }
   .logo-frame img { max-width: min(140px, 40vw); max-height: 78px; object-fit: contain; display: block; }
+  .logo-frame img.on-white { background: #fff; border-radius: 12px; padding: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.35); }
   .logo-frame .bat { position: absolute; top: -17px; font-size: 22px; z-index: 2;
     animation: bat-bob 2.6s ease-in-out infinite; filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)); }
   .logo-frame .bat.b1 { left: 10px; }
@@ -206,22 +208,22 @@
   <div class="batfly b3" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
   <main>
     <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
-    <p class="num">Scarecrow #7 of 21</p>
+    <p class="num">Scarecrow #9 of 21</p>
     <p class="label">Sponsored by</p>
-    <h1>Oscar&#x27;s Pizza</h1>
-    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-07.png" alt="Oscar&#x27;s Pizza logo" onerror="this.remove()"></div>
+    <h1>Kokomo Tribune</h1>
+    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-09.png" alt="Kokomo Tribune logo" onerror="this.remove()"></div>
     <p class="label letter-label">Your letter is</p>
-    <div class="letter">N</div>
-    <p class="brought-by">Brought to you by <a href="https://www.oscars.pizza/" target="_blank" rel="noopener">Oscar&amp;#x27;s Pizza</a></p>
-    <p class="letter-line">Write it in blank #7.</p>
+    <div class="letter">R</div>
+    <p class="brought-by">Brought to you by <a href="https://www.kokomotribune.com/" target="_blank" rel="noopener">Kokomo Tribune</a></p>
+    <p class="letter-line">Write it in blank #9.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
-      <p class="riddle">A cheesy grin, a pepperoni vest —
-This pizza &#x27;crow is simply the best!
-Hot and fresh, he&#x27;s quite a slice —
-Scan the tag — now isn&#x27;t that nice?</p>
+      <p class="riddle">Hot off the press, both day and night,
+This newsy &#x27;crow is quite a sight!
+Headlines, photos, stories galore —
+Scan the tag, then shout for more!</p>
     </div>
-    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=521+N+Buckeye+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">SUTE</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">Keep heading north on Buckeye.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
+    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=N+Buckeye+St.+near+W+Sycamore+%28dropped+pin%2C+approx.%29%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">Community Foundation</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">South on Buckeye St. to the 100 block.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
     <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
     <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
     <p class="share"><button type="button" id="shareBtn">&#x1f4f8; Love this scarecrow? Tap to share the hunt!</button></p>
@@ -288,9 +290,7 @@ Scan the tag — now isn&#x27;t that nice?</p>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
 (function () {
   try {
-    var m = location.pathname.match(/s(\d{2})\.html$/i);
-    if (!m) return;
-    var stop = m[1];
+    var stop = "09"; /* embedded: page served at an unguessable URL */
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
     var VKEY = "kokomoScarecrowsVisitedV2";
@@ -342,7 +342,7 @@ Scan the tag — now isn&#x27;t that nice?</p>
 (function () {
   var btn = document.getElementById("shareBtn");
   if (!btn) return;
-  var text = "I found the Oscar\'s Pizza scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
+  var text = "I found the Kokomo Tribune scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
   var url = "https://kokomoscarecrows.com/";
   var note = document.getElementById("shareNote");
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }

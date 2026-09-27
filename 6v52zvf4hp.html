@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Scarecrow #17 &mdash; First Friday Scavenger Hunt</title>
+<title>Scarecrow #3 &mdash; First Friday Scavenger Hunt</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -206,22 +206,22 @@
   <div class="batfly b3" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
   <main>
     <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
-    <p class="num">Scarecrow #17 of 21</p>
+    <p class="num">Scarecrow #3 of 21</p>
     <p class="label">Sponsored by</p>
-    <h1>IUK SNAHP (Nursing &amp; Allied Health)</h1>
-    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img src="logos/logo-17.png" alt="IUK SNAHP (Nursing &amp; Allied Health) logo" onerror="this.remove()"></div>
+    <h1>Dechert Law Office</h1>
+    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img src="logos/logo-03.png" alt="Dechert Law Office logo" onerror="this.remove()"></div>
     <p class="label letter-label">Your letter is</p>
-    <div class="letter">D</div>
-    <p class="brought-by">Brought to you by <a href="https://kokomo.iu.edu/nursing-allied-health/" target="_blank" rel="noopener">IUK SNAHP (Nursing &amp;amp; Allied Health)</a></p>
-    <p class="letter-line">Write it in blank #17.</p>
+    <div class="letter">A</div>
+    <p class="brought-by">Brought to you by <a href="http://www.dechertlawoffice.com/" target="_blank" rel="noopener">Dechert Law Office</a></p>
+    <p class="letter-line">Write it in blank #3.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
-      <p class="riddle">With gentle hands and healing art,
-This caregiver &#x27;crow has a giant heart!
-Feeling great? Then celebrate —
-Scan the tag — you&#x27;re doing great!</p>
+      <p class="riddle">With gavel, books, and scales of gold,
+This &#x27;crow keeps order, brave and bold.
+No objections — just delight!
+Scan the tag and hold on tight!</p>
     </div>
-    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=114+N+Union+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">YMCA of Kokomo</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">Just north on Union St.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
+    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=W+Walnut+St.+between+Main+%26+Buckeye%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">The Hardie Group Real Estate Company</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">Keep heading west on W Walnut St.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
     <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
     <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
     <p class="share"><button type="button" id="shareBtn">&#x1f4f8; Love this scarecrow? Tap to share the hunt!</button></p>
@@ -288,9 +288,7 @@ Scan the tag — you&#x27;re doing great!</p>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
 (function () {
   try {
-    var m = location.pathname.match(/s(\d{2})\.html$/i);
-    if (!m) return;
-    var stop = m[1];
+    var stop = "03"; /* embedded: page served at an unguessable URL */
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
     var VKEY = "kokomoScarecrowsVisitedV2";
@@ -342,7 +340,7 @@ Scan the tag — you&#x27;re doing great!</p>
 (function () {
   var btn = document.getElementById("shareBtn");
   if (!btn) return;
-  var text = "I found the IUK SNAHP (Nursing & Allied Health) scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
+  var text = "I found the Dechert Law Office scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
   var url = "https://kokomoscarecrows.com/";
   var note = document.getElementById("shareNote");
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }

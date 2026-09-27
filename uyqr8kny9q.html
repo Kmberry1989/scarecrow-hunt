@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Scarecrow #1 &mdash; First Friday Scavenger Hunt</title>
+<title>Scarecrow #8 &mdash; First Friday Scavenger Hunt</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -50,6 +50,8 @@
   @property --fa { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
   @keyframes frame-spin { to { --fa: 360deg; } }
   .logo-frame img { max-width: min(140px, 40vw); max-height: 78px; object-fit: contain; display: block; }
+  .logo-frame img.on-white { background: #fff; border-radius: 12px; padding: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.35); }
   .logo-frame .bat { position: absolute; top: -17px; font-size: 22px; z-index: 2;
     animation: bat-bob 2.6s ease-in-out infinite; filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)); }
   .logo-frame .bat.b1 { left: 10px; }
@@ -206,22 +208,22 @@
   <div class="batfly b3" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
   <main>
     <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
-    <p class="num">Scarecrow #1 of 21</p>
+    <p class="num">Scarecrow #8 of 21</p>
     <p class="label">Sponsored by</p>
-    <h1>Artworks Gallery</h1>
-    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img src="logos/logo-01.png" alt="Artworks Gallery logo" onerror="this.remove()"></div>
+    <h1>SUTE</h1>
+    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-08.png" alt="SUTE logo" onerror="this.remove()"></div>
     <p class="label letter-label">Your letter is</p>
-    <div class="letter">N</div>
-    <p class="brought-by">Brought to you by <a href="https://www.kaaonline.org" target="_blank" rel="noopener">Artworks Gallery</a></p>
-    <p class="letter-line">Write it in blank #1.</p>
+    <div class="letter">E</div>
+    <p class="brought-by">Brought to you by <a href="https://www.sutebbq.com/" target="_blank" rel="noopener">SUTE</a></p>
+    <p class="letter-line">Write it in blank #8.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
-      <p class="riddle">Brushstrokes dancing on the wall,
-The jolliest gallery of fall!
-A straw-stuffed greeter guards the door —
-Your hunt begins! What are you waiting for?</p>
+      <p class="riddle">With trendy threads and boutique cheer,
+The best-dressed &#x27;crow is standing here!
+Strike a pose, then don&#x27;t delay —
+Scan the tag and strut away!</p>
     </div>
-    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=200+N+Main+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">Lucky Raven Tattoo Lounge</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">Just picked up your card here? Good news — scarecrow #1 is right at Artworks! Then stroll south on Main St. to find #2.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
+    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=123+N+Buckeye+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">Kokomo Tribune</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">That&#x27;s the far end! Head back south on the trail to the Tribune at Walnut &amp; Buckeye.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
     <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
     <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
     <p class="share"><button type="button" id="shareBtn">&#x1f4f8; Love this scarecrow? Tap to share the hunt!</button></p>
@@ -288,9 +290,7 @@ Your hunt begins! What are you waiting for?</p>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
 (function () {
   try {
-    var m = location.pathname.match(/s(\d{2})\.html$/i);
-    if (!m) return;
-    var stop = m[1];
+    var stop = "08"; /* embedded: page served at an unguessable URL */
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
     var VKEY = "kokomoScarecrowsVisitedV2";
@@ -342,7 +342,7 @@ Your hunt begins! What are you waiting for?</p>
 (function () {
   var btn = document.getElementById("shareBtn");
   if (!btn) return;
-  var text = "I found the Artworks Gallery scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
+  var text = "I found the SUTE scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
   var url = "https://kokomoscarecrows.com/";
   var note = document.getElementById("shareNote");
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }

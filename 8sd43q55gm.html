@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Scarecrow #4 &mdash; First Friday Scavenger Hunt</title>
+<title>Scarecrow #5 &mdash; First Friday Scavenger Hunt</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -206,22 +206,22 @@
   <div class="batfly b3" aria-hidden="true"><img src="img/bat-fly.png" alt=""></div>
   <main>
     <p class="kicker">&#127875; First Friday Scarecrow Scavenger Hunt</p>
-    <p class="num">Scarecrow #4 of 21</p>
+    <p class="num">Scarecrow #5 of 21</p>
     <p class="label">Sponsored by</p>
-    <h1>The Hardie Group Real Estate Company</h1>
-    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-04.png" alt="The Hardie Group Real Estate Company logo" onerror="this.remove()"></div>
+    <h1>Kokomo Area Lions</h1>
+    <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img src="logos/logo-05.png" alt="Kokomo Area Lions logo" onerror="this.remove()"></div>
     <p class="label letter-label">Your letter is</p>
-    <div class="letter">D</div>
-    <p class="brought-by">Brought to you by <a href="https://thehardiegroup.com" target="_blank" rel="noopener">The Hardie Group Real Estate Company</a></p>
-    <p class="letter-line">Write it in blank #4.</p>
+    <div class="letter">A</div>
+    <p class="brought-by">Brought to you by <a href="https://www.lionsclubs.org" target="_blank" rel="noopener">Kokomo Area Lions</a></p>
+    <p class="letter-line">Write it in blank #5.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
-      <p class="riddle">This &#x27;crow is selling, don&#x27;t you know —
-A haunted house with room to grow!
-Three bedrooms, bats, one creaky stair —
-Scan the tag — your letter&#x27;s there!</p>
+      <p class="riddle">With a mighty mane and a friendly roar,
+This lion guards the trail&#x27;s north door.
+He&#x27;s king of scarecrows, brave and true —
+Scan the tag — he&#x27;s rooting for you!</p>
     </div>
-    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=505+N+Buckeye+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">Kokomo Area Lions</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">Take the Industrial Heritage Trail NORTH to 505 N Buckeye — do the Buckeye leg before dark!</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
+    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">UpCreations</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">Continue north along the trail to the Artist Alley north gateway.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
     <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
     <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
     <p class="share"><button type="button" id="shareBtn">&#x1f4f8; Love this scarecrow? Tap to share the hunt!</button></p>
@@ -288,9 +288,7 @@ Scan the tag — your letter&#x27;s there!</p>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
 (function () {
   try {
-    var m = location.pathname.match(/s(\d{2})\.html$/i);
-    if (!m) return;
-    var stop = m[1];
+    var stop = "05"; /* embedded: page served at an unguessable URL */
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
     var VKEY = "kokomoScarecrowsVisitedV2";
@@ -342,7 +340,7 @@ Scan the tag — your letter&#x27;s there!</p>
 (function () {
   var btn = document.getElementById("shareBtn");
   if (!btn) return;
-  var text = "I found the The Hardie Group Real Estate Company scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
+  var text = "I found the Kokomo Area Lions scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
   var url = "https://kokomoscarecrows.com/";
   var note = document.getElementById("shareNote");
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }
