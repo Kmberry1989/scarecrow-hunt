@@ -128,8 +128,8 @@
     <h1>Pix Pots Pottery</h1>
     <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-16.png" alt="Pix Pots Pottery logo" onerror="this.remove()"></div>
     <p class="label">Your letter is</p>
-    <div class="letter">N</div>
-    <p class="letter-line">Your letter is N &mdash; write it in blank #10.</p>
+    <div class="letter">U</div>
+    <p class="letter-line">Your letter is U &mdash; write it in blank #16.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
       <p class="riddle">Spinning clay both smooth and round,
@@ -194,8 +194,8 @@ Scan the tag with just a blink!</p>
     var stop = m[1];
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
-    var VKEY = "kokomoScarecrowsVisitedV1";
-    var LKEY = "kokomoScarecrowsLettersV1";
+    var VKEY = "kokomoScarecrowsVisitedV2";
+    var LKEY = "kokomoScarecrowsLettersV2";
     var visited = JSON.parse(localStorage.getItem(VKEY) || "[]");
     var letters = JSON.parse(localStorage.getItem(LKEY) || "{}");
     if (visited.indexOf(stop) === -1) visited.push(stop);

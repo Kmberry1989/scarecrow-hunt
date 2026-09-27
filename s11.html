@@ -126,8 +126,8 @@
     <h1>PF Hendricks LLC</h1>
     <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img src="logos/logo-11.png" alt="PF Hendricks LLC logo" onerror="this.remove()"></div>
     <p class="label">Your letter is</p>
-    <div class="letter">C</div>
-    <p class="letter-line">Your letter is C &mdash; write it in blank #1.</p>
+    <div class="letter">U</div>
+    <p class="letter-line">Your letter is U &mdash; write it in blank #11.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
       <p class="riddle">Treasures gathered far and wide,
@@ -192,8 +192,8 @@ Scan the tag — there&#x27;s fun for you!</p>
     var stop = m[1];
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
-    var VKEY = "kokomoScarecrowsVisitedV1";
-    var LKEY = "kokomoScarecrowsLettersV1";
+    var VKEY = "kokomoScarecrowsVisitedV2";
+    var LKEY = "kokomoScarecrowsLettersV2";
     var visited = JSON.parse(localStorage.getItem(VKEY) || "[]");
     var letters = JSON.parse(localStorage.getItem(LKEY) || "{}");
     if (visited.indexOf(stop) === -1) visited.push(stop);

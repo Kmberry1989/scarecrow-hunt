@@ -126,8 +126,8 @@
     <h1>The Hardie Group Real Estate Company</h1>
     <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-04.png" alt="The Hardie Group Real Estate Company logo" onerror="this.remove()"></div>
     <p class="label">Your letter is</p>
-    <div class="letter">E</div>
-    <p class="letter-line">Your letter is E &mdash; write it in blank #2.</p>
+    <div class="letter">D</div>
+    <p class="letter-line">Your letter is D &mdash; write it in blank #4.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
       <p class="riddle">This &#x27;crow is selling, don&#x27;t you know —
@@ -192,8 +192,8 @@ Scan the tag — your letter&#x27;s there!</p>
     var stop = m[1];
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
-    var VKEY = "kokomoScarecrowsVisitedV1";
-    var LKEY = "kokomoScarecrowsLettersV1";
+    var VKEY = "kokomoScarecrowsVisitedV2";
+    var LKEY = "kokomoScarecrowsLettersV2";
     var visited = JSON.parse(localStorage.getItem(VKEY) || "[]");
     var letters = JSON.parse(localStorage.getItem(LKEY) || "{}");
     if (visited.indexOf(stop) === -1) visited.push(stop);

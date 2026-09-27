@@ -126,8 +126,8 @@
     <h1>IUK SNAHP (Nursing &amp; Allied Health)</h1>
     <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img src="logos/logo-17.png" alt="IUK SNAHP (Nursing &amp; Allied Health) logo" onerror="this.remove()"></div>
     <p class="label">Your letter is</p>
-    <div class="letter">R</div>
-    <p class="letter-line">Your letter is R &mdash; write it in blank #6.</p>
+    <div class="letter">D</div>
+    <p class="letter-line">Your letter is D &mdash; write it in blank #17.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
       <p class="riddle">With gentle hands and healing art,
@@ -192,8 +192,8 @@ Scan the tag — you&#x27;re doing great!</p>
     var stop = m[1];
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
-    var VKEY = "kokomoScarecrowsVisitedV1";
-    var LKEY = "kokomoScarecrowsLettersV1";
+    var VKEY = "kokomoScarecrowsVisitedV2";
+    var LKEY = "kokomoScarecrowsLettersV2";
     var visited = JSON.parse(localStorage.getItem(VKEY) || "[]");
     var letters = JSON.parse(localStorage.getItem(LKEY) || "{}");
     if (visited.indexOf(stop) === -1) visited.push(stop);

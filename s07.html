@@ -126,8 +126,8 @@
     <h1>Oscar&#x27;s Pizza</h1>
     <div class="logo-frame"><span class="bat b1"><img src="img/bat-front.png" alt=""></span><span class="bat b2"><img src="img/bat-front.png" alt=""></span><img class="on-white" src="logos/logo-07.png" alt="Oscar&#x27;s Pizza logo" onerror="this.remove()"></div>
     <p class="label">Your letter is</p>
-    <div class="letter">E</div>
-    <p class="letter-line">Your letter is E &mdash; write it in blank #4.</p>
+    <div class="letter">N</div>
+    <p class="letter-line">Your letter is N &mdash; write it in blank #7.</p>
     <div class="clue-card">
       <p class="clue-label">&#x1f50d; About this scarecrow</p>
       <p class="riddle">A cheesy grin, a pepperoni vest —
@@ -192,8 +192,8 @@ Scan the tag — now isn&#x27;t that nice?</p>
     var stop = m[1];
     var letterEl = document.querySelector(".letter");
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
-    var VKEY = "kokomoScarecrowsVisitedV1";
-    var LKEY = "kokomoScarecrowsLettersV1";
+    var VKEY = "kokomoScarecrowsVisitedV2";
+    var LKEY = "kokomoScarecrowsLettersV2";
     var visited = JSON.parse(localStorage.getItem(VKEY) || "[]");
     var letters = JSON.parse(localStorage.getItem(LKEY) || "{}");
     if (visited.indexOf(stop) === -1) visited.push(stop);
