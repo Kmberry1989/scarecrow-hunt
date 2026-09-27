@@ -11,7 +11,7 @@
   body {
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: #150c28; color: #fff; min-height: 100vh; min-height: 100dvh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    display: flex; flex-direction: column; align-items: center;
     text-align: center; padding: calc(64px + env(safe-area-inset-top, 0px)) 20px 28px; overflow-x: hidden; position: relative;
   }
   #fog { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: .85; }
@@ -34,7 +34,7 @@
     75% { transform: translateX(90vw) translateY(-20px); }
     100% { transform: translateX(118vw) translateY(0); }
   }
-  main { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+  main { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; margin: auto 0; }
   .kicker { color: #ffb347; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
     text-shadow: 0 0 18px rgba(255,179,71,.6); }
   .num { color: #c9b8e8; font-size: 15px; margin-bottom: 26px; }
@@ -127,7 +127,7 @@
   </style>
 <style>
 /* Solve celebration: phrase assembles spookily, then a friendly scarecrow pops up. */
-.solve-veil { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center;
+.solve-veil { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center;
   background: radial-gradient(ellipse at 50% 35%, rgba(46,18,80,.98), rgba(8,4,18,.995));
   opacity: 0; transition: opacity .9s ease; padding: 22px; overflow-y: auto; }
 .solve-veil[hidden] { display: none; }
