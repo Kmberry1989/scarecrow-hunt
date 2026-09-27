@@ -538,7 +538,7 @@
 
     <aside class="notice" role="note">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 21V4m0 0h11l-2.5 3L16 10H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Begin at the First Friday Welcome Booth on Courthouse Square. Scan the QR code at each scarecrow and let its riddle lead you onward. Turn in your completed passport at Artworks Gallery, 210 N. Main St.</span>
+      <span>Start at any scarecrow and visit in any order. Scan the QR code on each pumpkin to collect its letter and the riddle to your next stop. Turn in your finished hunt card at Artworks Gallery (210 N. Main St., upstairs) or Fired Arts Studio (111 W Sycamore St.) &mdash; every completed card enters the Mystery Prize Basket drawing.</span>
     </aside>
 
     <section class="toolbar" aria-label="Map controls">
@@ -586,9 +586,9 @@
     </section>
 
     <div class="legend" aria-label="Map legend">
-      <span><i class="legend-flag" aria-hidden="true">⚑</i> Welcome Booth start</span>
+      <span><i class="legend-flag" aria-hidden="true">⚑</i> Welcome Booth</span>
       <span><i class="legend-dot" aria-hidden="true"></i> Scarecrow location</span>
-      <span><i class="legend-star" aria-hidden="true">★</i> Passport turn-in</span>
+      <span><i class="legend-star" aria-hidden="true">★</i> Card turn-in</span>
     </div>
 
     <footer>
@@ -711,10 +711,10 @@
       }
 
       function extraPopupHtml(place) {
-        var kicker = place.kind === "start" ? "Hunt start" : "Passport turn-in";
+        var kicker = place.kind === "start" ? "Welcome Booth" : "Card turn-in";
         var detail = place.kind === "start"
-          ? "<div class=\"popup-riddle\"><strong>Your first riddle</strong><p>Welcome, hunter! The hunt begins right here —<br>Your first scarecrow is close, never fear!<br>Walk west on Sycamore where neighbors all meet:<br>Find the Community Foundation at 215 West Sycamore Street!</p></div>"
-          : "<div class=\"popup-note\">Submit your completed passport and cast your People’s Choice vote.</div>";
+          ? "<div class=\"popup-riddle\"><strong>Welcome, hunter!</strong><p>Start at any scarecrow &mdash; no fixed route. Scan each pumpkin&rsquo;s QR code to collect its letter and the riddle to your next stop. Free hunt cards at Artworks Gallery (210 N Main, at the door) or Fired Arts Studio (111 W Sycamore).</p></div>"
+          : "<div class=\"popup-note\">Turn in your finished hunt card here (upstairs) or at Fired Arts Studio, 111 W Sycamore. Every completed card enters the Mystery Prize Basket drawing.</div>";
         return "<div class=\"popup-kicker\">" + kicker + "</div>" +
           "<div class=\"popup-title\">" + escapeHtml(place.title) + "</div>" +
           "<div class=\"popup-address\">" + escapeHtml(place.address) + "</div>" +
