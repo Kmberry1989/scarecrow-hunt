@@ -366,12 +366,6 @@
       display: flex; align-items: center; justify-content: space-between; gap: .75rem;
       font-size: .85rem; font-weight: 800;
     }
-    .checklist-reset {
-      border: 1px solid var(--line); background: transparent; color: var(--muted);
-      border-radius: 999px; padding: .32rem .75rem; font-size: .72rem; font-weight: 700;
-      cursor: pointer; flex: none;
-    }
-    .checklist-reset:hover { color: var(--ink); border-color: var(--muted); }
     .letter-bank { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .65rem; }
     .letter-bank .bank-slot {
       width: 1.7rem; height: 1.7rem; display: inline-flex; align-items: center; justify-content: center;
@@ -383,18 +377,7 @@
       background: color-mix(in srgb, var(--gold) 20%, transparent);
     }
     .checklist-hint { margin: .6rem 0 0; font-size: .72rem; color: var(--muted); line-height: 1.5; }
-    .location-row { position: relative; }
-    .location-card.has-toggle { padding-left: 2.9rem; }
     .location-card.visited { background: color-mix(in srgb, var(--gold) 9%, transparent); }
-    .visit-toggle {
-      position: absolute; left: .6rem; top: 50%; transform: translateY(-50%);
-      width: 1.7rem; height: 1.7rem; border-radius: 50%;
-      border: 2px solid var(--muted); background: transparent; color: transparent;
-      font-size: 1.05rem; font-weight: 900; line-height: 1; cursor: pointer; padding: 0;
-      display: inline-flex; align-items: center; justify-content: center; flex: none;
-    }
-    .visit-toggle.done { border-color: #3fae5a; background: #3fae5a; color: #fff; }
-    .visit-toggle:hover { border-color: var(--ink); }
     .stop-badge {
       display: inline-flex !important; align-items: center; justify-content: center;
       width: 1.5rem; height: 1.5rem; border-radius: 50%;
@@ -594,10 +577,9 @@
         <div class="checklist-progress" id="checklist-progress">
           <div class="progress-line">
             <span id="checklist-count">0 of 21 checked off</span>
-            <button class="checklist-reset" id="checklist-reset" type="button">Start over</button>
           </div>
           <div class="letter-bank" id="letter-bank" aria-label="Letters gathered so far"></div>
-          <p class="checklist-hint">Scanning a scarecrow&rsquo;s QR code checks it off and banks its letter automatically &mdash; or tap a circle to mark one by hand.</p>
+          <p class="checklist-hint">Scanning a scarecrow&rsquo;s QR code checks it off and banks its letter automatically. No scan, no check &mdash; that&rsquo;s the game.</p>
         </div>
         <ol class="location-list" id="location-list"></ol>
       </aside>
@@ -686,9 +668,6 @@
           return (l && typeof l === "object") ? l : {};
         } catch (e) { return {}; }
       }
-      function saveVisited(list) {
-        try { localStorage.setItem(VISIT_KEY, JSON.stringify(list)); } catch (e) {}
-      }
       function updateChecklist() {
         var visited = loadVisited();
         var letters = loadLetters();
@@ -711,18 +690,6 @@
         }
       }
 
-      var resetBtn = document.getElementById("checklist-reset");
-      if (resetBtn) {
-        resetBtn.addEventListener("click", function () {
-          if (!window.confirm("Clear your checklist and letter bank on this phone?")) return;
-          try {
-            localStorage.removeItem(VISIT_KEY);
-            localStorage.removeItem(LETTER_KEY);
-          } catch (e) {}
-          renderList(currentQuery);
-          updateChecklist();
-        });
-      }
 
       function escapeHtml(value) {
         return String(value).replace(/[&<>'"]/g, function (char) {
@@ -770,25 +737,9 @@
           row.className = "location-row";
           var stopNum = STOP_BY_SPONSOR[place.sponsor] || "";
           var isDone = stopNum !== "" && visitedNow.indexOf(stopNum) !== -1;
-          var toggle = document.createElement("button");
-          toggle.type = "button";
-          toggle.className = "visit-toggle" + (isDone ? " done" : "");
-          toggle.innerHTML = "&#10003;";
-          toggle.setAttribute("aria-pressed", isDone ? "true" : "false");
-          toggle.setAttribute("aria-label", (isDone ? "Unmark " : "Check off ") + place.sponsor);
-          toggle.addEventListener("click", function (ev) {
-            ev.stopPropagation();
-            var saved = loadVisited();
-            var at = stopNum ? saved.indexOf(stopNum) : -1;
-            if (at === -1) { if (stopNum) saved.push(stopNum); }
-            else { saved.splice(at, 1); }
-            saveVisited(saved);
-            renderList(currentQuery);
-            updateChecklist();
-          });
           var button = document.createElement("button");
           button.type = "button";
-          button.className = "location-card has-toggle" + (isDone ? " visited" : "");
+          button.className = "location-card" + (isDone ? " visited" : "");
           button.innerHTML =
             "<span class=\"location-copy\"><strong>" +
             (stopNum ? "<span class=\"stop-badge\" aria-hidden=\"true\">" + parseInt(stopNum, 10) + "</span>" : "") +
@@ -799,7 +750,6 @@
             "<svg class=\"row-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
           button.setAttribute("aria-label", "Show " + place.sponsor + " on the map");
           button.addEventListener("click", function () { focusPlace(place); });
-          row.appendChild(toggle);
           row.appendChild(button);
           list.appendChild(row);
         });
