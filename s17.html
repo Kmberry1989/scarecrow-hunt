@@ -192,8 +192,14 @@ Scan the tag — you&#x27;re doing great!</p>
 <script data-goatcounter="https://kmberry1989.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 <style>
-  .letter-bank-line { color:#c9b8e8; font-size:14px; margin:22px 0 0; line-height:2; text-align:center; }
-  .letter-bank-line span { display:block; letter-spacing:5px; font-weight:700; color:#ffd166; font-size:18px; }
+  .letter-bank-title { color:#c9b8e8; font-size:14px; margin:22px 0 10px; text-align:center; }
+  .letter-bank { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-width:470px; margin:0 auto; }
+  .lb-word { display:flex; gap:6px; }
+  .lb-cell { width:36px; height:46px; display:flex; align-items:center; justify-content:center;
+    border:2px solid rgba(255,209,102,.45); border-radius:8px;
+    font-size:21px; font-weight:800; color:#ffd166; background:rgba(255,209,102,.06); }
+  .lb-cell.lb-empty { border-style:dashed; color:#6f5f9e; font-size:13px; font-weight:700; }
+  .lb-cell.lb-pre { border-color:#ffd166; background:rgba(255,209,102,.16); }
 </style>
 <script>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
@@ -212,17 +218,39 @@ Scan the tag — you&#x27;re doing great!</p>
     if (/^[A-Z]$/.test(letter)) letters[stop] = letter;
     localStorage.setItem(VKEY, JSON.stringify(visited));
     localStorage.setItem(LKEY, JSON.stringify(letters));
-    var bank = [];
-    for (var i = 1; i <= 21; i++) {
-      var k = ("0" + i).slice(-2);
-      bank.push(letters[k] || "\u00B7");
-    }
-    var line = document.createElement("p");
-    line.className = "letter-bank-line";
-    line.innerHTML = "Your letter bank so far<br><span>" + bank.join(" ") + "</span>";
+    var WORDS = [["O",1,15],[6,10,18,4,13,8,17],[3,16,21,11,19,7,14],[20,2],[5,9,12]];
+    var wrap = document.createElement("div");
+    var title = document.createElement("p");
+    title.className = "letter-bank-title";
+    title.textContent = "Your letter bank so far";
+    wrap.appendChild(title);
+    var grid = document.createElement("div");
+    grid.className = "letter-bank";
+    grid.setAttribute("aria-label", "Letters placed in their card blanks");
+    WORDS.forEach(function (word) {
+      var w = document.createElement("div");
+      w.className = "lb-word";
+      word.forEach(function (slot) {
+        var c = document.createElement("span");
+        if (slot === "O") {
+          c.className = "lb-cell lb-pre";
+          c.textContent = "O";
+          c.title = "Pre-printed on your card";
+        } else {
+          var k = ("0" + slot).slice(-2);
+          var L = letters[k];
+          c.className = "lb-cell" + (L ? " lb-found" : " lb-empty");
+          c.textContent = L || slot;
+          c.title = "Blank #" + slot + (L ? ": letter " + L : " (not found yet)");
+        }
+        w.appendChild(c);
+      });
+      grid.appendChild(w);
+    });
+    wrap.appendChild(grid);
     var anchor = document.querySelector(".letter-line");
-    if (anchor && anchor.insertAdjacentElement) anchor.insertAdjacentElement("afterend", line);
-    else document.body.appendChild(line);
+    if (anchor && anchor.insertAdjacentElement) anchor.insertAdjacentElement("afterend", wrap);
+    else document.body.appendChild(wrap);
   } catch (e) { /* storage unavailable (private mode) - page still works */ }
 })();
 </script>

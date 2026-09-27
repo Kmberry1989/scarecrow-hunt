@@ -366,7 +366,8 @@
       display: flex; align-items: center; justify-content: space-between; gap: .75rem;
       font-size: .85rem; font-weight: 800;
     }
-    .letter-bank { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .65rem; }
+    .letter-bank { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: .65rem; align-items: center; }
+    .bank-word { display: inline-flex; gap: .3rem; }
     .letter-bank .bank-slot {
       width: 1.7rem; height: 1.7rem; display: inline-flex; align-items: center; justify-content: center;
       border: 1px dashed var(--muted); border-radius: .45rem;
@@ -375,6 +376,10 @@
     .letter-bank .bank-slot.found {
       border-style: solid; border-color: var(--gold); color: var(--ink);
       background: color-mix(in srgb, var(--gold) 20%, transparent);
+    }
+    .letter-bank .bank-slot.pre {
+      border-style: solid; border-color: var(--gold); color: var(--gold);
+      background: color-mix(in srgb, var(--gold) 30%, transparent);
     }
     .checklist-hint { margin: .6rem 0 0; font-size: .72rem; color: var(--muted); line-height: 1.5; }
     .location-card.visited { background: color-mix(in srgb, var(--gold) 9%, transparent); }
@@ -680,14 +685,26 @@
         var bank = document.getElementById("letter-bank");
         if (bank) {
           bank.innerHTML = "";
-          for (var i = 1; i <= 21; i++) {
-            var k = ("0" + i).slice(-2);
-            var slot = document.createElement("span");
-            slot.className = "bank-slot" + (letters[k] ? " found" : "");
-            slot.textContent = letters[k] || "\u00B7";
-            slot.title = "Stop " + i + (letters[k] ? ": letter " + letters[k] : " (not visited)");
-            bank.appendChild(slot);
-          }
+          var WORDS = [["O",1,15],[6,10,18,4,13,8,17],[3,16,21,11,19,7,14],[20,2],[5,9,12]];
+          WORDS.forEach(function (word) {
+            var w = document.createElement("span");
+            w.className = "bank-word";
+            word.forEach(function (slot) {
+              var s = document.createElement("span");
+              if (slot === "O") {
+                s.className = "bank-slot pre";
+                s.textContent = "O";
+                s.title = "Pre-printed on your card";
+              } else {
+                var k = ("0" + slot).slice(-2);
+                s.className = "bank-slot" + (letters[k] ? " found" : "");
+                s.textContent = letters[k] || slot;
+                s.title = "Blank #" + slot + (letters[k] ? ": letter " + letters[k] : " (not visited)");
+              }
+              w.appendChild(s);
+            });
+            bank.appendChild(w);
+          });
         }
       }
 
