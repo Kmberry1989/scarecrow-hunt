@@ -178,5 +178,41 @@ Scan the tag — you&#x27;re doing great!</p>
 })();
 </script>
 <script data-goatcounter="https://kmberry1989.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+
+<style>
+  .letter-bank-line { color:#c9b8e8; font-size:14px; margin:22px 0 0; line-height:2; text-align:center; }
+  .letter-bank-line span { display:block; letter-spacing:5px; font-weight:700; color:#ffd166; font-size:18px; }
+</style>
+<script>
+/* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
+(function () {
+  try {
+    var m = location.pathname.match(/s(\d{2})\.html$/i);
+    if (!m) return;
+    var stop = m[1];
+    var letterEl = document.querySelector(".letter");
+    var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
+    var VKEY = "kokomoScarecrowsVisitedV1";
+    var LKEY = "kokomoScarecrowsLettersV1";
+    var visited = JSON.parse(localStorage.getItem(VKEY) || "[]");
+    var letters = JSON.parse(localStorage.getItem(LKEY) || "{}");
+    if (visited.indexOf(stop) === -1) visited.push(stop);
+    if (/^[A-Z]$/.test(letter)) letters[stop] = letter;
+    localStorage.setItem(VKEY, JSON.stringify(visited));
+    localStorage.setItem(LKEY, JSON.stringify(letters));
+    var bank = [];
+    for (var i = 1; i <= 21; i++) {
+      var k = ("0" + i).slice(-2);
+      bank.push(letters[k] || "\u00B7");
+    }
+    var line = document.createElement("p");
+    line.className = "letter-bank-line";
+    line.innerHTML = "Your letter bank so far<br><span>" + bank.join(" ") + "</span>";
+    var anchor = document.querySelector(".letter-line");
+    if (anchor && anchor.insertAdjacentElement) anchor.insertAdjacentElement("afterend", line);
+    else document.body.appendChild(line);
+  } catch (e) { /* storage unavailable (private mode) - page still works */ }
+})();
+</script>
 </body>
 </html>
