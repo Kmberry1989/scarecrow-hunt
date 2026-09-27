@@ -79,10 +79,12 @@
     background: rgba(24,12,46,.62); box-shadow: 0 0 24px rgba(138,63,252,.18);
   }
   .next-card {
+    display: block; text-decoration: none; color: inherit;
     margin: 4px 0 20px; padding: 20px 22px; max-width: 440px;
     border: 2px solid rgba(255,179,71,.6); border-radius: 16px;
     background: rgba(46,24,8,.55); box-shadow: 0 0 24px rgba(255,179,71,.18);
   }
+  .next-card:active { transform: scale(.98); }
   .finale-card {
     margin: 4px 0 20px; padding: 22px 24px; max-width: 460px;
     border: 3px solid #ffd166; border-radius: 16px;
@@ -99,6 +101,7 @@
     white-space: pre-line; }
   .next-name { font-size: 21px; font-weight: 800; color: #ffd166; margin: 4px 0 8px; }
   .next-dir { font-size: 16px; line-height: 1.6; color: #f3e9ff; }
+  .next-hint { font-size: 13px; color: #ffd166; opacity: .85; margin: 10px 0 0; }
   .anyorder { color: #c9b8e8; font-size: 14px; font-style: italic; margin: 2px 0 24px; max-width: 380px; }
   .foot { color: #c9b8e8; font-size: 14px; line-height: 1.7; max-width: 400px; }
   .foot strong { color: #ffd166; }
@@ -167,10 +170,20 @@
 .solve-gotcha { font-size: 26px; font-weight: 800; color: #ffd166; margin: 6px 0 10px; }
 .solve-msg p { color: #f3e9ff; font-size: 16px; line-height: 1.6; margin: 8px 0; }
 .solve-msg strong { color: #ffd166; }
-.solve-close { margin-top: 14px; background: #f5b301; color: #141414; font-size: 17px; font-weight: 800;
+.solve-actions { display: flex; gap: 12px; justify-content: center; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+.solve-close { background: #f5b301; color: #141414; font-size: 17px; font-weight: 800;
   border: none; border-radius: 999px; padding: 12px 34px; cursor: pointer;
   box-shadow: 0 0 26px rgba(245,179,1,.45); }
 .solve-close:active { transform: scale(.96); }
+.solve-replay-inline { background: transparent; color: #ffd166; font-size: 15px; font-weight: 700;
+  border: 2px solid rgba(255,209,102,.7); border-radius: 999px; padding: 10px 22px; cursor: pointer; }
+.solve-replay-inline:active { transform: scale(.96); }
+.solve-replay-fab { position: fixed; right: 16px; bottom: 16px; z-index: 9000; width: 54px; height: 54px;
+  border-radius: 50%; border: 2px solid rgba(255,209,102,.85); background: rgba(21,12,40,.94); color: #ffd166;
+  font-size: 26px; line-height: 1; cursor: pointer; box-shadow: 0 0 20px rgba(255,177,71,.4);
+  display: flex; align-items: center; justify-content: center; }
+.solve-replay-fab[hidden] { display: none; }
+.solve-replay-fab:active { transform: scale(.92); }
 @media (max-width: 400px) {
   .solve-letter { width: 28px; height: 38px; font-size: 17px; }
   .solve-word { gap: 4px; }
@@ -208,7 +221,7 @@ Burgers, brews, and happy sighs!
 This foodie &#x27;crow has quite the taste —
 Scan the tag — no time to waste!</p>
     </div>
-    <div class="next-card"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">First Farmers Bank &amp; Trust</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">East on Sycamore.</p></div>
+    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=101+W+Sycamore+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">First Farmers Bank &amp; Trust</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">East on Sycamore.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
     <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
     <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
     <p class="share"><button type="button" id="shareBtn">&#x1f4f8; Love this scarecrow? Tap to share the hunt!</button></p>
@@ -524,15 +537,20 @@ Scan the tag — no time to waste!</p>
       <p>You cracked the secret phrase &mdash; <strong>ONE HUNDRED AUTUMNS OF ART</strong>!</p>
       <p>Thank you for being part of our First Friday Scarecrow Scavenger Hunt. &#x1f383;</p>
       <p>Turn in your card at <strong>Artworks Gallery</strong> or <strong>Fired Arts Studio</strong> to enter the <strong>Mystery Prize Basket</strong> drawing! &#x1f381;</p>
-      <button type="button" class="solve-close" id="solveClose">Hooray! &#x1f389;</button>
+      <div class="solve-actions">
+        <button type="button" class="solve-close" id="solveClose">Hooray! &#x1f389;</button>
+        <button type="button" class="solve-replay-inline" id="solveReplayInline">&#x21bb; Replay</button>
+      </div>
     </div>
   </div>
 </div>
+<button type="button" class="solve-replay-fab" id="solveReplay" hidden aria-label="Replay the celebration">&#x21bb;</button>
 
 
 <script>
 /* Solve celebration: when all 21 letters are banked, the phrase assembles with a
-   spooky flourish, then a friendly scarecrow pops up with a tiny jump scare. */
+   spooky flourish, then a friendly scarecrow pops up with a tiny jump scare.
+   Plays once automatically; the looping-arrow replay buttons let anyone rewatch. */
 (function () {
   try {
     var LKEY = "kokomoScarecrowsLettersV2";
@@ -541,61 +559,83 @@ Scan the tag — no time to waste!</p>
     var n = 0, k;
     for (k in letters) { if (/^[A-Z]$/.test(letters[k])) n++; }
     if (n < 21) return;
-    if (localStorage.getItem(CKEY)) return;
     var veil = document.getElementById("solveVeil");
     var phrase = document.getElementById("solvePhrase");
     var msg = document.getElementById("solveMsg");
     var closeBtn = document.getElementById("solveClose");
+    var replayFab = document.getElementById("solveReplay");
+    var replayInline = document.getElementById("solveReplayInline");
     if (!veil || !phrase || !msg || !closeBtn) return;
-    localStorage.setItem(CKEY, "1");
     var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
     var WORDS = [["O",1,15],[6,10,18,4,13,8,17],[3,16,21,11,19,7,14],[20,2],[5,9,12]];
     var order = 0;
-    WORDS.forEach(function (word) {
-      var w = document.createElement("div");
-      w.className = "solve-word";
-      word.forEach(function (slot) {
-        var L = (slot === "O") ? "O" : (letters[("0" + slot).slice(-2)] || "?");
-        var c = document.createElement("span");
-        c.className = "solve-letter";
-        c.textContent = L;
-        if (!reduce) {
-          c.style.setProperty("--sx", Math.round((Math.random() - .5) * 260) + "px");
-          c.style.setProperty("--sy", Math.round((Math.random() - .5) * 300) + "px");
-          c.style.setProperty("--sr", Math.round((Math.random() - .5) * 360) + "deg");
-          c.style.transitionDelay = (order * 0.055) + "s";
-        }
-        order++;
-        w.appendChild(c);
+    function buildPhrase() {
+      order = 0;
+      phrase.innerHTML = "";
+      WORDS.forEach(function (word) {
+        var w = document.createElement("div");
+        w.className = "solve-word";
+        word.forEach(function (slot) {
+          var L = (slot === "O") ? "O" : (letters[("0" + slot).slice(-2)] || "?");
+          var c = document.createElement("span");
+          c.className = "solve-letter";
+          c.textContent = L;
+          if (!reduce) {
+            c.style.setProperty("--sx", Math.round((Math.random() - .5) * 260) + "px");
+            c.style.setProperty("--sy", Math.round((Math.random() - .5) * 300) + "px");
+            c.style.setProperty("--sr", Math.round((Math.random() - .5) * 360) + "deg");
+            c.style.transitionDelay = (order * 0.055) + "s";
+          }
+          order++;
+          w.appendChild(c);
+        });
+        phrase.appendChild(w);
       });
-      phrase.appendChild(w);
-    });
+    }
     function showMsg() {
       msg.hidden = false;
       requestAnimationFrame(function(){ requestAnimationFrame(function(){ msg.classList.add("show"); }); });
     }
+    function playCelebration(delay) {
+      veil.classList.remove("show", "assemble", "boo");
+      msg.classList.remove("show");
+      msg.hidden = true;
+      veil.hidden = true;
+      buildPhrase();
+      void veil.offsetWidth;
+      setTimeout(function () {
+        veil.hidden = false;
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){
+          veil.classList.add("show");
+          if (reduce) {
+            veil.classList.add("assemble", "boo");
+            showMsg();
+            return;
+          }
+          var t = 500;
+          setTimeout(function(){ veil.classList.add("assemble"); }, t);
+          t += order * 55 + 900;
+          setTimeout(function(){ veil.classList.add("boo"); }, t);
+          t += 1400;
+          setTimeout(showMsg, t);
+        }); });
+      }, delay);
+    }
+    function showReplayFab() {
+      if (replayFab) replayFab.hidden = false;
+    }
     closeBtn.addEventListener("click", function () {
       veil.classList.remove("show");
-      setTimeout(function(){ veil.hidden = true; }, 900);
+      setTimeout(function(){ veil.hidden = true; showReplayFab(); }, 900);
     });
-    if (reduce) {
-      veil.hidden = false;
-      veil.classList.add("show", "assemble", "boo");
-      showMsg();
-      return;
+    if (replayFab) replayFab.addEventListener("click", function(){ playCelebration(700); });
+    if (replayInline) replayInline.addEventListener("click", function(){ playCelebration(700); });
+    if (localStorage.getItem(CKEY)) {
+      showReplayFab();
+    } else {
+      localStorage.setItem(CKEY, "1");
+      playCelebration(2400);
     }
-    setTimeout(function () {
-      veil.hidden = false;
-      requestAnimationFrame(function(){ requestAnimationFrame(function(){
-        veil.classList.add("show");
-        var t = 500;
-        setTimeout(function(){ veil.classList.add("assemble"); }, t);
-        t += order * 55 + 900;
-        setTimeout(function(){ veil.classList.add("boo"); }, t);
-        t += 1400;
-        setTimeout(showMsg, t);
-      }); });
-    }, 2400);
   } catch (e) { /* celebration is optional - never break the page */ }
 })();
 </script>
