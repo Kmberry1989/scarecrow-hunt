@@ -586,14 +586,12 @@
     </section>
 
     <div class="legend" aria-label="Map legend">
-      <span><i class="legend-flag" aria-hidden="true">⚑</i> Welcome Booth</span>
       <span><i class="legend-dot" aria-hidden="true"></i> Scarecrow location</span>
       <span><i class="legend-star" aria-hidden="true">★</i> Card turn-in</span>
     </div>
 
     <footer>
       <div><strong>Presented by the Kokomo Art Association</strong><br />Celebrating 100 years of art in Kokomo · 1926–2026</div>
-      <div class="source-note">Locations updated September 24, 2026<br />Pins sourced from Rochelle Berry’s “2026 KAA Scarecrows” Google Maps list; two provisional business-address pins await exact placement confirmation</div>
     </footer>
   </main>
 
@@ -627,7 +625,6 @@
       ];
 
       var extraMarkers = [
-        {kind:"start", title:"First Friday Welcome Booth", address:"Courthouse Square Info Hub", lat:40.48645, lng:-86.13260},
         {kind:"turnin", title:"Artworks Gallery", address:"210 N. Main St.", lat:40.48781, lng:-86.13088}
       ];
 
@@ -711,11 +708,8 @@
       }
 
       function extraPopupHtml(place) {
-        var kicker = place.kind === "start" ? "Welcome Booth" : "Card turn-in";
-        var detail = place.kind === "start"
-          ? "<div class=\"popup-riddle\"><strong>Welcome, hunter!</strong><p>Start at any scarecrow &mdash; no fixed route. Scan each pumpkin&rsquo;s QR code to collect its letter and the riddle to your next stop. Free hunt cards at Artworks Gallery (210 N Main, at the door) or Fired Arts Studio (111 W Sycamore).</p></div>"
-          : "<div class=\"popup-note\">Turn in your finished hunt card here (upstairs) or at Fired Arts Studio, 111 W Sycamore. Every completed card enters the Mystery Prize Basket drawing.</div>";
-        return "<div class=\"popup-kicker\">" + kicker + "</div>" +
+        var detail = "<div class=\"popup-note\">Turn in your finished hunt card here (upstairs) or at Fired Arts Studio, 111 W Sycamore. Every completed card enters the Mystery Prize Basket drawing.</div>";
+        return "<div class=\"popup-kicker\">Card turn-in</div>" +
           "<div class=\"popup-title\">" + escapeHtml(place.title) + "</div>" +
           "<div class=\"popup-address\">" + escapeHtml(place.address) + "</div>" +
           detail +
@@ -806,10 +800,9 @@
         });
 
         extraMarkers.forEach(function (place) {
-          var isStart = place.kind === "start";
           var icon = L.divIcon({
-            className:isStart ? "start-icon" : "turnin-icon",
-            html:isStart ? "<div class=\"flag-shell\" aria-hidden=\"true\">⚑</div>" : "<div class=\"star-shell\" aria-hidden=\"true\">★</div>",
+            className:"turnin-icon",
+            html:"<div class=\"star-shell\" aria-hidden=\"true\">★</div>",
             iconSize:[42,42],
             iconAnchor:[21,21],
             popupAnchor:[0,-22]
