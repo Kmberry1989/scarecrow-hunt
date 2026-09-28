@@ -222,7 +222,7 @@ Scan the tag and join the dance!</p>
     PATHS.push({ p: new Path2D(SHAPES[si][0]), cx: SHAPES[si][1], cy: SHAPES[si][2], m: SHAPES[si][3] });
   }
   var COLORS = [[217,72,28],[232,114,42],[232,163,61],[240,180,41],[168,58,28]];
-  var CYCLE_MS = 14000;
+  var CYCLE_MS = 22000;
   function mixc(a, b, f){
     return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f];
   }
@@ -246,12 +246,12 @@ Scan the tag and join the dance!</p>
     this.x = Math.random() * W;
     this.y = seedTop ? Math.random() * H : -40 - Math.random() * 60;
     this.s = 9 + Math.random() * 16;
-    this.fall = .5 + Math.random() * 1.1;
+    this.fall = .25 + Math.random() * .55;
     this.swayAmp = 18 + Math.random() * 46;
-    this.swayFreq = .004 + Math.random() * .009;
+    this.swayFreq = .002 + Math.random() * .0045;
     this.phase = Math.random() * Math.PI * 2;
     this.rot = Math.random() * Math.PI * 2;
-    this.rotSpd = (Math.random() - .5) * .03;
+    this.rotSpd = (Math.random() - .5) * .015;
     this.huePhase = Math.random();
     this.alpha = .45 + Math.random() * .4;
   }
@@ -259,7 +259,7 @@ Scan the tag and join the dance!</p>
     var x = l.x + Math.sin(t * l.swayFreq + l.phase) * l.swayAmp;
     ctx.save();
     ctx.translate(x, l.y);
-    ctx.rotate(l.rot + Math.sin(t * .001 + l.phase) * .4);
+    ctx.rotate(l.rot + Math.sin(t * .0005 + l.phase) * .4);
     var k = (2 * l.s) / l.shape.m;
     ctx.scale(k, -k);
     ctx.translate(-l.shape.cx, -l.shape.cy);
@@ -366,7 +366,7 @@ Scan the tag and join the dance!</p>
 (function () {
   var btn = document.getElementById("shareBtn");
   if (!btn) return;
-  var text = "I found the Indiana Underdog Martial Arts scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃🍂";
+  var text = "I found the Indiana Underdog Martial Arts scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃";
   var url = "https://kokomoscarecrows.com/";
   var note = document.getElementById("shareNote");
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }
@@ -520,7 +520,7 @@ Scan the tag and join the dance!</p>
 
 <div class="solve-veil" id="solveVeil" hidden>
   <div class="solve-inner" role="dialog" aria-modal="true" aria-label="You solved the secret phrase!">
-    <p class="solve-kicker">&#x1f342; You found every scarecrow! &#x1f342;</p>
+    <p class="solve-kicker">You found every scarecrow! </p>
     <div class="solve-phrase" id="solvePhrase" aria-label="The solved secret phrase"></div>
     <div class="solve-stage">
       <div class="solve-scare" aria-hidden="true">
@@ -557,9 +557,9 @@ Scan the tag and join the dance!</p>
       <p class="solve-boo" aria-hidden="true">HOORAY!</p>
     </div>
     <div class="solve-msg" id="solveMsg" hidden>
-      <p class="solve-gotcha">Amazing! &#x1f342;</p>
+      <p class="solve-gotcha">Amazing! </p>
       <p>You cracked the secret phrase &mdash; <strong>ONE HUNDRED AUTUMNS OF ART</strong>!</p>
-      <p>Thank you for being part of our First Friday Scarecrow Scavenger Hunt. &#x1f342;</p>
+      <p>Thank you for being part of our First Friday Scarecrow Scavenger Hunt. </p>
       <p>Turn in your card at <strong>Artworks Gallery</strong> or <strong>Fired Arts Studio</strong> to enter the <strong>Mystery Prize Basket</strong> drawing! &#x1f381;</p>
       <div class="solve-actions">
         <button type="button" class="solve-close" id="solveClose">Hooray! &#x1f389;</button>

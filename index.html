@@ -81,8 +81,8 @@
         <span class="cent">Celebrating 100 years of art in Kokomo &mdash; 1926&ndash;2026</span>
       </a>
     </div>
-    <h1 class="autumn">&#x1f342; Thank You to Our First Friday Sponsors!</h1>
-    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible.</p> <div class="howto" style="max-width:640px;margin:0 auto 8px;padding:18px 22px;border:1px solid rgba(200,90,23,.35);border-radius:16px;background:rgba(232,114,42,.08);text-align:left;">   <h2 style="margin:0 0 10px;font-size:22px;">&#x1f342; How the hunt works</h2>   <p style="margin:6px 0;"><strong>First Friday, October 2</strong> &mdash; downtown Kokomo</p>   <ol style="margin:8px 0;padding-left:22px;line-height:1.65;">     <li><strong>Grab a passport</strong> &mdash; free hunt card at Artworks Gallery (210 N Main St) or Fired Arts Studio (111 W Sycamore St).</li>     <li><strong>Find all 21 scarecrows</strong> &mdash; scan each pumpkin&rsquo;s QR code with your phone to collect its letter.</li>     <li><strong>Crack the phrase</strong> &mdash; unscramble the secret phrase, turn in your card at either spot, and you&rsquo;re entered in the Mystery Prize Basket drawing.</li>   </ol>   <p style="margin:8px 0 0;font-size:14px;opacity:.85;">Please use crosswalks, and bring a phone and/or flashlight after dark. &#x1f526;</p> </div> <p class="map-cta" style="text-align:center;margin:6px 0 26px;"><a href="map.html" style="display:inline-block;padding:14px 30px;border-radius:999px;background:#d9481c;color:#fff;font-weight:800;font-size:17px;text-decoration:none;box-shadow:0 0 22px rgba(217,72,28,.40);">&#x1f5fa;&#xfe0f; View the Scarecrow Trail Map</a></p>
+    <h1 class="autumn">Thank You to Our First Friday Sponsors!</h1>
+    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible.</p> <div class="howto" style="max-width:640px;margin:0 auto 8px;padding:18px 22px;border:1px solid rgba(200,90,23,.35);border-radius:16px;background:rgba(232,114,42,.08);text-align:left;">   <h2 style="margin:0 0 10px;font-size:22px;">How the hunt works</h2>   <p style="margin:6px 0;"><strong>First Friday, October 2</strong> &mdash; downtown Kokomo</p>   <ol style="margin:8px 0;padding-left:22px;line-height:1.65;">     <li><strong>Grab a passport</strong> &mdash; free hunt card at Artworks Gallery (210 N Main St) or Fired Arts Studio (111 W Sycamore St).</li>     <li><strong>Find all 21 scarecrows</strong> &mdash; scan each pumpkin&rsquo;s QR code with your phone to collect its letter.</li>     <li><strong>Crack the phrase</strong> &mdash; unscramble the secret phrase, turn in your card at either spot, and you&rsquo;re entered in the Mystery Prize Basket drawing.</li>   </ol>   <p style="margin:8px 0 0;font-size:14px;opacity:.85;">Please use crosswalks, and bring a phone and/or flashlight after dark. </p> </div> <p class="map-cta" style="text-align:center;margin:6px 0 26px;"><a href="map.html" style="display:inline-block;padding:14px 30px;border-radius:999px;background:#d9481c;color:#fff;font-weight:800;font-size:17px;text-decoration:none;box-shadow:0 0 22px rgba(217,72,28,.40);">&#x1f5fa;&#xfe0f; View the Scarecrow Trail Map</a></p>
     <div class="grid">
       <div class="card" style="--d:0.06s">
         <a class="logo-link" href="https://www.kaaonline.org" target="_blank" rel="noopener"><span class="logo-frame"><img src="logos/logo-01.png" alt="Artworks Gallery logo" loading="lazy"></span></a>
@@ -230,7 +230,7 @@
     PATHS.push({ p: new Path2D(SHAPES[si][0]), cx: SHAPES[si][1], cy: SHAPES[si][2], m: SHAPES[si][3] });
   }
   var COLORS = [[217,72,28],[232,114,42],[232,163,61],[240,180,41],[168,58,28]];
-  var CYCLE_MS = 14000;
+  var CYCLE_MS = 22000;
   function mixc(a, b, f){
     return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f];
   }
@@ -254,12 +254,12 @@
     this.x = Math.random() * W;
     this.y = seedTop ? Math.random() * H : -40 - Math.random() * 60;
     this.s = 9 + Math.random() * 16;
-    this.fall = .5 + Math.random() * 1.1;
+    this.fall = .25 + Math.random() * .55;
     this.swayAmp = 18 + Math.random() * 46;
-    this.swayFreq = .004 + Math.random() * .009;
+    this.swayFreq = .002 + Math.random() * .0045;
     this.phase = Math.random() * Math.PI * 2;
     this.rot = Math.random() * Math.PI * 2;
-    this.rotSpd = (Math.random() - .5) * .03;
+    this.rotSpd = (Math.random() - .5) * .015;
     this.huePhase = Math.random();
     this.alpha = .45 + Math.random() * .4;
   }
@@ -267,7 +267,7 @@
     var x = l.x + Math.sin(t * l.swayFreq + l.phase) * l.swayAmp;
     ctx.save();
     ctx.translate(x, l.y);
-    ctx.rotate(l.rot + Math.sin(t * .001 + l.phase) * .4);
+    ctx.rotate(l.rot + Math.sin(t * .0005 + l.phase) * .4);
     var k = (2 * l.s) / l.shape.m;
     ctx.scale(k, -k);
     ctx.translate(-l.shape.cx, -l.shape.cy);
