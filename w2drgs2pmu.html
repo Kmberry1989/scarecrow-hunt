@@ -10,7 +10,12 @@
   html, body { height: 100%; }
   body {
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #f7f1e3; color: #4c4132; min-height: 100vh; min-height: 100dvh;
+    background:
+    repeating-linear-gradient(0deg, rgba(200,90,23,.05) 0 2px, transparent 2px 52px),
+    repeating-linear-gradient(90deg, rgba(200,90,23,.05) 0 2px, transparent 2px 52px),
+    repeating-linear-gradient(0deg, transparent 0 24px, rgba(23,63,107,.045) 24px 33px, transparent 33px 110px),
+    repeating-linear-gradient(90deg, transparent 0 64px, rgba(217,72,28,.05) 64px 73px, transparent 73px 110px),
+    #f7f1e3; color: #4c4132; min-height: 100vh; min-height: 100dvh;
     display: flex; flex-direction: column; align-items: center;
     text-align: center; padding: calc(64px + env(safe-area-inset-top, 0px)) 20px 28px; overflow-x: hidden; position: relative;
   }
@@ -230,6 +235,14 @@ Scan the tag and walk the lane!</p>
     this.color = COLORS[(Math.random() * COLORS.length) | 0];
     this.alpha = .45 + Math.random() * .4;
   }
+  /* Stylized 5-lobe autumn leaf: unit coords, tip at top, stem notch at bottom. */
+  var LEAF_PTS = [
+    [0, -1], [0.12, -0.75], [0.38, -0.88], [0.34, -0.62], [0.62, -0.60],
+    [0.45, -0.38], [0.66, -0.22], [0.38, -0.16], [0.34, 0.12], [0.14, 0.06],
+    [0.10, 0.30], [0, 0.22], [-0.10, 0.30], [-0.14, 0.06], [-0.34, 0.12],
+    [-0.38, -0.16], [-0.66, -0.22], [-0.45, -0.38], [-0.62, -0.60],
+    [-0.34, -0.62], [-0.38, -0.88], [-0.12, -0.75]
+  ];
   function drawLeaf(l, t){
     var x = l.x + Math.sin(t * l.swayFreq + l.phase) * l.swayAmp;
     ctx.save();
@@ -239,15 +252,27 @@ Scan the tag and walk the lane!</p>
     ctx.globalAlpha = l.alpha;
     ctx.fillStyle = l.color;
     ctx.beginPath();
-    ctx.moveTo(0, -s);
-    ctx.quadraticCurveTo(s * .75, -s * .25, 0, s);
-    ctx.quadraticCurveTo(-s * .75, -s * .25, 0, -s);
+    for (var i = 0; i < LEAF_PTS.length; i++){
+      var px = LEAF_PTS[i][0] * s, py = LEAF_PTS[i][1] * s;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
     ctx.fill();
-    ctx.globalAlpha = l.alpha * .55;
-    ctx.strokeStyle = "rgba(90,48,18,.8)";
-    ctx.lineWidth = Math.max(1, s * .07);
-    ctx.beginPath(); ctx.moveTo(0, -s * .8); ctx.lineTo(0, s * .9); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, s); ctx.lineTo(s * .18, s * 1.35); ctx.stroke();
+    ctx.strokeStyle = "rgba(90,48,18,.85)";
+    /* stem */
+    ctx.globalAlpha = l.alpha * .8;
+    ctx.lineWidth = Math.max(1.2, s * .08);
+    ctx.beginPath(); ctx.moveTo(0, s * .22); ctx.lineTo(0, s * 1.15); ctx.stroke();
+    /* center vein + side veins reaching the lobes */
+    ctx.globalAlpha = l.alpha * .5;
+    ctx.lineWidth = Math.max(1, s * .05);
+    ctx.beginPath();
+    ctx.moveTo(0, -s * .92); ctx.lineTo(0, s * .2);
+    ctx.moveTo(0, -s * .35); ctx.lineTo(s * .5, -s * .62);
+    ctx.moveTo(0, -s * .35); ctx.lineTo(-s * .5, -s * .62);
+    ctx.moveTo(0, s * .02); ctx.lineTo(s * .52, -s * .14);
+    ctx.moveTo(0, s * .02); ctx.lineTo(-s * .52, -s * .14);
+    ctx.stroke();
     ctx.restore();
   }
   function reset(){
