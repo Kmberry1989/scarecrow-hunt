@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fall Frame — Scarecrow Scavenger Hunt</title>
-<meta name="description" content="Add a golden fall frame and the #KokomoScarecrows hashtag to your scarecrow selfie, right in your browser.">
+<meta name="description" content="Add a golden fall frame and the #KokomoScarecrows and #FirstFridayKokomo hashtags to your scarecrow selfie, right in your browser.">
 <meta property="og:title" content="Fall Frame — Scarecrow Scavenger Hunt">
-<meta property="og:description" content="Add a golden fall frame and the #KokomoScarecrows hashtag to your scarecrow selfie, right in your browser.">
+<meta property="og:description" content="Add a golden fall frame and the #KokomoScarecrows and #FirstFridayKokomo hashtags to your scarecrow selfie, right in your browser.">
 <meta property="og:image" content="https://kokomoscarecrows.com/img/og-share.jpg">
 <style>
   body { font-family: Georgia, 'Times New Roman', serif; background: #f7f1e3; color: #2b2b2b;
@@ -58,7 +58,7 @@
   </nav>
   <main>
     <h1>Fall Frame for Your Selfie</h1>
-    <p class="sub">Dress up your scarecrow selfie, then share it with <strong>#KokomoScarecrows</strong>.</p>
+    <p class="sub">Dress up your scarecrow selfie, then share it with <strong>#KokomoScarecrows</strong> and <strong>#FirstFridayKokomo</strong>.</p>
     <div class="tool">
       <p>Choose a photo (or take a fresh selfie) and we&rsquo;ll wrap it in a golden fall frame with the hunt hashtag &mdash; ready to post.</p>
       <label class="pick" for="filePick">Choose a photo</label>
@@ -304,8 +304,13 @@ window.HuntSfx = (function () {
     leafCluster(ctx, bw + cs, H - bw - cs, Math.PI * 1.22, 46);
     leafCluster(ctx, W - bw - cs, H - bw - cs, Math.PI * 1.78, 46);
     // hashtag ribbon
-    var tag = "#KokomoScarecrows";
-    ctx.font = "800 58px Georgia, serif";
+    var tag = "#KokomoScarecrows  #FirstFridayKokomo";
+    var fs = 58;
+    ctx.font = "800 " + fs + "px Georgia, serif";
+    while (ctx.measureText(tag).width > W - 2 * bw - 120 && fs > 26) {
+      fs -= 2;
+      ctx.font = "800 " + fs + "px Georgia, serif";
+    }
     var tw = ctx.measureText(tag).width;
     var pw = tw + 110, ph = 108, px = (W - pw) / 2, py = H - bw - ph - 46;
     ctx.fillStyle = "rgba(23,63,107,.88)";
