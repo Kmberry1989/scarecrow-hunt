@@ -33,6 +33,25 @@
     { n: 21, name: "Crossroads Community Church",         tag: "#ECrossroads" }
   ];
 
+  /* Verified social handles for @-tagging. Only handles confirmed live on
+     2026-09-30 are listed — never guess a handle, a wrong @ tags a stranger.
+     Shown as a "tag them" hint in album.html's manual-share panel; the
+     baked-in hashtags stay the platform-agnostic layer. */
+  var SOCIALS = {
+    2:  [ { p: "Facebook",  h: "@luckyraventattoolounge" } ],
+    6:  [ { p: "Facebook",  h: "@KokomoUrbanOutreach" } ],
+    7:  [ { p: "Facebook",  h: "@oscarspizzallc" } ],
+    14: [ { p: "Instagram", h: "@kokomocoterie" } ],
+    15: [ { p: "Instagram", h: "@firstfarmers" },
+          { p: "Facebook",  h: "@firstfarmers" } ],
+    21: [ { p: "Instagram", h: "@crossroadskokomo" },
+          { p: "Facebook",  h: "@ecrossroadskokomo" } ]
+  };
+
+  function socialsFor(n) {
+    return SOCIALS[n] || [];
+  }
+
   function stopByNumber(n) {
     for (var i = 0; i < STOPS.length; i++) {
       if (STOPS[i].n === n) return STOPS[i];
@@ -244,6 +263,7 @@
     TOP_TAG: TOP_TAG,
     STOPS: STOPS,
     stopByNumber: stopByNumber,
+    socialsFor: socialsFor,
     slug: slug,
     zipName: zipName,
     db: db,

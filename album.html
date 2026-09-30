@@ -42,6 +42,8 @@
   .notice { margin: 10px auto 0; max-width: 520px; background: #fffdf6; border: 2px solid rgba(200,90,23,.35);
     border-radius: 14px; padding: 12px 18px; color: #4a4033; line-height: 1.55; font-size: .95rem; }
   .notice[hidden] { display: none; }
+  .taghint { display: block; margin-top: 10px; font-size: .88rem; }
+  .tagcopy { margin: 4px 4px 0 0 !important; padding: 5px 14px !important; font-size: .85rem !important; }
   .notice button { margin-top: 8px; background: #fffdf6; color: #6b4a2a; font-weight: 700; font-size: .95rem;
     border: 2px solid rgba(200,90,23,.55); border-radius: 999px; padding: 9px 22px; cursor: pointer; font-family: inherit; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; width: 100%; margin-top: 16px; }
@@ -226,19 +228,34 @@
     try {
       file = new File([p.blob], Journey.zipName(stop), { type: "image/png" });
     } catch (e) { file = null; }
-    if (!file) { downloadPhoto(stopN); showShareFallback(text); return; }
+    if (!file) { downloadPhoto(stopN); showShareFallback(text, stopN); return; }
     Journey.shareFiles([file], "Scarecrow #" + stop.n + " selfie", text).then(function (ok) {
-      if (!ok) { downloadPhoto(stopN); showShareFallback(text); }
+      if (!ok) { downloadPhoto(stopN); showShareFallback(text, stopN); }
     });
   }
 
-  function showShareFallback(text) {
+  function showShareFallback(text, stopN) {
+    var hint = "";
+    var socials = Journey.socialsFor(stopN);
+    if (socials.length) {
+      var bits = socials.map(function (s, i) {
+        return '<button type="button" class="tagcopy" data-tag="' + i + '">' + escapeHtml(s.h) + "</button> on " + escapeHtml(s.p);
+      }).join(" &middot; ");
+      hint = '<span class="taghint">Want to notify the sponsor so they can reshare it? Tag ' + bits +
+             " (tap a handle to copy it).</span>";
+    }
     notice.innerHTML = "Your browser couldn&rsquo;t open the share sheet, so the photo downloaded instead &mdash; " +
       "post it from your Photos app. Here&rsquo;s a caption to go with it:<br><strong>" + escapeHtml(text) + "</strong><br>" +
-      '<button type="button" id="copyCap">Copy caption</button>';
+      '<button type="button" id="copyCap">Copy caption</button>' + hint;
     notice.hidden = false;
     document.getElementById("copyCap").addEventListener("click", function () {
       copyText(text, this);
+    });
+    var tagBtns = notice.querySelectorAll(".tagcopy");
+    Array.prototype.forEach.call(tagBtns, function (b) {
+      b.addEventListener("click", function () {
+        copyText(socials[parseInt(b.getAttribute("data-tag"), 10)].h, b);
+      });
     });
     notice.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
