@@ -422,7 +422,9 @@
 
     footer {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: 1fr;
+      text-align: center;
+      justify-items: center;
       gap: 1rem;
       align-items: center;
       padding: 1.2rem .1rem 0;
@@ -544,11 +546,11 @@
   
   html { scroll-behavior: smooth; }
   .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
-    background: rgba(247,241,227,.94); border: 2px solid #e7d9bd; border-radius: 999px;
-    padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 4px 16px rgba(120,72,20,.12); }
-  .topnav a { color: #173f6b; font-weight: 700; text-decoration: none;
+    background: linear-gradient(135deg,#d9481c,#e8722a 55%,#e8a33d); border: 2px solid rgba(255,255,255,.4); border-radius: 999px;
+    padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 6px 22px rgba(200,90,23,.38); }
+  .topnav a { color: #fff; text-shadow: 0 1px 2px rgba(122,46,0,.45); font-weight: 700; text-decoration: none;
     font-size: .95rem; white-space: nowrap; }
-  .topnav a:hover { color: #d9481c; }
+  .topnav a:hover { color: #ffe9c4; }
   .topnav .brand { font-size: 1.05rem; }
   
   
@@ -566,9 +568,10 @@
 <body id="top">
   <canvas id="leaves" aria-hidden="true"></canvas>
   <nav class="topnav" aria-label="Site">
-    <a class="brand" href="index.html">Scarecrow Hunt</a>
+    <a class="brand" href="index.html"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> Scarecrow Hunt</a>
     <a href="index.html">Home</a>
     <a href="map.html">Trail Map</a>
+    <a href="faq.html">FAQ</a>
   </nav>
   <a class="skip-link" href="#map">Skip to map</a>
   <main class="page-shell">
