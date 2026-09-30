@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fall Frame — Scarecrow Scavenger Hunt</title>
-<meta name="description" content="Add a golden fall frame and the #KokomoScarecrows and #FirstFridayKokomo hashtags to your scarecrow selfie, right in your browser.">
+<meta name="description" content="Add a fall frame (3 styles) and the #KokomoScarecrows and #FirstFridayKokomo hashtags to your scarecrow selfie, right in your browser.">
 <meta property="og:title" content="Fall Frame — Scarecrow Scavenger Hunt">
-<meta property="og:description" content="Add a golden fall frame and the #KokomoScarecrows and #FirstFridayKokomo hashtags to your scarecrow selfie, right in your browser.">
+<meta property="og:description" content="Add a fall frame (3 styles) and the #KokomoScarecrows and #FirstFridayKokomo hashtags to your scarecrow selfie, right in your browser.">
 <meta property="og:image" content="https://kokomoscarecrows.com/img/og-share.jpg">
 <style>
   body { font-family: Georgia, 'Times New Roman', serif; background: #f7f1e3; color: #2b2b2b;
@@ -43,6 +43,11 @@
   #dlBtn { display: none; background: #173f6b; color: #fff; font-weight: 800; font-size: 1.05rem;
     border: none; border-radius: 999px; padding: 14px 34px; cursor: pointer; margin-top: 14px; }
   #dlBtn:active { transform: scale(.97); }
+  .frames { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; margin: 2px 0 14px; }
+  .frames-label { font-weight: 700; color: #6b4a2a; }
+  .frames button { padding: 10px 18px; border-radius: 999px; border: 2px solid rgba(200,90,23,.55); background: #fffdf6; color: #6b4a2a; font-weight: 700; font-size: .95rem; cursor: pointer; }
+  .frames button[aria-pressed="true"] { background: #d9481c; border-color: #d9481c; color: #fff; }
+  .frames button:active { transform: scale(.97); }
   .priv { font-size: .85rem; color: #a3937a; margin-top: 14px; }
   .priv strong { color: #6b5d49; }
 
@@ -60,7 +65,13 @@
     <h1>Fall Frame for Your Selfie</h1>
     <p class="sub">Dress up your scarecrow selfie, then share it with <strong>#KokomoScarecrows</strong> and <strong>#FirstFridayKokomo</strong>.</p>
     <div class="tool">
-      <p>Choose a photo (or take a fresh selfie) and we&rsquo;ll wrap it in a golden fall frame with the hunt hashtag &mdash; ready to post.</p>
+      <p>Choose a photo (or take a fresh selfie), pick a frame style, and we&rsquo;ll wrap it with the hunt hashtags &mdash; ready to post.</p>
+      <div class="frames" id="framePick" role="group" aria-label="Choose a frame style">
+        <span class="frames-label">Pick a frame:</span>
+        <button type="button" data-frame="harvest" aria-pressed="true">Golden Harvest</button>
+        <button type="button" data-frame="dusk" aria-pressed="false">Orchard Dusk</button>
+        <button type="button" data-frame="cream" aria-pressed="false">Cream Minimal</button>
+      </div>
       <label class="pick" for="filePick">Choose a photo</label>
       <input type="file" id="filePick" accept="image/*">
       <div id="stage"></div>
@@ -249,6 +260,7 @@ window.HuntSfx = (function () {
   var cv = document.createElement("canvas"); cv.width = W; cv.height = H;
   var ctx = cv.getContext("2d");
   var photo = null;
+  var frameStyle = "harvest";
 
   function drawLeafShape(c, shape, x, y, size, rot, color){
     c.save(); c.translate(x, y); c.rotate(rot);
@@ -274,6 +286,70 @@ window.HuntSfx = (function () {
     c.arcTo(x, y, x + w, y, r);
     c.closePath();
   }
+  function drawTag(pill, pillStroke, textColor, baseFs, ph, py){
+    var tag = "#KokomoScarecrows  #FirstFridayKokomo";
+    var fs = baseFs;
+    ctx.font = "800 " + fs + "px Georgia, serif";
+    while (ctx.measureText(tag).width > W - 160 && fs > 24) {
+      fs -= 2;
+      ctx.font = "800 " + fs + "px Georgia, serif";
+    }
+    var tw = ctx.measureText(tag).width;
+    var pw = tw + ph, px = (W - pw) / 2;
+    ctx.fillStyle = pill;
+    roundRect(ctx, px, py, pw, ph, ph / 2); ctx.fill();
+    if (pillStroke) {
+      ctx.strokeStyle = pillStroke; ctx.lineWidth = 4;
+      roundRect(ctx, px, py, pw, ph, ph / 2); ctx.stroke();
+    }
+    ctx.fillStyle = textColor; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(tag, W / 2, py + ph / 2 + 2);
+  }
+  function drawFrame(){
+    var bw, bg, cs;
+    if (frameStyle === "dusk") {
+      bw = 56;
+      bg = ctx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0, "#2e2547"); bg.addColorStop(0.5, "#181230"); bg.addColorStop(1, "#2e2547");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, bw); ctx.fillRect(0, H - bw, W, bw);
+      ctx.fillRect(0, 0, bw, H); ctx.fillRect(W - bw, 0, bw, H);
+      ctx.strokeStyle = "#e8a33d"; ctx.lineWidth = 8;
+      ctx.strokeRect(bw + 10, bw + 10, W - 2*bw - 20, H - 2*bw - 20);
+      ctx.strokeStyle = "rgba(232,163,61,.55)"; ctx.lineWidth = 3;
+      ctx.strokeRect(bw + 24, bw + 24, W - 2*bw - 48, H - 2*bw - 48);
+      cs = 44;
+      leafCluster(ctx, bw + cs, bw + cs, Math.PI * 0.78, 46);
+      leafCluster(ctx, W - bw - cs, bw + cs, Math.PI * 0.22, 46);
+      leafCluster(ctx, bw + cs, H - bw - cs, Math.PI * 1.22, 46);
+      leafCluster(ctx, W - bw - cs, H - bw - cs, Math.PI * 1.78, 46);
+      drawTag("#e8a33d", "#181230", "#181230", 58, 108, H - bw - 108 - 46);
+    } else if (frameStyle === "cream") {
+      ctx.strokeStyle = "#f7f1e3"; ctx.lineWidth = 10;
+      ctx.strokeRect(16, 16, W - 32, H - 32);
+      ctx.strokeStyle = "#e8a33d"; ctx.lineWidth = 3;
+      ctx.strokeRect(34, 34, W - 68, H - 68);
+      leafCluster(ctx, W - 92, H - 92, Math.PI * 1.78, 40);
+      drawTag("rgba(23,63,107,.88)", null, "#f7f1e3", 44, 88, H - 152);
+    } else {
+      bw = 56;
+      bg = ctx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0, "#8a5426"); bg.addColorStop(0.5, "#6e3f18"); bg.addColorStop(1, "#8a5426");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, bw); ctx.fillRect(0, H - bw, W, bw);
+      ctx.fillRect(0, 0, bw, H); ctx.fillRect(W - bw, 0, bw, H);
+      ctx.strokeStyle = "#e8a33d"; ctx.lineWidth = 8;
+      ctx.strokeRect(bw + 10, bw + 10, W - 2*bw - 20, H - 2*bw - 20);
+      ctx.strokeStyle = "rgba(255,247,230,.85)"; ctx.lineWidth = 3;
+      ctx.strokeRect(bw + 24, bw + 24, W - 2*bw - 48, H - 2*bw - 48);
+      cs = 44;
+      leafCluster(ctx, bw + cs, bw + cs, Math.PI * 0.78, 46);
+      leafCluster(ctx, W - bw - cs, bw + cs, Math.PI * 0.22, 46);
+      leafCluster(ctx, bw + cs, H - bw - cs, Math.PI * 1.22, 46);
+      leafCluster(ctx, W - bw - cs, H - bw - cs, Math.PI * 1.78, 46);
+      drawTag("rgba(23,63,107,.88)", "#e8a33d", "#f7f1e3", 58, 108, H - bw - 108 - 46);
+    }
+  }
   function render(){
     if (!photo) return;
     // photo, cover-fit
@@ -286,39 +362,7 @@ window.HuntSfx = (function () {
     g.addColorStop(0, "rgba(0,0,0,0)");
     g.addColorStop(1, "rgba(90,48,24,0.28)");
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    // frame bands
-    var bw = 56;
-    var bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, "#8a5426"); bg.addColorStop(0.5, "#6e3f18"); bg.addColorStop(1, "#8a5426");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, bw); ctx.fillRect(0, H - bw, W, bw);
-    ctx.fillRect(0, 0, bw, H); ctx.fillRect(W - bw, 0, bw, H);
-    ctx.strokeStyle = "#e8a33d"; ctx.lineWidth = 8;
-    ctx.strokeRect(bw + 10, bw + 10, W - 2*bw - 20, H - 2*bw - 20);
-    ctx.strokeStyle = "rgba(255,247,230,.85)"; ctx.lineWidth = 3;
-    ctx.strokeRect(bw + 24, bw + 24, W - 2*bw - 48, H - 2*bw - 48);
-    // corner leaf clusters (user's leaf art)
-    var cs = 44;
-    leafCluster(ctx, bw + cs, bw + cs, Math.PI * 0.78, 46);
-    leafCluster(ctx, W - bw - cs, bw + cs, Math.PI * 0.22, 46);
-    leafCluster(ctx, bw + cs, H - bw - cs, Math.PI * 1.22, 46);
-    leafCluster(ctx, W - bw - cs, H - bw - cs, Math.PI * 1.78, 46);
-    // hashtag ribbon
-    var tag = "#KokomoScarecrows  #FirstFridayKokomo";
-    var fs = 58;
-    ctx.font = "800 " + fs + "px Georgia, serif";
-    while (ctx.measureText(tag).width > W - 2 * bw - 120 && fs > 26) {
-      fs -= 2;
-      ctx.font = "800 " + fs + "px Georgia, serif";
-    }
-    var tw = ctx.measureText(tag).width;
-    var pw = tw + 110, ph = 108, px = (W - pw) / 2, py = H - bw - ph - 46;
-    ctx.fillStyle = "rgba(23,63,107,.88)";
-    roundRect(ctx, px, py, pw, ph, 54); ctx.fill();
-    ctx.strokeStyle = "#e8a33d"; ctx.lineWidth = 4;
-    roundRect(ctx, px, py, pw, ph, 54); ctx.stroke();
-    ctx.fillStyle = "#f7f1e3"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(tag, W / 2, py + ph / 2 + 2);
+    drawFrame();
     // show preview
     stage.innerHTML = "";
     var prev = document.createElement("canvas");
@@ -358,6 +402,19 @@ window.HuntSfx = (function () {
       setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
     }, "image/png");
   });
+  var frameBtns = document.querySelectorAll("#framePick button");
+  for (var fi = 0; fi < frameBtns.length; fi++) {
+    (function (btn) {
+      btn.addEventListener("click", function () {
+        frameStyle = btn.getAttribute("data-frame");
+        for (var fj = 0; fj < frameBtns.length; fj++) {
+          frameBtns[fj].setAttribute("aria-pressed", frameBtns[fj] === btn ? "true" : "false");
+        }
+        if (window.HuntSfx) { window.HuntSfx.click(); }
+        render();
+      });
+    })(frameBtns[fi]);
+  }
 })();
 </script>
 </body>
