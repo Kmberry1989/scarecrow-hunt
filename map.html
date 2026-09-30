@@ -546,10 +546,10 @@
   .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
     background: rgba(247,241,227,.94); border: 2px solid #e7d9bd; border-radius: 999px;
     padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 4px 16px rgba(120,72,20,.12); }
-  .topnav a, 
+  .topnav a { color: #173f6b; font-weight: 700; text-decoration: none;
+    font-size: .95rem; white-space: nowrap; }
   .topnav a:hover { color: #d9481c; }
   .topnav .brand { font-size: 1.05rem; }
-  .topnav .spacer { flex: 1; }
   
   
   
@@ -557,10 +557,8 @@
   
   
   
-  .totop { border: 2px solid #e7d9bd; border-radius: 999px; padding: .25rem .8rem;
-    background: rgba(255,253,246,.9); }
   @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; }
-    .topnav .brand { display: none; } .topnav a,  }
+    .topnav .brand { display: none; } .topnav a { font-size: .85rem; } }
   .page-shell { position: relative; z-index: 1; }
 </style>
 </head>
@@ -570,8 +568,6 @@
     <a class="brand" href="index.html">Scarecrow Hunt</a>
     <a href="index.html">Home</a>
     <a href="map.html">Trail Map</a>
-    <span class="spacer"></span>
-    <a class="totop" href="#top">&uarr; Top</a>
   </nav>
   <a class="skip-link" href="#map">Skip to map</a>
   <main class="page-shell">
@@ -753,7 +749,6 @@
           });
         }
       }
-
 
       function escapeHtml(value) {
         return String(value).replace(/[&<>'"]/g, function (char) {
