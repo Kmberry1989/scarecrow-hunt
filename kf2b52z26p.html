@@ -106,6 +106,20 @@
   .share-note { color: #c85a17; font-size: 14px; font-weight: 700; margin-top: 8px; }
   .frame-link { text-align: center; margin-top: 10px; }
   .frame-link a { color: #c85a17; font-weight: 700; }
+  .journey-cta { margin: 18px auto 0; max-width: 440px; background: #fffdf6;
+    border: 2px solid rgba(200,90,23,.35); border-radius: 16px; padding: 16px 20px; text-align: center; }
+  .journey-kicker { color: #c85a17; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 6px; }
+  .journey-text { color: #4a4033; line-height: 1.55; font-size: .95rem; margin-bottom: 12px; }
+  .journey-text strong { color: #173f6b; }
+  .journey-row { margin: 0 0 8px; }
+  .journey-btn { display: inline-block; background: #d9481c; color: #fff; font-weight: 800; font-size: 1.05rem;
+    border-radius: 999px; padding: 14px 32px; text-decoration: none; box-shadow: 0 0 18px rgba(217,72,28,.35); }
+  .journey-btn:active { transform: scale(.97); }
+  .journey-prog { font-size: .9rem; color: #6b5d49; margin: 0; }
+  .journey-prog a { color: #c85a17; font-weight: 700; }
+  .journey-prog[hidden] { display: none; }
+
   .credit { margin-top: 22px; font-size: 13px; color: #a3937a; text-align: center; }
   .credit a { color: #c85a17; }
   @media (prefers-reduced-motion: reduce) {
@@ -319,6 +333,14 @@ Scan the tag — your letter&#x27;s there!</p>
     <p class="share-fallback" id="shareFallback" hidden>Share via: <a id="fbShare" href="#" target="_blank" rel="noopener">Facebook</a> &middot; <a id="xShare" href="#" target="_blank" rel="noopener">X</a> &middot; <a id="copyShare" href="#">Copy text</a></p>
     <p class="share-note" id="shareNote" hidden></p>
     <p class="frame-link"><a href="frame.html">Put a fall frame on your scarecrow selfie</a></p>
+    <div class="journey-cta">
+      <p class="journey-kicker"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg> Your selfie journey</p>
+      <p class="journey-text">You&rsquo;re at scarecrow <strong>#4</strong>! Snap your selfie &mdash;
+        we&rsquo;ll frame it with <strong>#KokomoScarecrows2026</strong> and <strong class="jtag"></strong>,
+        and tuck it into your personal 21-stop album.</p>
+      <p class="journey-row"><a class="journey-btn" href="snap.html?stop=4">Snap your journey selfie</a></p>
+      <p class="journey-prog" hidden><span></span> &middot; <a href="album.html">View your album</a></p>
+    </div>
     <p class="scan-row"><button type="button" id="scanBtn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
   <circle cx="12" cy="13" r="3" /></svg> Scan your next scarecrow</button></p>
     <p class="credit">Presented by the <a href="https://www.kaaonline.org">Kokomo Art Association</a></p>
@@ -1019,6 +1041,25 @@ window.HuntSfx = (function () {
 <script>
 /* Clean address bar: show /hunt instead of the token URL (History API; the page does not reload). */
 (function(){try{if(window.history&&history.replaceState&&location.pathname!=="/hunt"&&location.pathname!=="/hunt/"){history.replaceState(null,"","/hunt");}}catch(e){}})();
+</script>
+
+<script src="journey.js"></script>
+<script>
+/* journey-cta: fill sponsor tag + album progress for this stop */
+(function () {
+  var N = 4;
+  try {
+    var stop = Journey.stopByNumber(N);
+    var tagEl = document.querySelector(".journey-cta .jtag");
+    if (stop && tagEl) tagEl.textContent = stop.tag;
+    Journey.db.count().then(function (c) {
+      if (c > 0) {
+        var p = document.querySelector(".journey-cta .journey-prog");
+        if (p) { p.hidden = false; p.querySelector("span").textContent = c + " of 21 selfies saved"; }
+      }
+    }).catch(function () {});
+  } catch (e) {}
+})();
 </script>
 <!-- letsgo-fab: floating LET'S GO! camera quick-start -->
 <style>

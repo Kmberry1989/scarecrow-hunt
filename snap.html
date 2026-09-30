@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/png" href="img/brand/k-mark-64.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Snap your scarecrow selfie — Scarecrow Scavenger Hunt">
+<meta property="og:description" content="Friday, October 2, 5:30&#8211;8:00 PM. Collect all 21 scarecrow selfies in your personal on-device album.">
+<meta property="og:image" content="https://kokomoscarecrows.com/img/og-share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
+<title>Snap your selfie &mdash; Scarecrow Scavenger Hunt</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background:
+    repeating-linear-gradient(0deg, rgba(23,63,107,.055) 0 2px, transparent 2px 52px),
+    repeating-linear-gradient(90deg, rgba(23,63,107,.055) 0 2px, transparent 2px 52px),
+    #f7f1e3; color: #4c4132; min-height: 100vh; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; padding: calc(64px + env(safe-area-inset-top, 0px)) 20px 28px;
+  }
+  body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 50% -10%, rgba(232,163,61,.25), transparent 55%),
+                radial-gradient(ellipse at 50% 115%, rgba(217,179,132,.30), transparent 55%); }
+  main { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; margin: auto 0; max-width: 560px; }
+  .kicker { color: #c85a17; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 8px 0 12px; color: #173f6b; }
+  .framenote { color: #4a4033; line-height: 1.6; max-width: 440px; margin-bottom: 6px; }
+  .framenote strong { color: #173f6b; }
+  .pick { display: inline-block; background: #d9481c; color: #fff; font-weight: 800; font-size: 1.12rem;
+    border: none; border-radius: 999px; padding: 16px 38px; cursor: pointer; margin: 14px 0 4px;
+    box-shadow: 0 0 22px rgba(217,72,28,.40); }
+  .pick:active { transform: scale(.97); }
+  input[type=file] { display: none; }
+  #stage { margin: 14px auto 0; max-width: 420px; width: 100%; }
+  #stage[hidden] { display: none; }
+  #stage canvas { width: 100%; height: auto; border-radius: 14px; box-shadow: 0 8px 30px rgba(120,72,20,.25); }
+  #saveBtn { display: none; background: #173f6b; color: #fff; font-weight: 800; font-size: 1.12rem;
+    border: none; border-radius: 999px; padding: 16px 38px; cursor: pointer; margin-top: 14px; }
+  #saveBtn:active { transform: scale(.97); }
+  .done { margin: 18px auto 0; max-width: 440px; background: #fffdf6; border: 2px solid rgba(200,90,23,.35);
+    border-radius: 16px; padding: 18px 22px; }
+  .done[hidden] { display: none; }
+  .done p { color: #4a4033; line-height: 1.6; margin-bottom: 10px; }
+  .done .big { font-size: 1.15rem; color: #173f6b; font-weight: 800; }
+  .btnrow { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+  .btn-primary { display: inline-block; background: #d9481c; color: #fff; font-weight: 800; font-size: 1.05rem;
+    border-radius: 999px; padding: 14px 32px; text-decoration: none; box-shadow: 0 0 18px rgba(217,72,28,.35); }
+  .btn-ghost { display: inline-block; background: #fffdf6; color: #6b4a2a; font-weight: 700; font-size: 1.05rem;
+    border: 2px solid rgba(200,90,23,.55); border-radius: 999px; padding: 12px 30px; cursor: pointer; font-family: inherit; }
+  .btn-ghost:active { transform: scale(.97); }
+  .err { margin: 18px auto 0; max-width: 440px; background: #fffdf6; border: 2px solid rgba(200,90,23,.35);
+    border-radius: 16px; padding: 18px 22px; color: #4a4033; line-height: 1.6; }
+  .err[hidden] { display: none; }
+  .priv { font-size: .85rem; color: #a3937a; margin-top: 18px; max-width: 440px; line-height: 1.5; }
+  .priv strong { color: #6b5d49; }
+  .credit { margin-top: 26px; font-size: .85rem; color: #a3937a; }
+  .credit a { color: #c85a17; font-weight: 700; }
+  .topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center;
+    justify-content: space-between; padding: 10px 16px;
+    background: rgba(247,241,227,.92); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(200,90,23,.25); }
+  .topnav .brand { display: inline-flex; align-items: center; gap: 8px; color: #173f6b; font-weight: 800;
+    text-decoration: none; font-size: 1.05rem; }
+  .topnav .brand .ico { width: 1.4em; height: 1.4em; }
+  .topnav .navlinks a { color: #6b4a2a; font-weight: 700; text-decoration: none; margin-left: 14px; font-size: .95rem; }
+  .ico { width: 1.15em; height: 1.15em; vertical-align: -0.2em; }
+</style>
+</head>
+<body>
+  <nav class="topnav" aria-label="Site">
+    <a class="brand" href="index.html"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> Scarecrow Hunt</a>
+    <span class="navlinks"><a href="index.html">Home</a><a href="map.html">Trail Map</a><a href="faq.html">FAQ</a></span>
+  </nav>
+  <main>
+    <p class="kicker">Scarecrow Selfie Journey</p>
+    <h1 id="stopTitle">Snap your selfie</h1>
+    <p class="framenote" id="frameNote">Take a selfie with the scarecrow and we&rsquo;ll frame it with
+      <strong>#KokomoScarecrows2026</strong> across the top and the stop&rsquo;s own sponsor hashtag across the bottom &mdash;
+      then tuck it into your personal 21-stop album.</p>
+    <div id="captureBox">
+      <label class="pick" for="photoPick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg> Take your selfie</label>
+      <input type="file" id="photoPick" accept="image/*" capture="user">
+      <div id="stage" hidden><canvas id="preview"></canvas></div>
+      <button type="button" id="saveBtn">Save to my album</button>
+    </div>
+    <div class="done" id="donePanel" hidden>
+      <p class="big" id="doneTitle">Saved!</p>
+      <p id="doneText"></p>
+      <div class="btnrow">
+        <a class="btn-primary" href="album.html">View my album</a>
+        <button type="button" class="btn-ghost" id="againBtn">Take another</button>
+      </div>
+    </div>
+    <div class="err" id="errPanel" hidden>
+      <p><strong>We couldn&rsquo;t tell which scarecrow this is for.</strong></p>
+      <p>Head back to a scarecrow stop page and tap its selfie button, or browse what you&rsquo;ve saved so far.</p>
+      <div class="btnrow"><a class="btn-primary" href="album.html">View my album</a></div>
+    </div>
+    <p class="priv"><strong>Private by design:</strong> your selfies are stored only in this browser on your device &mdash; nothing is uploaded anywhere.</p>
+    <p class="credit">Presented by the <a href="https://www.kaaonline.org">Kokomo Art Association</a></p>
+  </main>
+<!-- letsgo-fab: floating LET'S GO! camera quick-start -->
+<style>
+#letsGoFab { position: fixed; right: 18px; bottom: 18px; z-index: 9000; display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #d9481c, #e8722a 60%, #e8a33d); color: #fff; font-weight: 800; font-size: 15px;
+  letter-spacing: .5px; border: 2px solid rgba(255,255,255,.45); border-radius: 999px; padding: 12px 20px 12px 16px;
+  cursor: pointer; font-family: inherit; text-shadow: 0 1px 2px rgba(122,46,0,.45);
+  box-shadow: 0 6px 24px rgba(217,72,28,.55); animation: letsgo-pulse 2.6s ease-in-out infinite; }
+#letsGoFab .ico { width: 1.3em; height: 1.3em; }
+#letsGoFab:active { transform: scale(.95); }
+@keyframes letsgo-pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(217,72,28,.55); } 50% { box-shadow: 0 6px 34px rgba(232,163,61,.9); } }
+@media (prefers-reduced-motion: reduce) { #letsGoFab { animation: none; } }
+</style>
+<button type="button" id="letsGoFab" aria-label="Start the camera scanner"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg>LET&rsquo;S GO!</button>
+<script>
+(function () {
+  var go = document.getElementById("letsGoFab");
+  if (!go) return;
+  go.addEventListener("click", function () {
+    if (window.HuntSfx) { try { window.HuntSfx.click(); } catch (e) {} }
+    location.href = "map.html#scan";
+  });
+})();
+</script>
+<script src="journey.js"></script>
+<script>
+(function () {
+  "use strict";
+  var params = new URLSearchParams(location.search);
+  var stopN = parseInt(params.get("stop"), 10);
+  var stop = Journey.stopByNumber(stopN);
+  var title = document.getElementById("stopTitle");
+  var note = document.getElementById("frameNote");
+  var captureBox = document.getElementById("captureBox");
+  var errPanel = document.getElementById("errPanel");
+  if (!stop) {
+    title.textContent = "Snap your selfie";
+    captureBox.style.display = "none";
+    note.style.display = "none";
+    errPanel.hidden = false;
+    return;
+  }
+  title.textContent = "Scarecrow #" + stop.n + " \u2014 " + stop.name;
+  note.innerHTML = "Take a selfie with the " + escapeHtml(stop.name) + " scarecrow and we\u2019ll frame it with " +
+    "<strong>" + Journey.TOP_TAG + "</strong> across the top and <strong>" + stop.tag +
+    "</strong> across the bottom \u2014 then tuck it into your personal 21-stop album.";
+
+  var pick = document.getElementById("photoPick");
+  var stage = document.getElementById("stage");
+  var preview = document.getElementById("preview");
+  var saveBtn = document.getElementById("saveBtn");
+  var donePanel = document.getElementById("donePanel");
+  var doneText = document.getElementById("doneText");
+  var currentImg = null;
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  pick.addEventListener("change", function () {
+    var f = pick.files && pick.files[0];
+    if (!f) return;
+    var url = URL.createObjectURL(f);
+    var img = new Image();
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      currentImg = img;
+      try {
+        Journey.drawJourneyFrame(preview, img, stop.tag);
+      } catch (e) {
+        doneText.textContent = "That photo couldn't be framed — please try another.";
+        donePanel.hidden = false;
+        return;
+      }
+      stage.hidden = false;
+      saveBtn.style.display = "inline-block";
+      donePanel.hidden = true;
+      preview.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    };
+    img.onerror = function () {
+      URL.revokeObjectURL(url);
+      doneText.textContent = "That file couldn't be read as a photo — please try another.";
+      donePanel.hidden = false;
+    };
+    img.src = url;
+  });
+
+  saveBtn.addEventListener("click", function () {
+    if (!currentImg) return;
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving\u2026";
+    try {
+      var full = document.createElement("canvas");
+      Journey.drawJourneyFrame(full, currentImg, stop.tag);
+      full.toBlob(function (blob) {
+        if (!blob) { failSave(); return; }
+        Journey.db.save(stop.n, blob).then(function () {
+          return Journey.db.count();
+        }).then(function (c) {
+          doneText.innerHTML = "That\u2019s <strong>" + c + " of 21</strong> scarecrow selfies saved on this device." +
+            (c >= 21 ? " You did it \u2014 enjoy your slideshow!" : " Keep hunting!");
+          donePanel.hidden = false;
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Save to my album";
+          donePanel.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }, failSave);
+      }, "image/png");
+    } catch (e) { failSave(); }
+  });
+
+  function failSave() {
+    saveBtn.disabled = false;
+    saveBtn.textContent = "Save to my album";
+    doneText.textContent = "Couldn't save on this device (private browsing can block storage). Your framed photo is still showing above — you can screenshot it instead.";
+    donePanel.hidden = false;
+  }
+
+  document.getElementById("againBtn").addEventListener("click", function () {
+    donePanel.hidden = true;
+    pick.value = "";
+    pick.click();
+  });
+})();
+</script>
+</body>
+</html>
