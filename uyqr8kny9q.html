@@ -388,6 +388,84 @@ Scan the tag and strut away!</p>
   .lb-cell.lb-pre { border-color:#e8722a; background:rgba(232,114,42,.14); }
 </style>
 <script>
+/* Hunt sound effects: a tiny procedural Web Audio kit (no audio files, no
+   network, fully offline). Browsers block audio before the first user gesture,
+   so sounds requested earlier are queued and play on the first tap/click/key. */
+window.HuntSfx = (function () {
+  "use strict";
+  var ctx = null, queued = [], unlocked = false;
+  function ac() {
+    try {
+      if (!ctx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        ctx = new AC();
+      }
+      if (ctx.state === "suspended") { try { ctx.resume(); } catch (e) {} }
+      return ctx;
+    } catch (e) { return null; }
+  }
+  function tone(freq, delay, dur, type, vol, slideTo) {
+    var c = ac();
+    if (!c || c.state !== "running") return;
+    try {
+      var t = c.currentTime + delay;
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = type || "triangle";
+      o.frequency.setValueAtTime(freq, t);
+      if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol || 0.08, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(c.destination);
+      o.start(t); o.stop(t + dur + 0.05);
+    } catch (e) {}
+  }
+  function flush() {
+    if (unlocked) return;
+    unlocked = true;
+    var q = queued; queued = [];
+    for (var i = 0; i < q.length; i++) { try { q[i](); } catch (e) {} }
+  }
+  function whenReady(fn) { if (unlocked) { fn(); } else { queued.push(fn); } }
+  function unlock() {
+    var c = ac();
+    if (!c) return;
+    if (c.state === "running") flush();
+    else { try { c.resume().then(flush, function () {}); } catch (e) {} }
+  }
+  if (document.addEventListener) {
+    document.addEventListener("pointerdown", unlock);
+    document.addEventListener("keydown", unlock);
+    document.addEventListener("touchend", unlock);
+  }
+  return {
+    click: function () { whenReady(function () {
+      tone(620, 0, 0.07, "triangle", 0.06);
+      tone(830, 0.035, 0.06, "sine", 0.04);
+    }); },
+    collect: function () { whenReady(function () {
+      tone(523.25, 0, 0.11, "triangle", 0.085);
+      tone(659.25, 0.085, 0.11, "triangle", 0.085);
+      tone(783.99, 0.17, 0.14, "triangle", 0.085);
+      tone(1046.5, 0.255, 0.28, "sine", 0.075);
+    }); },
+    pop: function () { whenReady(function () {
+      tone(280, 0, 0.14, "square", 0.035, 880);
+      tone(1400, 0.05, 0.09, "sine", 0.045);
+    }); },
+    fanfare: function () { whenReady(function () {
+      var seq = [523.25, 523.25, 659.25, 783.99, 1046.5];
+      var tt = [0, 0.12, 0.24, 0.36, 0.48];
+      for (var i = 0; i < seq.length; i++) {
+        tone(seq[i], tt[i], i === seq.length - 1 ? 0.42 : 0.12, "triangle", 0.085);
+      }
+      tone(1318.5, 0.48, 0.42, "sine", 0.055);
+    }); }
+  };
+})();
+</script>
+<script>
 /* Scavenger-hunt checklist: record this scan + bank its letter on the visitor's phone. */
 (function () {
   try {
@@ -398,10 +476,12 @@ Scan the tag and strut away!</p>
     var LKEY = "kokomoScarecrowsLettersV2";
     var visited = JSON.parse(localStorage.getItem(VKEY) || "[]");
     var letters = JSON.parse(localStorage.getItem(LKEY) || "{}");
-    if (visited.indexOf(stop) === -1) visited.push(stop);
+    var isNewLetter = visited.indexOf(stop) === -1;
+    if (isNewLetter) visited.push(stop);
     if (/^[A-Z]$/.test(letter)) letters[stop] = letter;
     localStorage.setItem(VKEY, JSON.stringify(visited));
     localStorage.setItem(LKEY, JSON.stringify(letters));
+    if (isNewLetter && window.HuntSfx) { window.HuntSfx.collect(); }
     var WORDS = [["O",1,15],[6,10,18,4,13,8,17],[3,16,21,11,19,7,14],[20,2],[5,9,12]];
     var wrap = document.createElement("div");
     var title = document.createElement("p");
@@ -449,6 +529,7 @@ Scan the tag and strut away!</p>
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }
   var copyLink = document.getElementById("copyShare");
   if (copyLink) copyLink.addEventListener("click", function (e) {
+    if (window.HuntSfx) { window.HuntSfx.click(); }
     e.preventDefault();
     var t = text + " " + url;
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -459,6 +540,7 @@ Scan the tag and strut away!</p>
     }
   });
   btn.addEventListener("click", function () {
+    if (window.HuntSfx) { window.HuntSfx.click(); }
     if (navigator.share) {
       navigator.share({ title: "First Friday Scarecrow Scavenger Hunt", text: text, url: url })
         .catch(function () {});
@@ -553,8 +635,9 @@ Scan the tag and strut away!</p>
     } catch (e) { /* not a URL */ }
     if (target) {
       msg.textContent = "Got it — taking you there…";
+      if (window.HuntSfx) { window.HuntSfx.collect(); }
       stopAll();
-      location.href = target;
+      setTimeout(function(){ location.href = target; }, 500);
     } else if (Date.now() > coolUntil) {
       coolUntil = Date.now() + 2500;
       msg.textContent = "That isn't a hunt QR code — try another pumpkin.";
@@ -577,6 +660,7 @@ Scan the tag and strut away!</p>
   }
 
   openBtn.addEventListener("click", function () {
+    if (window.HuntSfx) { window.HuntSfx.click(); }
     if (!window.jsQR) {
       msg.textContent = "Scanner couldn't load — check your connection and try again.";
       modal.hidden = false; return;
@@ -602,7 +686,7 @@ Scan the tag and strut away!</p>
         msg.textContent = "Couldn't open the camera. Allow camera access and try again, or use your phone's camera app.";
       });
   });
-  closeBtn.addEventListener("click", stopAll);
+  closeBtn.addEventListener("click", function(){ if (window.HuntSfx) { window.HuntSfx.click(); } stopAll(); });
 })();
 </script>
 
@@ -799,15 +883,16 @@ Scan the tag and strut away!</p>
           if (reduce) {
             veil.classList.add("assemble", "boo");
             showMsg();
+            if (window.HuntSfx) { window.HuntSfx.fanfare(); }
             return;
           }
           var t = 500;
           setTimeout(function(){ veil.classList.add("assemble"); }, t);
           t += order * 55 + 900;
-          setTimeout(function(){ veil.classList.add("boo");
+          setTimeout(function(){ if (window.HuntSfx) { window.HuntSfx.pop(); } veil.classList.add("boo");
             if (!reduce && typeof window.harvestConfetti === "function") window.harvestConfetti(false); }, t);
           t += 1400;
-          setTimeout(showMsg, t);
+          setTimeout(function(){ showMsg(); if (window.HuntSfx) { window.HuntSfx.fanfare(); } }, t);
         }); });
       }, delay);
     }
@@ -815,12 +900,13 @@ Scan the tag and strut away!</p>
       if (replayFab) replayFab.hidden = false;
     }
     closeBtn.addEventListener("click", function () {
+      if (window.HuntSfx) { window.HuntSfx.click(); }
       if (!reduce && typeof window.harvestConfetti === "function") window.harvestConfetti(true);
       veil.classList.remove("show");
       setTimeout(function(){ veil.hidden = true; showReplayFab(); }, 1500);
     });
-    if (replayFab) replayFab.addEventListener("click", function(){ playCelebration(700); });
-    if (replayInline) replayInline.addEventListener("click", function(){ playCelebration(700); });
+    if (replayFab) replayFab.addEventListener("click", function(){ if (window.HuntSfx) { window.HuntSfx.click(); } playCelebration(700); });
+    if (replayInline) replayInline.addEventListener("click", function(){ if (window.HuntSfx) { window.HuntSfx.click(); } playCelebration(700); });
     if (localStorage.getItem(CKEY)) {
       showReplayFab();
     } else {
