@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Selfie with the Community First Bank of Indiana scarecrow! — Scarecrow Scavenger Hunt">
-<meta property="og:description" content="Friday, October 2, 5:30&#8211;8:00 PM. 21 scarecrows hidden around downtown Kokomo. Scan the QRs, collect the letters, crack the secret phrase.">
+<meta property="og:description" content="Friday, October 2, 5:30&#8211;8:00 PM. 21 scarecrows hidden around downtown Kokomo. Scan the QRs, collect the letters, complete the secret phrase.">
 <meta property="og:image" content="https://kokomoscarecrows.com/img/og-share.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="noindex">
@@ -325,26 +325,35 @@ Scan the tag — your letter&#x27;s found!</p>
   <path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" />
   <path d="M7.5 7a1 1 0 0 1 0-5A4.8 8 0 0 1 12 7a4.8 8 0 0 1 4.5-5 1 1 0 0 1 0 5" />
   <rect x="3" y="7" width="18" height="4" rx="1" /></svg></p>
+    <div class="journey-cta">
+      <p class="journey-kicker"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg> Your selfie journey</p>
+      <p class="journey-text">You&rsquo;re at scarecrow <strong>#12</strong> &mdash; add it to your 21-stop keepsake album.</p>
+      <p class="journey-row"><a class="journey-btn" href="snap.html?stop=12">Snap your selfie</a></p>
+      <p class="journey-prog" hidden><span></span> &middot; <a href="album.html">View your album</a></p>
+    </div>
     <p class="share"><button type="button" id="shareBtn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3" />
   <circle cx="6" cy="12" r="3" />
   <circle cx="18" cy="19" r="3" />
   <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
-  <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></svg> Love this scarecrow? Snap a selfie with it, then share the hunt!</button></p>
+  <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></svg> Enjoying the hunt? Share it with a friend!</button></p>
     <p class="share-fallback" id="shareFallback" hidden>Share via: <a id="fbShare" href="#" target="_blank" rel="noopener">Facebook</a> &middot; <a id="xShare" href="#" target="_blank" rel="noopener">X</a> &middot; <a id="copyShare" href="#">Copy text</a></p>
     <p class="share-note" id="shareNote" hidden></p>
-    <p class="frame-link"><a href="frame.html">Put a fall frame on your scarecrow selfie</a></p>
-    <div class="journey-cta">
-      <p class="journey-kicker"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg> Your selfie journey</p>
-      <p class="journey-text">You&rsquo;re at scarecrow <strong>#12</strong>! Snap your selfie &mdash;
-        we&rsquo;ll frame it with <strong>#KokomoScarecrows2026</strong> and <strong class="jtag"></strong>,
-        and tuck it into your personal 21-stop album.</p>
-      <p class="journey-row"><a class="journey-btn" href="snap.html?stop=12">Snap your journey selfie</a></p>
-      <p class="journey-prog" hidden><span></span> &middot; <a href="album.html">View your album</a></p>
-    </div>
-    <p class="scan-row"><button type="button" id="scanBtn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
-  <circle cx="12" cy="13" r="3" /></svg> Scan your next scarecrow</button></p>
     <p class="credit">Presented by the <a href="https://www.kaaonline.org">Kokomo Art Association</a></p>
   </main>
+<!-- scan-fab: compact floating camera button; opens this page's QR scanner -->
+<style>
+#scanFab { position: fixed; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 9000;
+  width: 58px; height: 58px; border-radius: 50%; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #d9481c, #e8722a 60%, #e8a33d); color: #fff;
+  border: 2px solid rgba(255,255,255,.5); cursor: pointer;
+  box-shadow: 0 6px 24px rgba(217,72,28,.55); animation: scanfab-pulse 2.6s ease-in-out infinite; }
+#scanFab .ico { width: 27px; height: 27px; }
+#scanFab:active { transform: scale(.93); }
+@keyframes scanfab-pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(217,72,28,.55); } 50% { box-shadow: 0 6px 32px rgba(232,163,61,.85); } }
+@media (prefers-reduced-motion: reduce) { #scanFab { animation: none; } }
+</style>
+<button type="button" id="scanFab" aria-label="Scan your next scarecrow" title="Scan your next scarecrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg></button>
 <script>
 /* Autumn leaves: five SVG leaf silhouettes drift down, each cycling smoothly
    through five autumn shades; every silhouette appears several times. */
@@ -718,7 +727,7 @@ window.HuntSfx = (function () {
 <script>
 /* In-page QR scanner: opens the camera, decodes hunt QR codes, jumps to the stop page. */
 (function () {
-  var openBtn = document.getElementById("scanBtn");
+  var openBtn = document.getElementById("scanFab");
   var modal = document.getElementById("scanModal");
   var video = document.getElementById("scanVideo");
   var canvas = document.getElementById("scanCanvas");
@@ -821,9 +830,9 @@ window.HuntSfx = (function () {
 </script>
 
 <div class="solve-veil" id="solveVeil" hidden>
-  <div class="solve-inner" role="dialog" aria-modal="true" aria-label="You solved the secret phrase!">
+  <div class="solve-inner" role="dialog" aria-modal="true" aria-label="The secret phrase is complete!">
     <p class="solve-kicker">You found every scarecrow! </p>
-    <div class="solve-phrase" id="solvePhrase" aria-label="The solved secret phrase"></div>
+    <div class="solve-phrase" id="solvePhrase" aria-label="The completed secret phrase"></div>
     <div class="solve-stage">
       <div class="solve-wheatmask" aria-hidden="true"><div class="solve-wheat"></div></div>
       <div class="solve-rays" aria-hidden="true"></div>
@@ -835,7 +844,7 @@ window.HuntSfx = (function () {
     </div>
     <div class="solve-msg" id="solveMsg" hidden>
       <p class="solve-gotcha">Amazing! </p>
-      <p>You cracked the secret phrase &mdash; <strong>ONE HUNDRED AUTUMNS OF ART</strong>!</p>
+      <p>The secret phrase is complete &mdash; <strong>ONE HUNDRED AUTUMNS OF ART</strong>!</p>
       <p>Thank you for being part of our First Friday Scarecrow Scavenger Hunt. </p>
       <p>Turn in your card at <strong>Artworks Gallery</strong> or <strong>Fired Arts Studio</strong> to enter the <strong>Mystery Prize Basket</strong> drawing! <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14" />
   <path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" />
@@ -1076,43 +1085,24 @@ window.HuntSfx = (function () {
   } catch (e) {}
 })();
 </script>
-<!-- letsgo-fab: floating LET'S GO! camera quick-start -->
-<style>
-#letsGoFab { position: fixed; right: 18px; bottom: 18px; z-index: 9000; display: inline-flex; align-items: center; gap: 8px;
-  background: linear-gradient(135deg, #d9481c, #e8722a 60%, #e8a33d); color: #fff; font-weight: 800; font-size: 15px;
-  letter-spacing: .5px; border: 2px solid rgba(255,255,255,.45); border-radius: 999px; padding: 12px 20px 12px 16px;
-  cursor: pointer; font-family: inherit; text-shadow: 0 1px 2px rgba(122,46,0,.45);
-  box-shadow: 0 6px 24px rgba(217,72,28,.55); animation: letsgo-pulse 2.6s ease-in-out infinite; }
-#letsGoFab .ico { width: 1.3em; height: 1.3em; }
-#letsGoFab:active { transform: scale(.95); }
-@keyframes letsgo-pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(217,72,28,.55); } 50% { box-shadow: 0 6px 34px rgba(232,163,61,.9); } }
-@media (prefers-reduced-motion: reduce) { #letsGoFab { animation: none; } }
-</style>
-<button type="button" id="letsGoFab" aria-label="Start the camera scanner"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg>LET&rsquo;S GO!</button>
 <script>
 (function () {
-  var go = document.getElementById("letsGoFab");
-  if (!go) return;
+  /* Keep the scan button clear of the celebration replay button when it shows. */
+  var fab = document.getElementById("scanFab");
+  if (!fab) return;
   function dodge() {
     try {
-      var fab = document.querySelector(".solve-replay-fab");
-      go.style.bottom = (fab && !fab.hidden) ? "88px" : "18px";
+      var r = document.querySelector(".solve-replay-fab");
+      fab.style.bottom = (r && !r.hidden) ? "88px" : "";
     } catch (e) {}
   }
   dodge();
   try {
-    var fab0 = document.querySelector(".solve-replay-fab");
-    if (fab0 && window.MutationObserver) {
-      new MutationObserver(dodge).observe(fab0, { attributes: true, attributeFilter: ["hidden"] });
+    var r0 = document.querySelector(".solve-replay-fab");
+    if (r0 && window.MutationObserver) {
+      new MutationObserver(dodge).observe(r0, { attributes: true, attributeFilter: ["hidden"] });
     }
   } catch (e) {}
-  go.addEventListener("click", function () {
-    dodge();
-    if (window.HuntSfx) { try { window.HuntSfx.click(); } catch (e) {} }
-    var local = document.getElementById("scanBtn");
-    if (local) { local.click(); return; }
-    location.href = "map.html#scan";
-  });
 })();
 </script>
 

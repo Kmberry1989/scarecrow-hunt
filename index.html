@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta property="og:type" content="website">
 <meta property="og:title" content="First Friday Scarecrow Scavenger Hunt">
-<meta property="og:description" content="Friday, October 2, 5:30&#8211;8:00 PM. A family-friendly hunt: 21 scarecrows hidden around downtown Kokomo. Kids welcome with a parent or guardian — scan the QRs, collect the letters, crack the secret phrase.">
+<meta property="og:description" content="Friday, October 2, 5:30&#8211;8:00 PM. A family-friendly hunt: 21 scarecrows hidden around downtown Kokomo. Kids welcome with a parent or guardian — scan the QRs, collect the letters, complete the secret phrase.">
 <meta property="og:image" content="https://kokomoscarecrows.com/img/og-share.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <title>Thank You to Our First Friday Scarecrow Scavenger Hunt Sponsors!</title>
@@ -148,7 +148,7 @@
     </div>
     <div style="text-align:center;margin:6px 0 2px;position:relative;z-index:1;"><img src="img/brand/first-friday.png" alt="First Friday" style="width:min(320px,70vw);height:auto;"></div>
     <h1 class="autumn">Thank You to Our First Friday Sponsors!</h1>
-    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible.</p> <div class="howto" style="max-width:640px;margin:0 auto 8px;padding:18px 22px;border:1px solid rgba(200,90,23,.35);border-radius:16px;background:rgba(255,253,246,.85);text-align:left;">   <h2 style="margin:0 0 10px;font-size:22px;text-align:center;text-decoration:underline;">How the Scarecrow Scavenger Hunt Works</h2>   <p style="margin:6px 0;text-align:center;"><strong>Friday, October 2, 5:30&ndash;8:00 PM</strong> &mdash; downtown Kokomo</p>   <ol style="margin:8px 0;padding-left:22px;line-height:1.65;">     <li><strong>Grab a passport</strong> &mdash; free hunt card at Artworks Gallery (210 N Main St) or Fired Arts Studio (111 W Sycamore St).</li>     <li><strong>Find all 21 scarecrows</strong> &mdash; point your phone&rsquo;s camera (or any QR scanner app) at each pumpkin&rsquo;s QR code and tap the link that pops up to collect its letter.</li>     <li><strong>Crack the phrase</strong> &mdash; unscramble the secret phrase, turn in your card at either spot, and you&rsquo;re entered in the Mystery Prize Basket drawing.</li>     <li><strong>Snap &amp; share</strong> &mdash; take a selfie with your favorite scarecrow and post it with <strong>#KokomoScarecrows2026</strong> and <strong>#FirstFridayKokomo</strong>. <a href="frame.html">Add a fall frame</a> to it first if you like!</li>   </ol>   <p style="margin:8px 0 0;font-size:14px;opacity:.85;text-align:center;">A family-friendly evening &mdash; kids are encouraged to come hunt with a parent or guardian. Please use crosswalks, and bring a phone and/or flashlight after dark.</p> </div>
+    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible.</p> <div class="howto" style="max-width:640px;margin:0 auto 8px;padding:18px 22px;border:1px solid rgba(200,90,23,.35);border-radius:16px;background:rgba(255,253,246,.85);text-align:left;">   <h2 style="margin:0 0 10px;font-size:22px;text-align:center;text-decoration:underline;">How the Scarecrow Scavenger Hunt Works</h2>   <p style="margin:6px 0;text-align:center;"><strong>Friday, October 2, 5:30&ndash;8:00 PM</strong> &mdash; downtown Kokomo</p>   <ol style="margin:8px 0;padding-left:22px;line-height:1.65;">     <li><strong>Grab a passport</strong> &mdash; free hunt card at Artworks Gallery (210 N Main St) or Fired Arts Studio (111 W Sycamore St).</li>     <li><strong>Find all 21 scarecrows</strong> &mdash; point your phone&rsquo;s camera (or any QR scanner app) at each pumpkin&rsquo;s QR code and tap the link that pops up to collect its letter.</li>     <li><strong>Complete the phrase</strong> &mdash; each scan banks its letter automatically, filling in the secret phrase for you. Turn in your card at either spot, and you&rsquo;re entered in the Mystery Prize Basket drawing.</li>     <li><strong>Snap &amp; share</strong> &mdash; take a selfie with your favorite scarecrow and post it with <strong>#KokomoScarecrows2026</strong> and <strong>#FirstFridayKokomo</strong>. <a href="frame.html">Add a fall frame</a> to it first if you like!</li>   </ol>   <p style="margin:8px 0 0;font-size:14px;opacity:.85;text-align:center;">A family-friendly evening &mdash; kids are encouraged to come hunt with a parent or guardian. Please use crosswalks, and bring a phone and/or flashlight after dark.</p> </div>
 <div class="letsgo-hero">
   <div class="letsgo-camwrap">
     <a class="letsgo-btn" href="map.html#scan">LET&rsquo;S GO!</a>
@@ -481,19 +481,20 @@ window.HuntSfx = (function () {
   };
 })();
 </script>
-<!-- letsgo-fab: floating LET'S GO! camera quick-start -->
+<!-- scan-fab: compact floating camera button -->
 <style>
-#letsGoFab { position: fixed; right: 18px; bottom: 18px; z-index: 9000; display: inline-flex; align-items: center; gap: 8px;
-  background: linear-gradient(135deg, #d9481c, #e8722a 60%, #e8a33d); color: #fff; font-weight: 800; font-size: 15px;
-  letter-spacing: .5px; border: 2px solid rgba(255,255,255,.45); border-radius: 999px; padding: 12px 20px 12px 16px;
-  cursor: pointer; font-family: inherit; text-shadow: 0 1px 2px rgba(122,46,0,.45);
+#letsGoFab { position: fixed; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 9000;
+  width: 58px; height: 58px; border-radius: 50%; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #d9481c, #e8722a 60%, #e8a33d); color: #fff;
+  border: 2px solid rgba(255,255,255,.5); cursor: pointer;
   box-shadow: 0 6px 24px rgba(217,72,28,.55); animation: letsgo-pulse 2.6s ease-in-out infinite; }
-#letsGoFab .ico { width: 1.3em; height: 1.3em; }
-#letsGoFab:active { transform: scale(.95); }
-@keyframes letsgo-pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(217,72,28,.55); } 50% { box-shadow: 0 6px 34px rgba(232,163,61,.9); } }
+#letsGoFab .ico { width: 27px; height: 27px; }
+#letsGoFab:active { transform: scale(.93); }
+@keyframes letsgo-pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(217,72,28,.55); } 50% { box-shadow: 0 6px 32px rgba(232,163,61,.85); } }
 @media (prefers-reduced-motion: reduce) { #letsGoFab { animation: none; } }
 </style>
-<button type="button" id="letsGoFab" aria-label="Start the camera scanner"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg>LET&rsquo;S GO!</button>
+<button type="button" id="letsGoFab" aria-label="Scan a scarecrow QR code" title="Scan a scarecrow QR code"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg></button>
 <script>
 (function () {
   var go = document.getElementById("letsGoFab");
@@ -518,6 +519,18 @@ window.HuntSfx = (function () {
     if (local) { local.click(); return; }
     location.href = "map.html#scan";
   });
+})();
+</script>
+<script>
+/* smart-fab: the floating camera button only appears when the page's own
+   camera button has scrolled out of view, so the two never compete. */
+(function () {
+  var fab = document.getElementById("letsGoFab");
+  var anchor = document.querySelector(".letsgo-btn");
+  if (!fab || !anchor || !("IntersectionObserver" in window)) return;
+  new IntersectionObserver(function (entries) {
+    fab.style.display = entries[0].isIntersecting ? "none" : "";
+  }).observe(anchor);
 })();
 </script>
 
