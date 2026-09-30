@@ -11,26 +11,26 @@
      both read from this table. */
   var STOPS = [
     { n: 1,  name: "Artworks Gallery",                    tag: "#ArtworksGallery" },
-    { n: 2,  name: "Lucky Raven Tattoo Lounge",           tag: "#LuckyRaven" },
-    { n: 3,  name: "Dechert Law Office",                  tag: "#DechertLaw" },
-    { n: 4,  name: "The Hardie Group Real Estate Company", tag: "#HardieGroup" },
+    { n: 2,  name: "Lucky Raven Tattoo Lounge",           tag: "#LuckyRavenTattooLounge" },
+    { n: 3,  name: "Dechert Law Office",                  tag: "#DechertLawOffice" },
+    { n: 4,  name: "The Hardie Group Real Estate Company", tag: "#TheHardieGroup" },
     { n: 5,  name: "Kokomo Area Lions",                   tag: "#KokomoLions" },
     { n: 6,  name: "UpCreations (Urban Outreach)",        tag: "#UpCreations" },
-    { n: 7,  name: "Oscar's Pizza",                       tag: "#OscarsPizza" },
-    { n: 8,  name: "SUTE",                                tag: "#SUTE" },
+    { n: 7,  name: "Oscar's Pizza",                       tag: "#OscarsPizzaKokomo" },
+    { n: 8,  name: "SUTE",                                tag: "#SUTEKokomo" },
     { n: 9,  name: "Kokomo Tribune",                      tag: "#KokomoTribune" },
-    { n: 10, name: "Community Foundation",                tag: "#CommunityFoundation" },
+    { n: 10, name: "Community Foundation",                tag: "#CFHowardCounty" },
     { n: 11, name: "PF Hendricks LLC",                    tag: "#PFHendricks" },
     { n: 12, name: "Community First Bank of Indiana",     tag: "#CommunityFirstBank" },
-    { n: 13, name: "Fired Arts Studio",                   tag: "#FiredArtsStudio" },
-    { n: 14, name: "The Coterie",                         tag: "#TheCoterie" },
-    { n: 15, name: "First Farmers Bank & Trust",          tag: "#FirstFarmersBank" },
-    { n: 16, name: "Pix Pots Pottery",                    tag: "#PixPotsPottery" },
-    { n: 17, name: "IUK SNAHP (Nursing & Allied Health)", tag: "#IUKSNAHP" },
+    { n: 13, name: "Fired Arts Studio",                   tag: "#FiredArtsKokomo" },
+    { n: 14, name: "The Coterie",                         tag: "#TheCoterieKokomo" },
+    { n: 15, name: "First Farmers Bank & Trust",          tag: "#FirstFarmers" },
+    { n: 16, name: "Pix Pots Pottery",                    tag: "#PixPots" },
+    { n: 17, name: "IUK SNAHP (Nursing & Allied Health)", tag: "#IUKnursing" },
     { n: 18, name: "YMCA of Kokomo",                      tag: "#YMCAKokomo" },
     { n: 19, name: "Indiana Underdog Martial Arts",       tag: "#IndianaUnderdog" },
     { n: 20, name: "Tip Top Car Washes",                  tag: "#TipTopCarWash" },
-    { n: 21, name: "Crossroads Community Church",         tag: "#CrossroadsChurch" }
+    { n: 21, name: "Crossroads Community Church",         tag: "#ECrossroads" }
   ];
 
   function stopByNumber(n) {
