@@ -24,7 +24,21 @@
     <p><a href="/">Back to the hunt now</a></p>
   </main>
 <script>
-setTimeout(function(){ location.replace("/"); }, 2600);
+/* Legacy QR cards (first print run, Sep 22) encode the old GitHub Pages host
+   (kmberry1989.github.io/scarecrow-hunt/sNN.html). GitHub redirects those to
+   this domain preserving the path, which lands here — send hunters straight
+   to the right stop page instead of the generic off-trail fallback. */
+(function () {
+  var m = /^\/scarecrow-hunt\/(s\d{2})\.html$/i.exec(location.pathname);
+  if (m) {
+    var n = parseInt(m[1].slice(1), 10);
+    if (n >= 1 && n <= 21) {
+      location.replace("https://kokomoscarecrows.com/" + m[1].toLowerCase() + ".html");
+      return;
+    }
+  }
+  setTimeout(function(){ location.replace("/"); }, 2600);
+})();
 </script>
 <!-- letsgo-fab: floating LET'S GO! camera quick-start -->
 <style>

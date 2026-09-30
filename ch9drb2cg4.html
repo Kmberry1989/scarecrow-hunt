@@ -732,6 +732,17 @@ window.HuntSfx = (function () {
     modal.hidden = true;
   }
 
+  /* Legacy QR cards (first print run, Sep 22) encode the old GitHub Pages host
+     (kmberry1989.github.io/scarecrow-hunt/sNN.html). Map those onto this
+     site's numbered stop pages so old and new print runs both scan. */
+  function legacyStopPath(t) {
+    var m = /^https?:\/\/kmberry1989\.github\.io\/scarecrow-hunt\/(s\d{2})\.html(?:[?#].*)?$/i.exec(String(t).trim());
+    if (!m) return null;
+    var n = parseInt(m[1].slice(1), 10);
+    if (!(n >= 1 && n <= 21)) return null;
+    return "/" + m[1].toLowerCase() + ".html";
+  }
+
   function onDecode(text) {
     var target = null;
     try {
@@ -742,6 +753,10 @@ window.HuntSfx = (function () {
         target = u.href;
       }
     } catch (e) { /* not a URL */ }
+    if (!target) {
+      var legacyPath = legacyStopPath(text);
+      if (legacyPath) { try { target = new URL(legacyPath, location.href).href; } catch (err2) {} }
+    }
     if (target) {
       msg.textContent = "Got it — taking you there…";
       if (window.HuntSfx) { window.HuntSfx.shutter(); window.HuntSfx.collect(); }
