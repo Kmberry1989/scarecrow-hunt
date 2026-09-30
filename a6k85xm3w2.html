@@ -115,26 +115,21 @@
   .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
     background: rgba(247,241,227,.94); border: 2px solid #e7d9bd; border-radius: 999px;
     padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 4px 16px rgba(120,72,20,.12); }
-  .topnav a, .stops-menu summary { color: #173f6b; font-weight: 700; text-decoration: none;
-    font-size: .95rem; white-space: nowrap; }
-  .topnav a:hover, .stops-menu summary:hover, .stops-menu summary:focus-visible { color: #d9481c; }
+  .topnav a, 
+  .topnav a:hover { color: #d9481c; }
   .topnav .brand { font-size: 1.05rem; }
   .topnav .spacer { flex: 1; }
-  .stops-menu { position: relative; }
-  .stops-menu summary { cursor: pointer; list-style: none; }
-  .stops-menu summary::-webkit-details-marker { display: none; }
-  .stops-list { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%);
-    min-width: 270px; max-height: 62vh; overflow-y: auto; background: rgba(255,253,246,.97);
-    border: 2px solid #e7d9bd; border-radius: 14px; box-shadow: 0 12px 32px rgba(120,72,20,.20);
-    padding: .4rem; }
-  .stops-list a { display: flex; gap: .6rem; align-items: baseline; padding: .45rem .6rem;
-    border-radius: 8px; font-weight: 600; font-size: .9rem; }
-  .stops-list a:hover { background: rgba(232,114,42,.14); }
-  .stops-list .sn { color: #c85a17; font-weight: 800; min-width: 1.4em; text-align: right; }
+  
+  
+  
+  
+  
+  
+  
   .totop { border: 2px solid #e7d9bd; border-radius: 999px; padding: .25rem .8rem;
     background: rgba(255,253,246,.9); }
   @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; }
-    .topnav .brand { display: none; } .topnav a, .stops-menu summary { font-size: .85rem; } }
+    .topnav .brand { display: none; } .topnav a,  }
 </style>
 <style>
 /* Solve celebration: phrase assembles in a swirl of autumn leaves, then a friendly scarecrow pops up. */
@@ -157,13 +152,25 @@
 .solve-veil.assemble .solve-letter { opacity: 1; transform: none; filter: blur(0); }
 .solve-stage { position: relative; width: 170px; margin: 18px auto 4px; min-height: 172px; }
 .solve-scare { width: 148px; margin: 0 auto; opacity: 0; }
-.solve-veil.boo .solve-scare { opacity: 1; animation: scare-pop .55s cubic-bezier(.2,1.5,.4,1) forwards; }
-@keyframes scare-pop {
-  0% { transform: scale(0) rotate(-10deg); }
-  55% { transform: scale(1.28) rotate(4deg); }
-  78% { transform: scale(.93) rotate(-2deg); }
-  100% { transform: scale(1) rotate(0); }
+.solve-veil.boo .solve-scare { opacity: 1; animation: scare-rise .85s cubic-bezier(.2,1.35,.35,1) forwards; }
+@keyframes scare-rise {
+  0% { transform: translateY(110px) scale(.25) rotate(-10deg); opacity: 0; }
+  40% { transform: translateY(-16px) scale(1.14) rotate(4deg); opacity: 1; }
+  62% { transform: translateY(8px) scale(.95) rotate(-2deg); opacity: 1; }
+  80% { transform: translateY(-5px) scale(1.04) rotate(1.5deg); opacity: 1; }
+  100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
 }
+.solve-shock { position: absolute; left: 50%; top: 44%; width: 46px; height: 46px; margin: -23px 0 0 -23px;
+  border: 5px solid rgba(232,163,61,.95); border-radius: 50%; opacity: 0; pointer-events: none; }
+.solve-veil.boo .solve-shock { animation: shock 1.15s ease-out .05s forwards; }
+@keyframes shock {
+  0% { opacity: .95; transform: scale(.25); }
+  100% { opacity: 0; transform: scale(5.5); }
+}
+.solve-flash { position: fixed; inset: 0; z-index: 10002; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse at 50% 38%, rgba(242,193,78,.5), rgba(242,193,78,0) 62%); }
+.solve-flash.go { animation: goldflash .9s ease-out forwards; }
+@keyframes goldflash { 0% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: 0; } }
 .solve-boo { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   font-size: 40px; font-weight: 900; letter-spacing: 4px; color: #e8722a; margin: 0;
   text-shadow: 0 0 26px rgba(232,114,42,.9), 0 3px 0 #7a2e00; opacity: 0; pointer-events: none; }
@@ -203,6 +210,7 @@
   .solve-veil, .solve-kicker, .solve-letter, .solve-msg { transition: none !important; }
   .solve-letter { opacity: 1; transform: none; filter: none; }
   .solve-veil.boo .solve-scare { animation: none; opacity: 1; transform: none; }
+  .solve-veil.boo .solve-shock, .solve-flash.go { animation: none !important; }
   .solve-veil.boo .solve-boo { animation: none; opacity: 1; position: static; margin: 6px 0; }
   .solve-msg.show { opacity: 1; transform: none; }
 }
@@ -214,37 +222,11 @@
     <a class="brand" href="index.html">Scarecrow Hunt</a>
     <a href="index.html">Home</a>
     <a href="map.html">Trail Map</a>
-    <details class="stops-menu">
-      <summary>All 21 Stops</summary>
-      <div class="stops-list">
-      <a href="m767hwhp83.html"><span class="sn">1</span> Artworks Gallery</a>
-      <a href="vubcgrg55e.html"><span class="sn">2</span> Lucky Raven Tattoo Lounge</a>
-      <a href="6v52zvf4hp.html"><span class="sn">3</span> Dechert Law Office</a>
-      <a href="kf2b52z26p.html"><span class="sn">4</span> The Hardie Group Real Estate Company</a>
-      <a href="8sd43q55gm.html"><span class="sn">5</span> Kokomo Area Lions</a>
-      <a href="a6k85xm3w2.html"><span class="sn">6</span> UpCreations (Urban Outreach)</a>
-      <a href="fntm5d945j.html"><span class="sn">7</span> Oscar's Pizza</a>
-      <a href="uyqr8kny9q.html"><span class="sn">8</span> SUTE</a>
-      <a href="stmvvmenc4.html"><span class="sn">9</span> Kokomo Tribune</a>
-      <a href="da9sry6g59.html"><span class="sn">10</span> Community Foundation</a>
-      <a href="6d89w8vtkj.html"><span class="sn">11</span> PF Hendricks LLC</a>
-      <a href="g7mq4y6mj7.html"><span class="sn">12</span> Community First Bank of Indiana</a>
-      <a href="8pwb98skub.html"><span class="sn">13</span> Fired Arts Studio</a>
-      <a href="dvcvkys85w.html"><span class="sn">14</span> The Coterie</a>
-      <a href="w2drgs2pmu.html"><span class="sn">15</span> First Farmers Bank & Trust</a>
-      <a href="s7fsfuwse5.html"><span class="sn">16</span> Pix Pots Pottery</a>
-      <a href="p4fy6qhw2x.html"><span class="sn">17</span> IUK SNAHP (Nursing & Allied Health)</a>
-      <a href="sjnypgxnps.html"><span class="sn">18</span> YMCA of Kokomo</a>
-      <a href="cbhxnrtxuh.html"><span class="sn">19</span> Indiana Underdog Martial Arts</a>
-      <a href="7qgjqpr33t.html"><span class="sn">20</span> Tip Top Car Washes</a>
-      <a href="ch9drb2cg4.html"><span class="sn">21</span> Crossroads Community Church</a>
-      </div>
-    </details>
     <span class="spacer"></span>
     <a class="totop" href="#top">&uarr; Top</a>
   </nav>
   <main>
-    <p class="kicker">&#127810; First Friday Scarecrow Scavenger Hunt</p>
+    <p class="kicker">First Friday Scarecrow Scavenger Hunt</p>
     <p class="num">Scarecrow #6 of 21</p>
     <p class="label">Sponsored by</p>
     <h1>UpCreations (Urban Outreach)</h1>
@@ -254,19 +236,19 @@
     <p class="brought-by">Brought to you by <a href="https://www.kokomourbanoutreach.org" target="_blank" rel="noopener">UpCreations (Urban Outreach)</a></p>
     <p class="letter-line">Write it in blank #6.</p>
     <div class="clue-card">
-      <p class="clue-label">&#x1f50d; About this scarecrow</p>
+      <p class="clue-label">About this scarecrow</p>
       <p class="riddle">With paint and purpose, bold and bright,
 This &#x27;crow lifts spirits to new height.
 Made by hands that build and care —
 Scan the tag — there&#x27;s joy to share!</p>
     </div>
-    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=515+N+Buckeye+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">&#x1f9ed; Next stop</p><p class="next-name">Oscar&#x27;s Pizza</p><p class="next-dir">Off you go &mdash; follow your feet! &#x1f463;</p><p class="next-dir">A short stroll north on Buckeye.</p><p class="next-hint">&#x1f4cd; Tap to open in Google Maps</p></a>
-    <p class="anyorder">&#x1f983; Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
-    <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry! &#x1f381;</p>
-    <p class="share"><button type="button" id="shareBtn">&#x1f4f8; Love this scarecrow? Tap to share the hunt!</button></p>
+    <a class="next-card" href="https://www.google.com/maps/search/?api=1&amp;query=515+N+Buckeye+St.%2C+Kokomo%2C+IN" target="_blank" rel="noopener"><p class="clue-label">Next stop</p><p class="next-name">Oscar&#x27;s Pizza</p><p class="next-dir">Off you go &mdash; follow your feet!</p><p class="next-dir">A short stroll north on Buckeye.</p><p class="next-hint">Tap to open in Google Maps</p></a>
+    <p class="anyorder">Jumped in here? Great &mdash; visit the scarecrows in any order!</p>
+    <p class="foot">Turn in your completed card at <strong>Artworks Gallery</strong> (210 N Main St &mdash; pickup at the door, turn-in upstairs) or <strong>Fired Arts Studio</strong> (111 W Sycamore St &mdash; $10 ceramic scarecrow paint, 30&ndash;60 min) for your <strong>Mystery Prize Basket</strong> entry!</p>
+    <p class="share"><button type="button" id="shareBtn">Love this scarecrow? Tap to share the hunt!</button></p>
     <p class="share-fallback" id="shareFallback" hidden>Share via: <a id="fbShare" href="#" target="_blank" rel="noopener">Facebook</a> &middot; <a id="xShare" href="#" target="_blank" rel="noopener">X</a> &middot; <a id="copyShare" href="#">Copy text</a></p>
     <p class="share-note" id="shareNote" hidden></p>
-    <p class="scan-row"><button type="button" id="scanBtn">&#x1f4f7; Scan your next scarecrow</button></p>
+    <p class="scan-row"><button type="button" id="scanBtn">Scan your next scarecrow</button></p>
     <p class="credit">Presented by the <a href="https://www.kaaonline.org">Kokomo Art Association</a></p>
   </main>
 <script>
@@ -430,7 +412,7 @@ Scan the tag — there&#x27;s joy to share!</p>
 (function () {
   var btn = document.getElementById("shareBtn");
   if (!btn) return;
-  var text = "I found the UpCreations (Urban Outreach) scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo! 🎃";
+  var text = "I found the UpCreations (Urban Outreach) scarecrow on the First Friday Scarecrow Scavenger Hunt in downtown Kokomo!";
   var url = "https://kokomoscarecrows.com/";
   var note = document.getElementById("shareNote");
   function say(msg) { if (note) { note.hidden = false; note.textContent = msg; } }
@@ -459,7 +441,7 @@ Scan the tag — there&#x27;s joy to share!</p>
         document.getElementById("xShare").href =
           "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) +
           "&url=" + encodeURIComponent(url);
-        btn.innerHTML = "📸 Share the hunt:";
+        btn.innerHTML = "Share the hunt:";
       }
     }
   });
@@ -487,7 +469,7 @@ Scan the tag — there&#x27;s joy to share!</p>
 </style>
 <div class="scan-modal" id="scanModal" hidden>
   <div class="scan-box" role="dialog" aria-modal="true" aria-label="Scan a scarecrow QR code">
-    <p class="scan-title">&#x1f4f7; Point at the pumpkin&rsquo;s QR code</p>
+    <p class="scan-title">Point at the pumpkin&rsquo;s QR code</p>
     <video id="scanVideo" playsinline muted></video>
     <canvas id="scanCanvas" hidden></canvas>
     <p class="scan-msg" id="scanMsg">Starting camera&hellip;</p>
@@ -587,16 +569,40 @@ Scan the tag — there&#x27;s joy to share!</p>
     <p class="solve-kicker">You found every scarecrow! </p>
     <div class="solve-phrase" id="solvePhrase" aria-label="The solved secret phrase"></div>
     <div class="solve-stage">
+      <div class="solve-shock" aria-hidden="true"></div>
       <div class="solve-scare" aria-hidden="true">
         <svg viewBox="0 0 160 178" width="148" height="166" role="img" aria-label="A friendly scarecrow">
+          <g stroke="#a06a35" stroke-width="10" stroke-linecap="round">
+            <line x1="46" y1="94" x2="18" y2="116"/>
+            <line x1="114" y1="94" x2="142" y2="116"/>
+          </g>
+          <g stroke="#f0c53d" stroke-width="4" stroke-linecap="round">
+            <line x1="18" y1="116" x2="6" y2="108"/>
+            <line x1="18" y1="116" x2="8" y2="118"/>
+            <line x1="18" y1="116" x2="12" y2="128"/>
+            <line x1="142" y1="116" x2="154" y2="108"/>
+            <line x1="142" y1="116" x2="152" y2="118"/>
+            <line x1="142" y1="116" x2="148" y2="128"/>
+          </g>
           <path d="M52 132 L34 178 L126 178 L108 132 Z" fill="#b04444"/>
           <path d="M52 132 L80 156 L108 132" fill="none" stroke="#7e2c2c" stroke-width="4"/>
           <line x1="66" y1="150" x2="60" y2="178" stroke="#7e2c2c" stroke-width="3"/>
           <line x1="94" y1="150" x2="100" y2="178" stroke="#7e2c2c" stroke-width="3"/>
+          <g stroke="#f0c53d" stroke-width="4" stroke-linecap="round">
+            <line x1="42" y1="170" x2="32" y2="174"/>
+            <line x1="118" y1="170" x2="128" y2="174"/>
+          </g>
           <rect x="70" y="122" width="20" height="16" fill="#d9a066"/>
           <rect x="40" y="56" width="80" height="74" rx="32" fill="#d9a066"/>
           <path d="M48 64 L112 64" stroke="#b57e4a" stroke-width="2" stroke-dasharray="4 3" opacity=".7"/>
           <path d="M48 122 L112 122" stroke="#b57e4a" stroke-width="2" stroke-dasharray="4 3" opacity=".7"/>
+          <rect x="46" y="104" width="24" height="20" rx="4" fill="#c23b3b" stroke="#7e2c2c" stroke-width="2" stroke-dasharray="4 3" transform="rotate(-8 58 114)"/>
+          <g stroke="#f0c53d" stroke-width="4" stroke-linecap="round">
+            <line x1="58" y1="128" x2="50" y2="140"/>
+            <line x1="66" y1="130" x2="62" y2="144"/>
+            <line x1="102" y1="128" x2="110" y2="140"/>
+            <line x1="94" y1="130" x2="98" y2="144"/>
+          </g>
           <g stroke="#f0c53d" stroke-width="5" stroke-linecap="round">
             <line x1="44" y1="66" x2="26" y2="54"/>
             <line x1="50" y1="74" x2="32" y2="70"/>
@@ -607,6 +613,14 @@ Scan the tag — there&#x27;s joy to share!</p>
           <path d="M50 50 L60 12 L100 12 L110 50 Z" fill="#96622f"/>
           <rect x="50" y="36" width="60" height="11" fill="#4e2f12"/>
           <rect x="76" y="36" width="8" height="11" fill="#c23b3b"/>
+          <g>
+            <ellipse cx="121" cy="36" rx="10" ry="7" fill="#2b2b2b"/>
+            <circle cx="129" cy="30" r="6" fill="#2b2b2b"/>
+            <path d="M135 30 l7 2.5 l-7 2.5 z" fill="#e8a33d"/>
+            <circle cx="131" cy="28.5" r="1.6" fill="#fff"/>
+            <line x1="117" y1="42" x2="117" y2="48" stroke="#2b2b2b" stroke-width="2.5"/>
+            <line x1="125" y1="42" x2="125" y2="48" stroke="#2b2b2b" stroke-width="2.5"/>
+          </g>
           <rect x="98" y="62" width="20" height="15" rx="3" fill="#c08b52" stroke="#7a4a22" stroke-width="2" stroke-dasharray="3 2"/>
           <circle cx="64" cy="90" r="7" fill="#33200f"/>
           <circle cx="96" cy="90" r="7" fill="#33200f"/>
@@ -624,9 +638,9 @@ Scan the tag — there&#x27;s joy to share!</p>
       <p class="solve-gotcha">Amazing! </p>
       <p>You cracked the secret phrase &mdash; <strong>ONE HUNDRED AUTUMNS OF ART</strong>!</p>
       <p>Thank you for being part of our First Friday Scarecrow Scavenger Hunt. </p>
-      <p>Turn in your card at <strong>Artworks Gallery</strong> or <strong>Fired Arts Studio</strong> to enter the <strong>Mystery Prize Basket</strong> drawing! &#x1f381;</p>
+      <p>Turn in your card at <strong>Artworks Gallery</strong> or <strong>Fired Arts Studio</strong> to enter the <strong>Mystery Prize Basket</strong> drawing!</p>
       <div class="solve-actions">
-        <button type="button" class="solve-close" id="solveClose">Hooray! &#x1f389;</button>
+        <button type="button" class="solve-close" id="solveClose">Hooray!</button>
         <button type="button" class="solve-replay-inline" id="solveReplayInline">&#x21bb; Replay</button>
       </div>
     </div>
@@ -634,6 +648,99 @@ Scan the tag — there&#x27;s joy to share!</p>
 </div>
 <button type="button" class="solve-replay-fab" id="solveReplay" hidden aria-label="Replay the celebration">&#x21bb;</button>
 
+
+<script>
+/* Harvest confetti: autumn bursts fired by the Hooray button (and a small
+   pop when the scarecrow appears). The canvas is created on demand, animated
+   with requestAnimationFrame, and removes itself when the last piece lands. */
+(function () {
+  var COLORS = ["#d9481c", "#e8722a", "#e8a33d", "#f2c14e", "#a34a1f", "#7fb069", "#f7f1e3"];
+  var canvas = null, ctx = null, parts = [], raf = 0, flash = null;
+  function size() { if (canvas) { canvas.width = window.innerWidth; canvas.height = window.innerHeight; } }
+  function ensure() {
+    if (!canvas) {
+      canvas = document.createElement("canvas");
+      canvas.setAttribute("aria-hidden", "true");
+      canvas.style.cssText = "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10003;";
+      ctx = canvas.getContext("2d");
+      window.addEventListener("resize", size);
+    }
+    if (!canvas.parentNode) document.body.appendChild(canvas);
+    size();
+  }
+  function burst(x, y, n, spread, lift) {
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2;
+      var sp = (0.25 + Math.random() * 0.75) * spread;
+      parts.push({
+        x: x, y: y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp - lift,
+        w: 6 + Math.random() * 7,
+        h: 9 + Math.random() * 9,
+        r: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.35,
+        c: COLORS[(Math.random() * COLORS.length) | 0],
+        shape: (Math.random() * 3) | 0,
+        life: 1,
+        decay: 0.0035 + Math.random() * 0.005
+      });
+    }
+  }
+  function frame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var alive = [];
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      p.vy += 0.14; p.vx *= 0.99; p.vy *= 0.996;
+      p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life -= p.decay;
+      if (p.life <= 0 || p.y > canvas.height + 40) continue;
+      alive.push(p);
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.life * 1.6));
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      if (p.shape === 0) { ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); }
+      else if (p.shape === 1) { ctx.beginPath(); ctx.arc(0, 0, p.w / 2, 0, 6.3); ctx.fill(); }
+      else {
+        ctx.beginPath(); ctx.ellipse(0, 0, p.w / 2, p.h / 3, 0, 0, 6.3); ctx.fill();
+        ctx.strokeStyle = "rgba(90,48,24,.5)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(-p.w / 2, 0); ctx.lineTo(p.w / 2, 0); ctx.stroke();
+      }
+      ctx.restore();
+    }
+    parts = alive;
+    if (parts.length) { raf = requestAnimationFrame(frame); }
+    else { raf = 0; if (canvas.parentNode) canvas.parentNode.removeChild(canvas); }
+  }
+  function goldFlash() {
+    if (!flash) {
+      flash = document.createElement("div");
+      flash.className = "solve-flash";
+      flash.setAttribute("aria-hidden", "true");
+    }
+    if (!flash.parentNode) document.body.appendChild(flash);
+    flash.classList.remove("go");
+    void flash.offsetWidth;
+    flash.classList.add("go");
+    setTimeout(function () { if (flash.parentNode) flash.parentNode.removeChild(flash); }, 1000);
+  }
+  window.harvestConfetti = function (big) {
+    ensure();
+    goldFlash();
+    var W = canvas.width, H = canvas.height;
+    if (big) {
+      burst(W / 2, H * 0.32, 90, 11, 7);
+      setTimeout(function () { burst(W * 0.10, H * 0.72, 55, 8, 10); }, 160);
+      setTimeout(function () { burst(W * 0.90, H * 0.72, 55, 8, 10); }, 340);
+    } else {
+      burst(W / 2, H * 0.40, 36, 7, 6);
+    }
+    if (!raf) raf = requestAnimationFrame(frame);
+  };
+})();
+</script>
 
 <script>
 /* Solve celebration: when all 21 letters are banked, the phrase assembles in a
@@ -703,7 +810,8 @@ Scan the tag — there&#x27;s joy to share!</p>
           var t = 500;
           setTimeout(function(){ veil.classList.add("assemble"); }, t);
           t += order * 55 + 900;
-          setTimeout(function(){ veil.classList.add("boo"); }, t);
+          setTimeout(function(){ veil.classList.add("boo");
+            if (!reduce && typeof window.harvestConfetti === "function") window.harvestConfetti(false); }, t);
           t += 1400;
           setTimeout(showMsg, t);
         }); });
@@ -713,8 +821,9 @@ Scan the tag — there&#x27;s joy to share!</p>
       if (replayFab) replayFab.hidden = false;
     }
     closeBtn.addEventListener("click", function () {
+      if (!reduce && typeof window.harvestConfetti === "function") window.harvestConfetti(true);
       veil.classList.remove("show");
-      setTimeout(function(){ veil.hidden = true; showReplayFab(); }, 900);
+      setTimeout(function(){ veil.hidden = true; showReplayFab(); }, 1500);
     });
     if (replayFab) replayFab.addEventListener("click", function(){ playCelebration(700); });
     if (replayInline) replayInline.addEventListener("click", function(){ playCelebration(700); });
