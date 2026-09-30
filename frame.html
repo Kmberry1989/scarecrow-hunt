@@ -176,6 +176,13 @@ window.HuntSfx = (function () {
       tone(783.99, 0.17, 0.14, "triangle", 0.085);
       tone(1046.5, 0.255, 0.28, "sine", 0.075);
     }); },
+    milestone: function () { whenReady(function () {
+      tone(659.25, 0, 0.1, "triangle", 0.09);
+      tone(830.61, 0.09, 0.1, "triangle", 0.09);
+      tone(987.77, 0.18, 0.1, "triangle", 0.09);
+      tone(1318.5, 0.27, 0.32, "sine", 0.085);
+      tone(659.25, 0.27, 0.32, "sine", 0.04);
+    }); },
     pop: function () { whenReady(function () {
       tone(280, 0, 0.14, "square", 0.035, 880);
       tone(1400, 0.05, 0.09, "sine", 0.045);

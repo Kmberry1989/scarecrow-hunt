@@ -535,6 +535,13 @@ window.HuntSfx = (function () {
       tone(783.99, 0.17, 0.14, "triangle", 0.085);
       tone(1046.5, 0.255, 0.28, "sine", 0.075);
     }); },
+    milestone: function () { whenReady(function () {
+      tone(659.25, 0, 0.1, "triangle", 0.09);
+      tone(830.61, 0.09, 0.1, "triangle", 0.09);
+      tone(987.77, 0.18, 0.1, "triangle", 0.09);
+      tone(1318.5, 0.27, 0.32, "sine", 0.085);
+      tone(659.25, 0.27, 0.32, "sine", 0.04);
+    }); },
     pop: function () { whenReady(function () {
       tone(280, 0, 0.14, "square", 0.035, 880);
       tone(1400, 0.05, 0.09, "sine", 0.045);
@@ -576,7 +583,6 @@ window.HuntSfx = (function () {
     if (/^[A-Z]$/.test(letter)) letters[stop] = letter;
     localStorage.setItem(VKEY, JSON.stringify(visited));
     localStorage.setItem(LKEY, JSON.stringify(letters));
-    if (isNewLetter && window.HuntSfx) { window.HuntSfx.collect(); }
     var WORDS = [["O",1,15],[6,10,18,4,13,8,17],[3,16,21,11,19,7,14],[20,2],[5,9,12]];
     var wrap = document.createElement("div");
     var title = document.createElement("p");
@@ -586,6 +592,18 @@ window.HuntSfx = (function () {
     /* celebration-plus: segmented progress bar; fills fluidly as scans are banked. */
     var foundN = 0, fk;
     for (fk in letters) { if (/^[A-Z]$/.test(letters[fk])) foundN++; }
+    /* gamification: milestone moments reset the motivational cycle - a first-scan
+       welcome plus celebrations at each third of the trail. */
+    var MSTONES = {1: "First letter banked - you're on the board!",
+                   7: "7 of 21 - a third of the way there!",
+                   14: "14 of 21 - two thirds done, home stretch!"};
+    var msMsg = (isNewLetter && MSTONES[foundN]) || null;
+    if (isNewLetter && window.HuntSfx) {
+      try {
+        if (msMsg && window.HuntSfx.milestone) window.HuntSfx.milestone();
+        else window.HuntSfx.collect();
+      } catch (e) {}
+    }
     var prog = document.createElement("div");
     prog.className = "hunt-progress";
     var track = document.createElement("div");
@@ -606,9 +624,34 @@ window.HuntSfx = (function () {
     prog.appendChild(track);
     var plabel = document.createElement("p");
     plabel.className = "hunt-progress-label";
-    plabel.textContent = Math.min(foundN, 21) + " of 21 scarecrows found";
+    /* gamification: near the finish, frame the small remaining effort (goal-gradient). */
+    var cappedN = Math.min(foundN, 21), remainN = 21 - cappedN;
+    plabel.textContent = cappedN + " of 21 scarecrows found" +
+      (remainN > 0 && remainN <= 3 ? " - almost there, just " + remainN + " to go!" : "");
     prog.appendChild(plabel);
     wrap.appendChild(prog);
+    if (msMsg) {
+      var mstone = document.createElement("div");
+      mstone.className = "hunt-milestone";
+      mstone.setAttribute("role", "status");
+      var reduceMotion = false;
+      try { reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+      mstone.style.cssText = "margin:10px auto 2px;max-width:430px;padding:10px 18px;border-radius:999px;" +
+        "background:linear-gradient(180deg,#ffd97a,#f2a93b);color:#3a2a12;font-weight:700;text-align:center;" +
+        "box-shadow:0 3px 10px rgba(0,0,0,.18);font-size:15px;line-height:1.35;";
+      mstone.textContent = msMsg;
+      if (!reduceMotion) {
+        mstone.style.transition = "transform .45s cubic-bezier(.2,1.4,.4,1), opacity .45s ease";
+        mstone.style.transform = "scale(.7)";
+        mstone.style.opacity = "0";
+      }
+      wrap.appendChild(mstone);
+      if (!reduceMotion) {
+        requestAnimationFrame(function () { requestAnimationFrame(function () {
+          mstone.style.transform = "scale(1)"; mstone.style.opacity = "1";
+        }); });
+      }
+    }
     var grid = document.createElement("div");
     grid.className = "letter-bank";
     grid.setAttribute("aria-label", "Letters placed in their card blanks");

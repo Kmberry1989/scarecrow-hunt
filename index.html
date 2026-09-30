@@ -148,7 +148,7 @@
 
 <div class="keepsake" style="max-width:640px;margin:18px auto 8px;padding:20px 24px;border:2px solid #e8722a;border-radius:16px;background:linear-gradient(165deg,#fffef9,#fdf3e0);text-align:left;box-shadow:0 10px 30px rgba(120,72,20,.18);">
    <h2 style="margin:0 0 10px;font-size:22px;text-align:center;color:#173f6b;">Scarecrow Selfie Story</h2>
-   <p style="margin:8px 0;line-height:1.65;">The hunt card is the game &mdash; but your camera can make it <em>unforgettable</em>. Snap a selfie at each scarecrow and build your own <strong>Scarecrow Selfie Story slideshow</strong>: every stop framed in fall designs <strong>you</strong> pick, each photo carrying its sponsor&rsquo;s name.</p>
+   <p style="margin:8px 0;line-height:1.65;">The hunt card is the game &mdash; but your camera can make it <em>unforgettable</em>. Snap a photo at each scarecrow &mdash; a selfie, the scarecrow itself, or the scene around it &mdash; and build your own <strong>Scarecrow Selfie Story slideshow</strong>: every stop framed in fall designs <strong>you</strong> pick, each photo carrying its sponsor&rsquo;s name.</p>
    <p style="margin:8px 0;line-height:1.65;">It&rsquo;s the perfect share &mdash; post your favorites with <strong>#KokomoScarecrows2026</strong> and <strong>#FirstFridayKokomo</strong> and give the local businesses behind the hunt a little spotlight of their own. Your photos stay on <strong>your</strong> phone; nothing is ever uploaded anywhere.</p>
    <p style="margin:8px 0 0;line-height:1.65;font-size:15px;">Totally optional, completely yours &mdash; but your future self will thank you.</p>
  </div>
@@ -436,6 +436,13 @@ window.HuntSfx = (function () {
       tone(659.25, 0.085, 0.11, "triangle", 0.085);
       tone(783.99, 0.17, 0.14, "triangle", 0.085);
       tone(1046.5, 0.255, 0.28, "sine", 0.075);
+    }); },
+    milestone: function () { whenReady(function () {
+      tone(659.25, 0, 0.1, "triangle", 0.09);
+      tone(830.61, 0.09, 0.1, "triangle", 0.09);
+      tone(987.77, 0.18, 0.1, "triangle", 0.09);
+      tone(1318.5, 0.27, 0.32, "sine", 0.085);
+      tone(659.25, 0.27, 0.32, "sine", 0.04);
     }); },
     pop: function () { whenReady(function () {
       tone(280, 0, 0.14, "square", 0.035, 880);
