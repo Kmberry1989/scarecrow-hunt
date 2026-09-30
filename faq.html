@@ -20,6 +20,10 @@
     font-size: .95rem; white-space: nowrap; }
   .topnav a:hover { color: #ffe9c4; }
   .topnav .navlinks { display: flex; flex: 1; justify-content: space-evenly; align-items: center; }
+  .topnav { overflow: hidden; }
+  .topnav::before { content: ""; position: absolute; top: -35%; bottom: -35%; left: var(--glow-x, 50%); width: 260px; transform: translateX(-50%);
+    background: radial-gradient(ellipse 130px 80px at center, rgba(255,244,214,.55), rgba(255,244,214,0) 70%); pointer-events: none; }
+  .topnav > * { position: relative; z-index: 1; }
   .topnav .brand { font-size: 1.05rem; }
   @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; }
     .topnav .brand { display: none; } .topnav a { font-size: .85rem; } }
@@ -47,6 +51,20 @@
     <a href="map.html">Trail Map</a>
     <a href="faq.html">FAQ</a></span>
   </nav>
+  <script>
+  /* Nav glow: the brightest point of the nav gradient sits behind the active page's link. */
+  (function(){try{
+    var nav=document.querySelector('.topnav');if(!nav)return;
+    var path=location.pathname.replace(/\/$/,'/index.html'),active=null;
+    var links=nav.querySelectorAll('.navlinks a');
+    for(var i=0;i<links.length;i++){try{if(new URL(links[i].getAttribute('href'),location.href).pathname===path){active=links[i];break;}}catch(e){}}
+    if(!active)return;
+    active.setAttribute('aria-current','page');
+    function place(){var r=nav.getBoundingClientRect(),a=active.getBoundingClientRect();nav.style.setProperty('--glow-x',(a.left-r.left+a.width/2)+'px');}
+    place();window.addEventListener('resize',place);
+    if(document.fonts&&document.fonts.ready){document.fonts.ready.then(place).catch(function(){});}
+  }catch(e){}})();
+  </script>
   <main>
     <h1>Frequently Asked Questions</h1>
     <p class="sub">Everything you need for the First Friday Scarecrow Scavenger Hunt.</p>
