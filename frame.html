@@ -47,6 +47,17 @@
   #dlBtn { display: none; background: #173f6b; color: #fff; font-weight: 800; font-size: 1.12rem;
     border: none; border-radius: 999px; padding: 16px 38px; cursor: pointer; margin-top: 14px; }
   #dlBtn:active { transform: scale(.97); }
+  .dl-confirm { margin: 18px auto 0; max-width: 420px; background: #fffdf6;
+    border: 2px solid rgba(200,90,23,.35); border-radius: 16px; padding: 16px 20px; }
+  .dl-confirm[hidden] { display: none; }
+  .dl-done { margin: 0 0 6px; color: #6b4a2a; font-size: 1.05rem; }
+  .tagtip { font-size: .92rem; color: #6b5d49; margin: 0 0 12px; line-height: 1.5; }
+  #copyTags { background: #d9481c; color: #fff; font-weight: 800; font-size: 1rem;
+    border: none; border-radius: 999px; padding: 13px 30px; cursor: pointer;
+    box-shadow: 0 0 18px rgba(217,72,28,.35); }
+  #copyTags:active { transform: scale(.97); }
+  .copied { display: inline-block; margin-left: 10px; font-weight: 700; color: #2e7d32; }
+  .copied[hidden] { display: none; }
   .frames { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; margin: 2px 0 14px; }
   .frames-label { font-weight: 700; color: #6b4a2a; }
   .frames button { padding: 12px 22px; border-radius: 999px; border: 2px solid rgba(200,90,23,.55); background: #fffdf6; color: #6b4a2a; font-weight: 700; font-size: 1rem; cursor: pointer; }
@@ -94,6 +105,12 @@
       <input type="file" id="filePick" accept="image/*">
       <div id="stage"></div>
       <button type="button" id="dlBtn">Download framed photo</button>
+      <div class="dl-confirm" id="dlConfirm" hidden>
+        <p class="dl-done"><strong>Saved!</strong> Your framed selfie downloaded.</p>
+        <p class="tagtip">The hashtags are baked right into your photo &mdash; pasting them into your caption too helps even more locals find your post.</p>
+        <button type="button" id="copyTags">Copy hashtags</button>
+        <span class="copied" id="copiedMsg" role="status" hidden></span>
+      </div>
       <p class="priv"><strong>Private by design:</strong> your photo never leaves your phone. The frame is added right here in your browser &mdash; nothing is uploaded anywhere.</p>
     </div>
   </main>
@@ -433,7 +450,7 @@ window.HuntSfx = (function () {
       ctx.strokeStyle = "#e8a33d"; ctx.lineWidth = 3;
       ctx.strokeRect(34, 34, W - 68, H - 68);
       leafCluster(ctx, W - 92, H - 92, Math.PI * 1.78, 40);
-      drawTag("rgba(23,63,107,.88)", null, "#f7f1e3", 44, 88, H - 152);
+      drawTag("#173f6b", "#e8a33d", "#f7f1e3", 44, 88, H - 152);
     } else {
       bw = 56;
       bg = ctx.createLinearGradient(0, 0, W, H);
@@ -450,7 +467,7 @@ window.HuntSfx = (function () {
       leafCluster(ctx, W - bw - cs, bw + cs, Math.PI * 0.22, 46);
       leafCluster(ctx, bw + cs, H - bw - cs, Math.PI * 1.22, 46);
       leafCluster(ctx, W - bw - cs, H - bw - cs, Math.PI * 1.78, 46);
-      drawTag("rgba(23,63,107,.88)", "#e8a33d", "#f7f1e3", 58, 108, H - bw - 108 - 46);
+      drawTag("#173f6b", "#e8a33d", "#f7f1e3", 58, 108, H - bw - 108 - 46);
     }
   }
   function render(){
@@ -504,6 +521,29 @@ window.HuntSfx = (function () {
       document.body.appendChild(a); a.click();
       setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
     }, "image/png");
+    document.getElementById("dlConfirm").hidden = false;
+  });
+  document.getElementById("copyTags").addEventListener("click", function(){
+    if (window.HuntSfx) { window.HuntSfx.click(); }
+    var tags = "#KokomoScarecrows #FirstFridayKokomo";
+    var msg = document.getElementById("copiedMsg");
+    function done(ok){
+      msg.hidden = false;
+      msg.textContent = ok ? "Copied \u2014 paste them into your caption!" : "Copy these: " + tags;
+    }
+    function fallback(){
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = tags;
+        ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand("copy");
+        ta.remove(); done(!!ok);
+      } catch (e) { done(false); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(tags).then(function(){ done(true); }, fallback);
+    } else { fallback(); }
   });
   var frameBtns = document.querySelectorAll("#framePick button");
   for (var fi = 0; fi < frameBtns.length; fi++) {
