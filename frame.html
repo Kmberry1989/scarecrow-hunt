@@ -24,9 +24,8 @@
   .topnav::before { content: ""; position: absolute; top: -35%; bottom: -35%; left: var(--glow-x, 50%); width: 260px; transform: translateX(-50%);
     background: radial-gradient(ellipse 130px 80px at center, rgba(255,244,214,.55), rgba(255,244,214,0) 70%); pointer-events: none; }
   .topnav > * { position: relative; z-index: 1; }
-  .topnav .brand { font-size: 1.05rem; }
   @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; }
-    .topnav .brand { display: none; } .topnav a { font-size: .85rem; } }
+    .topnav a { font-size: .85rem; } }
   .ico { width: 1.15em; height: 1.15em; vertical-align: -0.2em; }
   h1 { color: #173f6b; text-align: center; font-size: 2rem; margin: 1.2rem 0 .4rem; }
   .sub { text-align: center; color: #6b5d49; margin: 0 0 1.6rem; }
@@ -71,7 +70,6 @@
 <body id="top">
   <canvas id="leaves" aria-hidden="true"></canvas>
   <nav class="topnav" aria-label="Site">
-    <a class="brand" href="index.html"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> Scarecrow Hunt</a>
     <span class="navlinks"><a href="index.html">Home</a>
     <a href="map.html">Trail Map</a>
     <a href="faq.html">FAQ</a></span>
