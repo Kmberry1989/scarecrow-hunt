@@ -89,9 +89,9 @@
     <span class="navlinks"><a href="index.html">Home</a><a href="map.html">Trail Map</a><a href="faq.html">FAQ</a></span>
   </nav>
   <main>
-    <p class="kicker">Scarecrow Selfie Journey</p>
+    <p class="kicker">Scarecrow Selfie Story</p>
     <h1 id="stopTitle">Snap your selfie</h1>
-    <p class="framenote" id="frameNote">Take a selfie with the scarecrow &mdash; or just photograph the scarecrow and the scene &mdash; for your 21-stop keepsake album.</p>
+    <p class="framenote" id="frameNote">Take a selfie with the scarecrow &mdash; or just photograph the scarecrow and the scene &mdash; for your Scarecrow Selfie Story.</p>
     <div id="captureBox">
       <label class="pick" for="photoPick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg> Take your photo</label>
       <input type="file" id="photoPick" accept="image/*">
@@ -109,7 +109,7 @@
     <div class="done" id="donePanel" hidden>
       <p class="big" id="doneTitle">Saved!</p>
       <p id="doneText"></p>
-      <div class="keepbar" role="img" aria-label="Keepsake album progress"><span id="keepFill"></span></div>
+      <div class="keepbar" role="img" aria-label="Scarecrow Selfie Story progress"><span id="keepFill"></span></div>
       <div class="btnrow">
         <button type="button" class="btn-share" id="shareSelfieBtn">Share this selfie</button>
         <a class="btn-ghost" href="album.html">View my album</a>
@@ -255,7 +255,7 @@ window.HuntSfx = (function () {
     return;
   }
   title.textContent = "Scarecrow #" + stop.n + " \u2014 " + stop.name;
-  note.innerHTML = "Take a selfie with the " + escapeHtml(stop.name) + " scarecrow &mdash; or just photograph the scarecrow and the scene &mdash; for your 21-stop keepsake album.";
+  note.innerHTML = "Take a selfie with the " + escapeHtml(stop.name) + " scarecrow &mdash; or just photograph the scarecrow and the scene &mdash; for your Scarecrow Selfie Story.";
   var frameStyle = "harvest";
   try { frameStyle = localStorage.getItem("scarecrow.frameStyle") || "harvest"; } catch (e) {}
   var framePick = document.getElementById("framePick");
@@ -356,7 +356,7 @@ window.HuntSfx = (function () {
           try { if (navigator.vibrate) navigator.vibrate(doneAll ? [60, 40, 60, 40, 120] : [35, 25, 70]); } catch (e) {}
           keepFill.style.width = Math.min(100, Math.round(c / 21 * 100)) + "%";
           lastBlob = blob;
-          doneText.innerHTML = "That\u2019s <strong>" + c + " of 21</strong> \u2014 tucked into your keepsake album." +
+          doneText.innerHTML = "That\u2019s <strong>" + c + " of 21</strong> \u2014 tucked into your Scarecrow Selfie Story." +
             (doneAll ? " Your journal is complete \u2014 enjoy the slideshow!" : " Keep hunting!");
           donePanel.hidden = false;
           saveBtn.disabled = false;
