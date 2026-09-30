@@ -97,8 +97,8 @@
   .foot strong { color: #c85a17; }
   .share { margin-top: 14px; }
   .share button {
-    background: #fffdf6; color: #c85a17; font-size: 15px; font-weight: 700;
-    border: 2px solid rgba(200,90,23,.55); border-radius: 999px; padding: 10px 18px; cursor: pointer;
+    background: #fffdf6; color: #c85a17; font-size: 16px; font-weight: 700;
+    border: 2px solid rgba(200,90,23,.55); border-radius: 999px; padding: 12px 22px; cursor: pointer;
   }
   .share button:active { transform: scale(.97); }
   .share-fallback { color: #6b5d49; font-size: 14px; margin-top: 10px; }
@@ -170,6 +170,28 @@
 .solve-scare { position: relative; z-index: 2; width: 170px; margin: 12px auto 0; opacity: 0; }
 .solve-scare img { display: block; width: 100%; height: auto; filter: drop-shadow(0 10px 22px rgba(0,0,0,.45)); }
 .solve-veil.boo .solve-scare { opacity: 1; animation: scare-rise .85s cubic-bezier(.2,1.35,.35,1) forwards; }
+/* celebration-plus: golden shimmer rays behind the scarecrow (from the Golden
+   Spotlight option). Slow spin (transform) + slow scale pulse (scale property)
+   so the two motions compose without fighting. */
+.solve-rays { position: absolute; inset: -70px; border-radius: 50%; opacity: 0; pointer-events: none; z-index: 1;
+  background: repeating-conic-gradient(rgba(255,217,105,.20) 0 8deg, transparent 8deg 20deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 66%);
+  mask-image: radial-gradient(circle, #000 0%, transparent 66%); }
+.solve-veil.boo .solve-rays { opacity: 1; animation: rays-spin 26s linear infinite, rays-breathe 9s ease-in-out infinite; }
+@keyframes rays-spin { to { transform: rotate(360deg); } }
+@keyframes rays-breathe { 0%, 100% { scale: 1; } 50% { scale: .86; } }
+/* celebration-plus: very slow sway layered after the spring-up rise; the rise
+   holds its final keyframe via fill-forwards and hands transform to the sway. */
+.solve-veil.boo .solve-scare { opacity: 1; transform-origin: 50% 100%;
+  animation: scare-rise .85s cubic-bezier(.2,1.35,.35,1) forwards, scare-sway 9s ease-in-out .9s infinite; }
+@keyframes scare-sway {
+  0%, 100% { transform: rotate(-1.6deg) skewX(-1deg); }
+  50% { transform: rotate(1.6deg) skewX(1deg); }
+}
+/* celebration-plus: keep the "Congratulations!" text above the confetti layer. */
+.solve-boo { z-index: 4; }
+/* celebration-plus: clip the rays/confetti spill horizontally; vertical scroll kept. */
+.solve-veil { overflow-x: hidden; }
 @keyframes scare-rise {
   0% { transform: translateY(110px) scale(.25) rotate(-10deg); opacity: 0; }
   40% { transform: translateY(-16px) scale(1.14) rotate(4deg); opacity: 1; }
@@ -188,7 +210,7 @@
   background: radial-gradient(ellipse at 50% 38%, rgba(242,193,78,.5), rgba(242,193,78,0) 62%); }
 .solve-flash.go { animation: goldflash .9s ease-out forwards; }
 @keyframes goldflash { 0% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: 0; } }
-.solve-boo { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+.solve-boo { position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center;
   font-size: clamp(24px, 8.5vw, 34px); font-weight: 900; letter-spacing: 2px; color: #f2c14e; margin: 0;
   padding: 0 8px; text-align: center; line-height: 1.15;
   text-shadow: -2px -2px 0 #4a2500, -2px 0 0 #4a2500, -2px 2px 0 #4a2500, 0 -2px 0 #4a2500, 0 2px 0 #4a2500, 2px -2px 0 #4a2500, 2px 0 0 #4a2500, 2px 2px 0 #4a2500, 0 0 26px rgba(232,114,42,.9), 0 4px 0 #7a2e00; opacity: 0; pointer-events: none; }
@@ -206,16 +228,16 @@
 .solve-msg p { color: #f0e6d2; font-size: 16px; line-height: 1.6; margin: 8px 0; text-shadow: 0 1px 6px rgba(0,0,0,.5); }
 .solve-msg strong { color: #e8a33d; }
 .solve-actions { display: flex; gap: 12px; justify-content: center; align-items: center; margin-top: 14px; flex-wrap: wrap; }
-.solve-close { background: #d9481c; color: #fff; font-size: 17px; font-weight: 800;
-  border: none; border-radius: 999px; padding: 12px 34px; cursor: pointer;
+.solve-close { background: #d9481c; color: #fff; font-size: 18px; font-weight: 800;
+  border: none; border-radius: 999px; padding: 14px 38px; cursor: pointer;
   box-shadow: 0 0 26px rgba(217,72,28,.45); }
 .solve-close:active { transform: scale(.96); }
-.solve-replay-inline { background: transparent; color: #e8a33d; font-size: 15px; font-weight: 700;
-  border: 2px solid rgba(232,163,61,.7); border-radius: 999px; padding: 10px 22px; cursor: pointer; }
+.solve-replay-inline { background: transparent; color: #e8a33d; font-size: 16px; font-weight: 700;
+  border: 2px solid rgba(232,163,61,.7); border-radius: 999px; padding: 12px 26px; cursor: pointer; }
 .solve-replay-inline:active { transform: scale(.96); }
-.solve-replay-fab { position: fixed; right: 16px; bottom: 16px; z-index: 9000; width: 54px; height: 54px;
+.solve-replay-fab { position: fixed; right: 16px; bottom: 16px; z-index: 9000; width: 60px; height: 60px;
   border-radius: 50%; border: 2px solid rgba(232,163,61,.85); background: rgba(23,63,107,.95); color: #e8a33d;
-  font-size: 26px; line-height: 1; cursor: pointer; box-shadow: 0 0 20px rgba(232,163,61,.4);
+  font-size: 28px; line-height: 1; cursor: pointer; box-shadow: 0 0 20px rgba(232,163,61,.4);
   display: flex; align-items: center; justify-content: center; }
 .solve-replay-fab[hidden] { display: none; }
 .solve-replay-fab:active { transform: scale(.92); }
@@ -229,6 +251,7 @@
   .solve-letter { opacity: 1; transform: none; filter: none; }
   .solve-veil.boo .solve-scare { animation: none; opacity: 1; transform: none; }
   .solve-veil.boo .solve-shock, .solve-flash.go { animation: none !important; }
+  .solve-veil.boo .solve-rays { animation: none; }
   .solve-veil.boo .solve-boo { animation: none; opacity: 1; position: static; margin: 6px 0; }
   .solve-msg.show { opacity: 1; transform: none; }
 }
@@ -391,6 +414,21 @@ Scan the tag — now isn&#x27;t that nice?</p>
 
 <style>
   .letter-bank-title { color:#8a7a63; font-size:14px; margin:22px 0 10px; text-align:center; }
+  /* celebration-plus: segmented hunt progress bar; segments fill fluidly as scans are banked. */
+  .hunt-progress { max-width: 470px; margin: 2px auto 0; }
+  .hunt-progress-track { display: flex; gap: 3px; padding: 3px; border-radius: 999px; }
+  .hunt-progress-track .seg { flex: 1 1 0; height: 10px; border-radius: 999px; background: rgba(200,90,23,.14); position: relative; overflow: hidden; }
+  .hunt-progress-track .seg i { position: absolute; inset: 0; display: block; border-radius: 999px;
+    background: linear-gradient(90deg, #e8722a, #e8a33d); transform: scaleX(0); transform-origin: left center;
+    transition: transform .8s cubic-bezier(.25,.9,.3,1); }
+  .hunt-progress-track .seg.full i { transform: scaleX(1); }
+  .hunt-progress-label { color: #8a7a63; font-size: 13px; margin: 6px 0 0; text-align: center; }
+  .hunt-progress-track.done { animation: prog-glow 2.4s ease-in-out infinite; }
+  @keyframes prog-glow { 0%, 100% { box-shadow: 0 0 0 rgba(232,163,61,0); } 50% { box-shadow: 0 0 18px rgba(232,163,61,.85); } }
+  @media (prefers-reduced-motion: reduce) {
+    .hunt-progress-track .seg i { transition: none; }
+    .hunt-progress-track.done { animation: none; box-shadow: 0 0 12px rgba(232,163,61,.5); }
+  }
   .letter-bank { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-width:470px; margin:0 auto; }
   .lb-word { display:flex; gap:6px; flex:0 0 auto; }
   @media (max-width: 400px) {
@@ -506,6 +544,32 @@ window.HuntSfx = (function () {
     title.className = "letter-bank-title";
     title.textContent = "Your letter bank so far";
     wrap.appendChild(title);
+    /* celebration-plus: segmented progress bar; fills fluidly as scans are banked. */
+    var foundN = 0, fk;
+    for (fk in letters) { if (/^[A-Z]$/.test(letters[fk])) foundN++; }
+    var prog = document.createElement("div");
+    prog.className = "hunt-progress";
+    var track = document.createElement("div");
+    track.className = "hunt-progress-track" + (foundN >= 21 ? " done" : "");
+    track.setAttribute("role", "progressbar");
+    track.setAttribute("aria-valuemin", "0");
+    track.setAttribute("aria-valuemax", "21");
+    track.setAttribute("aria-valuenow", String(Math.min(foundN, 21)));
+    track.setAttribute("aria-label", "Scarecrows found");
+    for (var si = 0; si < 21; si++) {
+      var seg = document.createElement("span");
+      seg.className = "seg" + (si < foundN ? " full" : "");
+      var fill = document.createElement("i");
+      fill.style.transitionDelay = (si * 55) + "ms";
+      seg.appendChild(fill);
+      track.appendChild(seg);
+    }
+    prog.appendChild(track);
+    var plabel = document.createElement("p");
+    plabel.className = "hunt-progress-label";
+    plabel.textContent = Math.min(foundN, 21) + " of 21 scarecrows found";
+    prog.appendChild(plabel);
+    wrap.appendChild(prog);
     var grid = document.createElement("div");
     grid.className = "letter-bank";
     grid.setAttribute("aria-label", "Letters placed in their card blanks");
@@ -581,8 +645,8 @@ window.HuntSfx = (function () {
 <style>
   .scan-row { margin-top: 14px; }
   .scan-row button {
-    background: #fffdf6; color: #c85a17; font-size: 15px; font-weight: 700;
-    border: 2px solid rgba(200,90,23,.55); border-radius: 999px; padding: 10px 18px; cursor: pointer;
+    background: #fffdf6; color: #c85a17; font-size: 16px; font-weight: 700;
+    border: 2px solid rgba(200,90,23,.55); border-radius: 999px; padding: 12px 22px; cursor: pointer;
   }
   .scan-row button:active { transform: scale(.97); }
   .scan-modal { position: fixed; inset: 0; background: rgba(24,20,14,.88); display: flex;
@@ -594,8 +658,8 @@ window.HuntSfx = (function () {
   #scanVideo { width: 100%; border-radius: 12px; background: #000; max-height: 52vh; object-fit: cover; }
   .scan-msg { color: #6b5d49; font-size: 14px; margin: 12px 0; min-height: 20px; }
   .scan-close {
-    background: transparent; color: #c85a17; font-size: 15px; font-weight: 700;
-    border: 2px solid rgba(200,90,23,.6); border-radius: 999px; padding: 8px 22px; cursor: pointer;
+    background: transparent; color: #c85a17; font-size: 16px; font-weight: 700;
+    border: 2px solid rgba(200,90,23,.6); border-radius: 999px; padding: 10px 24px; cursor: pointer;
   }
 </style>
 <div class="scan-modal" id="scanModal" hidden>
@@ -714,6 +778,7 @@ window.HuntSfx = (function () {
     <div class="solve-phrase" id="solvePhrase" aria-label="The solved secret phrase"></div>
     <div class="solve-stage">
       <div class="solve-wheatmask" aria-hidden="true"><div class="solve-wheat"></div></div>
+      <div class="solve-rays" aria-hidden="true"></div>
       <div class="solve-shock" aria-hidden="true"></div>
       <div class="solve-scare" aria-hidden="true">
         <img src="img/celebration/scarecrow.png" alt="A friendly scarecrow" width="170" height="224">
@@ -747,22 +812,26 @@ window.HuntSfx = (function () {
 
 <script>
 /* Harvest confetti: autumn bursts fired by the Hooray button (and a small
-   pop when the scarecrow appears). The canvas is created on demand, animated
+   pop when the scarecrow appears). The canvas lives inside the celebration
+   stage, layered beneath the scarecrow, and is created on demand, animated
    with requestAnimationFrame, and removes itself when the last piece lands. */
 (function () {
   var COLORS = ["#d9481c", "#e8722a", "#e8a33d", "#f2c14e", "#a34a1f", "#7fb069", "#f7f1e3"];
-  var canvas = null, ctx = null, parts = [], raf = 0, flash = null;
-  function size() { if (canvas) { canvas.width = window.innerWidth; canvas.height = window.innerHeight; } }
+  var canvas = null, ctx = null, parts = [], raf = 0, flash = null, stage = null;
+  function size() { if (canvas && stage) { canvas.width = stage.clientWidth; canvas.height = stage.clientHeight; } }
   function ensure() {
+    if (!stage) { stage = document.querySelector(".solve-stage"); }
+    if (!stage) return false;
     if (!canvas) {
       canvas = document.createElement("canvas");
       canvas.setAttribute("aria-hidden", "true");
-      canvas.style.cssText = "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10003;";
+      canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;";
       ctx = canvas.getContext("2d");
       window.addEventListener("resize", size);
     }
-    if (!canvas.parentNode) document.body.appendChild(canvas);
+    if (!canvas.parentNode) stage.appendChild(canvas);
     size();
+    return true;
   }
   function burst(x, y, n, spread, lift) {
     for (var i = 0; i < n; i++) {
@@ -823,15 +892,15 @@ window.HuntSfx = (function () {
     setTimeout(function () { if (flash.parentNode) flash.parentNode.removeChild(flash); }, 1000);
   }
   window.harvestConfetti = function (big) {
-    ensure();
+    if (!ensure()) return;
     goldFlash();
     var W = canvas.width, H = canvas.height;
     if (big) {
-      burst(W / 2, H * 0.32, 90, 11, 7);
-      setTimeout(function () { burst(W * 0.10, H * 0.72, 55, 8, 10); }, 160);
-      setTimeout(function () { burst(W * 0.90, H * 0.72, 55, 8, 10); }, 340);
+      burst(W / 2, H * 0.42, 90, 11, 7);
+      setTimeout(function () { burst(W * 0.08, H * 0.68, 55, 8, 10); }, 160);
+      setTimeout(function () { burst(W * 0.92, H * 0.68, 55, 8, 10); }, 340);
     } else {
-      burst(W / 2, H * 0.40, 36, 7, 6);
+      burst(W / 2, H * 0.45, 36, 7, 6);
     }
     if (!raf) raf = requestAnimationFrame(frame);
   };
