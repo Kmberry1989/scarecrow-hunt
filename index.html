@@ -22,7 +22,7 @@
   body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background: radial-gradient(ellipse at 50% -10%, rgba(232,163,61,.25), transparent 55%),
                 radial-gradient(ellipse at 50% 115%, rgba(217,179,132,.30), transparent 55%); }
-  #leaves { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  #leaves { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: .5;}
   .wrap { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
   h1.autumn { text-align: center; font-size: clamp(1.6rem, 4vw, 2.6rem); color: #173f6b; margin-bottom: .5rem; }
   .sub { text-align: center; color: #6b5d49; margin-bottom: 2rem; font-size: 1.05rem; }
@@ -64,9 +64,9 @@
                margin-bottom: .6rem; color: #c85a17; }
   .presented .org { display: block; font-size: 1.3rem; font-weight: 700; color: #173f6b; }
   .presented .cent { display: block; font-size: .95rem; margin-top: .3rem; color: #6b5d49; }
-  footer { text-align: center; margin-top: 3rem; color: #8a7a63; font-size: .9rem; position: relative; z-index: 1; }
+  footer { text-align: center; margin-top: 3rem; color: #6b5d49; font-size: .9rem; position: relative; z-index: 1; }
   @media (prefers-reduced-motion: reduce) {
-    #leaves { display: none; }
+    #leaves { display: none; opacity: .5;}
     .card, h1.autumn, .logo-frame::before { animation: none !important; }
   }
 
@@ -74,10 +74,68 @@
     a.visit{text-decoration:none;}
     a.visit:hover{background:#e8722a;}
       .on-white{background:#fff;border-radius:12px;padding:10px;box-shadow:0 2px 10px rgba(120,72,20,.25);}
+
+  html { scroll-behavior: smooth; }
+  .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
+    background: rgba(247,241,227,.94); border: 2px solid #e7d9bd; border-radius: 999px;
+    padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 4px 16px rgba(120,72,20,.12); }
+  .topnav a, .stops-menu summary { color: #173f6b; font-weight: 700; text-decoration: none;
+    font-size: .95rem; white-space: nowrap; }
+  .topnav a:hover, .stops-menu summary:hover, .stops-menu summary:focus-visible { color: #d9481c; }
+  .topnav .brand { font-size: 1.05rem; }
+  .topnav .spacer { flex: 1; }
+  .stops-menu { position: relative; }
+  .stops-menu summary { cursor: pointer; list-style: none; }
+  .stops-menu summary::-webkit-details-marker { display: none; }
+  .stops-list { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+    min-width: 270px; max-height: 62vh; overflow-y: auto; background: rgba(255,253,246,.97);
+    border: 2px solid #e7d9bd; border-radius: 14px; box-shadow: 0 12px 32px rgba(120,72,20,.20);
+    padding: .4rem; }
+  .stops-list a { display: flex; gap: .6rem; align-items: baseline; padding: .45rem .6rem;
+    border-radius: 8px; font-weight: 600; font-size: .9rem; }
+  .stops-list a:hover { background: rgba(232,114,42,.14); }
+  .stops-list .sn { color: #c85a17; font-weight: 800; min-width: 1.4em; text-align: right; }
+  .totop { border: 2px solid #e7d9bd; border-radius: 999px; padding: .25rem .8rem;
+    background: rgba(255,253,246,.9); }
+  @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; }
+    .topnav .brand { display: none; } .topnav a, .stops-menu summary { font-size: .85rem; } }
 </style>
 </head>
-<body>
+<body id="top">
   <canvas id="leaves" aria-hidden="true"></canvas>
+  <nav class="topnav" aria-label="Site">
+    <a class="brand" href="index.html">Scarecrow Hunt</a>
+    <a href="index.html">Home</a>
+    <a href="map.html">Trail Map</a>
+    <details class="stops-menu">
+      <summary>All 21 Stops</summary>
+      <div class="stops-list">
+      <a href="m767hwhp83.html"><span class="sn">1</span> Artworks Gallery</a>
+      <a href="vubcgrg55e.html"><span class="sn">2</span> Lucky Raven Tattoo Lounge</a>
+      <a href="6v52zvf4hp.html"><span class="sn">3</span> Dechert Law Office</a>
+      <a href="kf2b52z26p.html"><span class="sn">4</span> The Hardie Group Real Estate Company</a>
+      <a href="8sd43q55gm.html"><span class="sn">5</span> Kokomo Area Lions</a>
+      <a href="a6k85xm3w2.html"><span class="sn">6</span> UpCreations (Urban Outreach)</a>
+      <a href="fntm5d945j.html"><span class="sn">7</span> Oscar's Pizza</a>
+      <a href="uyqr8kny9q.html"><span class="sn">8</span> SUTE</a>
+      <a href="stmvvmenc4.html"><span class="sn">9</span> Kokomo Tribune</a>
+      <a href="da9sry6g59.html"><span class="sn">10</span> Community Foundation</a>
+      <a href="6d89w8vtkj.html"><span class="sn">11</span> PF Hendricks LLC</a>
+      <a href="g7mq4y6mj7.html"><span class="sn">12</span> Community First Bank of Indiana</a>
+      <a href="8pwb98skub.html"><span class="sn">13</span> Fired Arts Studio</a>
+      <a href="dvcvkys85w.html"><span class="sn">14</span> The Coterie</a>
+      <a href="w2drgs2pmu.html"><span class="sn">15</span> First Farmers Bank & Trust</a>
+      <a href="s7fsfuwse5.html"><span class="sn">16</span> Pix Pots Pottery</a>
+      <a href="p4fy6qhw2x.html"><span class="sn">17</span> IUK SNAHP (Nursing & Allied Health)</a>
+      <a href="sjnypgxnps.html"><span class="sn">18</span> YMCA of Kokomo</a>
+      <a href="cbhxnrtxuh.html"><span class="sn">19</span> Indiana Underdog Martial Arts</a>
+      <a href="7qgjqpr33t.html"><span class="sn">20</span> Tip Top Car Washes</a>
+      <a href="ch9drb2cg4.html"><span class="sn">21</span> Crossroads Community Church</a>
+      </div>
+    </details>
+    <span class="spacer"></span>
+    <a class="totop" href="#top">&uarr; Top</a>
+  </nav>
   <div class="wrap">
     <div class="presented">
       <a href="https://www.kaaonline.org" target="_blank" rel="noopener">
@@ -89,7 +147,7 @@
     </div>
     <div style="text-align:center;margin:6px 0 2px;position:relative;z-index:1;"><img src="img/brand/first-friday.png" alt="First Friday" style="width:min(320px,70vw);height:auto;"></div>
     <h1 class="autumn">Thank You to Our First Friday Sponsors!</h1>
-    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible.</p> <div class="howto" style="max-width:640px;margin:0 auto 8px;padding:18px 22px;border:1px solid rgba(200,90,23,.35);border-radius:16px;background:rgba(232,114,42,.08);text-align:left;">   <h2 style="margin:0 0 10px;font-size:22px;text-align:center;text-decoration:underline;">How the Scarecrow Scavenger Hunt Works</h2>   <p style="margin:6px 0;text-align:center;"><strong>Friday, October 2, 5:30&ndash;8:00 PM</strong> &mdash; downtown Kokomo</p>   <ol style="margin:8px 0;padding-left:22px;line-height:1.65;">     <li><strong>Grab a passport</strong> &mdash; free hunt card at Artworks Gallery (210 N Main St) or Fired Arts Studio (111 W Sycamore St).</li>     <li><strong>Find all 21 scarecrows</strong> &mdash; scan each pumpkin&rsquo;s QR code with your phone to collect its letter.</li>     <li><strong>Crack the phrase</strong> &mdash; unscramble the secret phrase, turn in your card at either spot, and you&rsquo;re entered in the Mystery Prize Basket drawing.</li>   </ol>   <p style="margin:8px 0 0;font-size:14px;opacity:.85;text-align:center;">Please use crosswalks, and bring a phone and/or flashlight after dark.</p> </div> <p class="map-cta" style="text-align:center;margin:6px 0 26px;"><a href="map.html" style="display:inline-block;padding:14px 30px;border-radius:999px;background:#d9481c;color:#fff;font-weight:800;font-size:17px;text-decoration:none;box-shadow:0 0 22px rgba(217,72,28,.40);">&#x1f5fa;&#xfe0f; View the Scarecrow Trail Map</a></p>
+    <p class="sub">These businesses made the Scarecrow Scavenger Hunt possible.</p> <div class="howto" style="max-width:640px;margin:0 auto 8px;padding:18px 22px;border:1px solid rgba(200,90,23,.35);border-radius:16px;background:rgba(255,253,246,.85);text-align:left;">   <h2 style="margin:0 0 10px;font-size:22px;text-align:center;text-decoration:underline;">How the Scarecrow Scavenger Hunt Works</h2>   <p style="margin:6px 0;text-align:center;"><strong>Friday, October 2, 5:30&ndash;8:00 PM</strong> &mdash; downtown Kokomo</p>   <ol style="margin:8px 0;padding-left:22px;line-height:1.65;">     <li><strong>Grab a passport</strong> &mdash; free hunt card at Artworks Gallery (210 N Main St) or Fired Arts Studio (111 W Sycamore St).</li>     <li><strong>Find all 21 scarecrows</strong> &mdash; scan each pumpkin&rsquo;s QR code with your phone to collect its letter.</li>     <li><strong>Crack the phrase</strong> &mdash; unscramble the secret phrase, turn in your card at either spot, and you&rsquo;re entered in the Mystery Prize Basket drawing.</li>   </ol>   <p style="margin:8px 0 0;font-size:14px;opacity:.85;text-align:center;">Please use crosswalks, and bring a phone and/or flashlight after dark.</p> </div> <p class="map-cta" style="text-align:center;margin:6px 0 26px;"><a href="map.html" style="display:inline-block;padding:14px 30px;border-radius:999px;background:#d9481c;color:#fff;font-weight:800;font-size:17px;text-decoration:none;box-shadow:0 0 22px rgba(217,72,28,.40);">&#x1f5fa;&#xfe0f; View the Scarecrow Trail Map</a></p>
     <div class="grid">
       <div class="card" style="--d:0.06s">
         <a class="logo-link" href="https://www.kaaonline.org" target="_blank" rel="noopener"><span class="logo-frame"><img src="logos/logo-01.png" alt="Artworks Gallery logo" loading="lazy"></span></a>
@@ -261,14 +319,14 @@
     this.x = Math.random() * W;
     this.y = seedTop ? Math.random() * H : -40 - Math.random() * 60;
     this.s = 9 + Math.random() * 16;
-    this.fall = .25 + Math.random() * .55;
+    this.fall = .12 + Math.random() * .28;
     this.swayAmp = 18 + Math.random() * 46;
     this.swayFreq = .002 + Math.random() * .0045;
     this.phase = Math.random() * Math.PI * 2;
     this.rot = Math.random() * Math.PI * 2;
     this.rotSpd = (Math.random() - .5) * .015;
     this.huePhase = Math.random();
-    this.alpha = .45 + Math.random() * .4;
+    this.alpha = .45 + Math.random() * .1;
   }
   function drawLeaf(l, t){
     var x = l.x + Math.sin(t * l.swayFreq + l.phase) * l.swayAmp;
@@ -286,7 +344,7 @@
   function reset(){
     size();
     leaves = [];
-    for (var j = 0; j < 25; j++) leaves.push(new Leaf(true, j % PATHS.length));
+    for (var j = 0; j < 12; j++) leaves.push(new Leaf(true, j % PATHS.length));
   }
   var t0 = performance.now();
   function frame(){

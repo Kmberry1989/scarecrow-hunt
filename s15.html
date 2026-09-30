@@ -28,11 +28,11 @@
   body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background: radial-gradient(ellipse at 50% -10%, rgba(232,163,61,.25), transparent 55%),
                 radial-gradient(ellipse at 50% 115%, rgba(217,179,132,.30), transparent 55%); }
-  #leaves { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  #leaves { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: .5;}
   main { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; margin: auto 0; }
   .kicker { color: #c85a17; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
     font-weight: 700; }
-  .num { color: #8a7a63; font-size: 15px; margin-bottom: 26px; }
+  .num { color: #6b5d49; font-size: 15px; margin-bottom: 26px; }
   .label { color: #c85a17; font-size: 17px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
   h1 { font-size: 30px; line-height: 1.2; margin: 8px 0 22px; max-width: 420px; color: #173f6b; }
   .logo-frame { position: relative; display: inline-flex; align-items: center; justify-content: center;
@@ -92,8 +92,8 @@
   .next-name { font-size: 21px; font-weight: 800; color: #173f6b; margin: 4px 0 8px; }
   .next-dir { font-size: 16px; line-height: 1.6; color: #4c4132; }
   .next-hint { font-size: 13px; color: #c85a17; opacity: .9; margin: 10px 0 0; font-weight: 700; }
-  .anyorder { color: #8a7a63; font-size: 14px; font-style: italic; margin: 2px 0 24px; max-width: 380px; }
-  .foot { color: #8a7a63; font-size: 14px; line-height: 1.7; max-width: 400px; }
+  .anyorder { color: #6b5d49; font-size: 14px; font-style: italic; margin: 2px 0 24px; max-width: 380px; }
+  .foot { color: #6b5d49; font-size: 14px; line-height: 1.7; max-width: 400px; }
   .foot strong { color: #c85a17; }
   .share { margin-top: 14px; }
   .share button {
@@ -101,15 +101,40 @@
     border: 2px solid rgba(200,90,23,.55); border-radius: 999px; padding: 10px 18px; cursor: pointer;
   }
   .share button:active { transform: scale(.97); }
-  .share-fallback { color: #8a7a63; font-size: 14px; margin-top: 10px; }
+  .share-fallback { color: #6b5d49; font-size: 14px; margin-top: 10px; }
   .share-fallback a { color: #c85a17; font-weight: 700; }
   .share-note { color: #c85a17; font-size: 14px; font-weight: 700; margin-top: 8px; }
   .credit { margin-top: 22px; font-size: 13px; color: #a3937a; }
   .credit a { color: #c85a17; }
   @media (prefers-reduced-motion: reduce) {
-    #leaves { display: none; }
+    #leaves { display: none; opacity: .5;}
     .letter, .logo-frame::before { animation: none !important; }
   }
+
+  html { scroll-behavior: smooth; }
+  .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
+    background: rgba(247,241,227,.94); border: 2px solid #e7d9bd; border-radius: 999px;
+    padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 4px 16px rgba(120,72,20,.12); }
+  .topnav a, .stops-menu summary { color: #173f6b; font-weight: 700; text-decoration: none;
+    font-size: .95rem; white-space: nowrap; }
+  .topnav a:hover, .stops-menu summary:hover, .stops-menu summary:focus-visible { color: #d9481c; }
+  .topnav .brand { font-size: 1.05rem; }
+  .topnav .spacer { flex: 1; }
+  .stops-menu { position: relative; }
+  .stops-menu summary { cursor: pointer; list-style: none; }
+  .stops-menu summary::-webkit-details-marker { display: none; }
+  .stops-list { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+    min-width: 270px; max-height: 62vh; overflow-y: auto; background: rgba(255,253,246,.97);
+    border: 2px solid #e7d9bd; border-radius: 14px; box-shadow: 0 12px 32px rgba(120,72,20,.20);
+    padding: .4rem; }
+  .stops-list a { display: flex; gap: .6rem; align-items: baseline; padding: .45rem .6rem;
+    border-radius: 8px; font-weight: 600; font-size: .9rem; }
+  .stops-list a:hover { background: rgba(232,114,42,.14); }
+  .stops-list .sn { color: #c85a17; font-weight: 800; min-width: 1.4em; text-align: right; }
+  .totop { border: 2px solid #e7d9bd; border-radius: 999px; padding: .25rem .8rem;
+    background: rgba(255,253,246,.9); }
+  @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; }
+    .topnav .brand { display: none; } .topnav a, .stops-menu summary { font-size: .85rem; } }
 </style>
 <style>
 /* Solve celebration: phrase assembles in a swirl of autumn leaves, then a friendly scarecrow pops up. */
@@ -183,8 +208,41 @@
 }
 </style>
 </head>
-<body>
+<body id="top">
   <canvas id="leaves" aria-hidden="true"></canvas>
+  <nav class="topnav" aria-label="Site">
+    <a class="brand" href="index.html">Scarecrow Hunt</a>
+    <a href="index.html">Home</a>
+    <a href="map.html">Trail Map</a>
+    <details class="stops-menu">
+      <summary>All 21 Stops</summary>
+      <div class="stops-list">
+      <a href="m767hwhp83.html"><span class="sn">1</span> Artworks Gallery</a>
+      <a href="vubcgrg55e.html"><span class="sn">2</span> Lucky Raven Tattoo Lounge</a>
+      <a href="6v52zvf4hp.html"><span class="sn">3</span> Dechert Law Office</a>
+      <a href="kf2b52z26p.html"><span class="sn">4</span> The Hardie Group Real Estate Company</a>
+      <a href="8sd43q55gm.html"><span class="sn">5</span> Kokomo Area Lions</a>
+      <a href="a6k85xm3w2.html"><span class="sn">6</span> UpCreations (Urban Outreach)</a>
+      <a href="fntm5d945j.html"><span class="sn">7</span> Oscar's Pizza</a>
+      <a href="uyqr8kny9q.html"><span class="sn">8</span> SUTE</a>
+      <a href="stmvvmenc4.html"><span class="sn">9</span> Kokomo Tribune</a>
+      <a href="da9sry6g59.html"><span class="sn">10</span> Community Foundation</a>
+      <a href="6d89w8vtkj.html"><span class="sn">11</span> PF Hendricks LLC</a>
+      <a href="g7mq4y6mj7.html"><span class="sn">12</span> Community First Bank of Indiana</a>
+      <a href="8pwb98skub.html"><span class="sn">13</span> Fired Arts Studio</a>
+      <a href="dvcvkys85w.html"><span class="sn">14</span> The Coterie</a>
+      <a href="w2drgs2pmu.html"><span class="sn">15</span> First Farmers Bank & Trust</a>
+      <a href="s7fsfuwse5.html"><span class="sn">16</span> Pix Pots Pottery</a>
+      <a href="p4fy6qhw2x.html"><span class="sn">17</span> IUK SNAHP (Nursing & Allied Health)</a>
+      <a href="sjnypgxnps.html"><span class="sn">18</span> YMCA of Kokomo</a>
+      <a href="cbhxnrtxuh.html"><span class="sn">19</span> Indiana Underdog Martial Arts</a>
+      <a href="7qgjqpr33t.html"><span class="sn">20</span> Tip Top Car Washes</a>
+      <a href="ch9drb2cg4.html"><span class="sn">21</span> Crossroads Community Church</a>
+      </div>
+    </details>
+    <span class="spacer"></span>
+    <a class="totop" href="#top">&uarr; Top</a>
+  </nav>
   <main>
     <p class="kicker">&#127810; First Friday Scarecrow Scavenger Hunt</p>
     <p class="num">Scarecrow #15 of 21</p>
@@ -252,14 +310,14 @@ Scan the tag and walk the lane!</p>
     this.x = Math.random() * W;
     this.y = seedTop ? Math.random() * H : -40 - Math.random() * 60;
     this.s = 9 + Math.random() * 16;
-    this.fall = .25 + Math.random() * .55;
+    this.fall = .12 + Math.random() * .28;
     this.swayAmp = 18 + Math.random() * 46;
     this.swayFreq = .002 + Math.random() * .0045;
     this.phase = Math.random() * Math.PI * 2;
     this.rot = Math.random() * Math.PI * 2;
     this.rotSpd = (Math.random() - .5) * .015;
     this.huePhase = Math.random();
-    this.alpha = .45 + Math.random() * .4;
+    this.alpha = .45 + Math.random() * .1;
   }
   function drawLeaf(l, t){
     var x = l.x + Math.sin(t * l.swayFreq + l.phase) * l.swayAmp;
@@ -277,7 +335,7 @@ Scan the tag and walk the lane!</p>
   function reset(){
     size();
     leaves = [];
-    for (var j = 0; j < 25; j++) leaves.push(new Leaf(true, j % PATHS.length));
+    for (var j = 0; j < 12; j++) leaves.push(new Leaf(true, j % PATHS.length));
   }
   var t0 = performance.now();
   function frame(){
@@ -312,7 +370,7 @@ Scan the tag and walk the lane!</p>
   }
   .lb-cell { width:36px; height:46px; display:flex; align-items:center; justify-content:center;
     border:2px solid rgba(200,90,23,.45); border-radius:8px;
-    font-size:21px; font-weight:800; color:#173f6b; background:rgba(255,253,246,.7); }
+    font-size:21px; font-weight:800; color:#173f6b; background:rgba(255,253,246,.85); }
   .lb-cell.lb-empty { border-style:dashed; color:#b3a488; font-size:13px; font-weight:700; }
   .lb-cell.lb-pre { border-color:#e8722a; background:rgba(232,114,42,.14); }
 </style>
@@ -421,7 +479,7 @@ Scan the tag and walk the lane!</p>
     padding: 18px; max-width: 420px; width: 100%; text-align: center; }
   .scan-title { color: #173f6b; font-weight: 800; font-size: 17px; margin: 0 0 12px; }
   #scanVideo { width: 100%; border-radius: 12px; background: #000; max-height: 52vh; object-fit: cover; }
-  .scan-msg { color: #8a7a63; font-size: 14px; margin: 12px 0; min-height: 20px; }
+  .scan-msg { color: #6b5d49; font-size: 14px; margin: 12px 0; min-height: 20px; }
   .scan-close {
     background: transparent; color: #c85a17; font-size: 15px; font-weight: 700;
     border: 2px solid rgba(200,90,23,.6); border-radius: 999px; padding: 8px 22px; cursor: pointer;
