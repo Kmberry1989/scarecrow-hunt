@@ -142,13 +142,13 @@
 .solve-veil.show { opacity: 1; }
 .solve-inner { text-align: center; max-width: 540px; margin: auto; }
 .solve-kicker { color: #e8a33d; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;
-  opacity: 0; transition: opacity .8s ease .4s; text-shadow: 0 0 18px rgba(232,163,61,.6); }
+  opacity: 0; transition: opacity .8s ease .4s; text-shadow: 0 0 18px rgba(232,163,61,.6), 0 2px 6px rgba(0,0,0,.6); }
 .solve-veil.show .solve-kicker { opacity: 1; }
 .solve-phrase { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 4px 0 6px; }
 .solve-word { display: flex; gap: 5px; }
 .solve-letter { width: 34px; height: 44px; display: flex; align-items: center; justify-content: center;
   border: 2px solid rgba(232,163,61,.8); border-radius: 8px; font-size: 20px; font-weight: 800; color: #f7e8c8;
-  background: rgba(232,163,61,.10); text-shadow: 0 0 16px rgba(232,163,61,.75);
+  background: rgba(232,163,61,.10); text-shadow: 0 0 16px rgba(232,163,61,.75), 0 2px 4px rgba(0,0,0,.65);
   opacity: 0; transform: translate(var(--sx,0px), var(--sy,0px)) rotate(var(--sr,0deg)) scale(.4); filter: blur(6px);
   transition: opacity .6s ease, transform .85s cubic-bezier(.2,.9,.25,1.12), filter .6s ease; }
 .solve-veil.assemble .solve-letter { opacity: 1; transform: none; filter: blur(0); }
@@ -184,8 +184,9 @@
 .solve-flash.go { animation: goldflash .9s ease-out forwards; }
 @keyframes goldflash { 0% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: 0; } }
 .solve-boo { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  font-size: 40px; font-weight: 900; letter-spacing: 4px; color: #e8722a; margin: 0;
-  text-shadow: 0 0 26px rgba(232,114,42,.9), 0 3px 0 #7a2e00; opacity: 0; pointer-events: none; }
+  font-size: clamp(24px, 8.5vw, 34px); font-weight: 900; letter-spacing: 2px; color: #f2c14e; margin: 0;
+  padding: 0 8px; text-align: center; line-height: 1.15;
+  text-shadow: -2px -2px 0 #4a2500, -2px 0 0 #4a2500, -2px 2px 0 #4a2500, 0 -2px 0 #4a2500, 0 2px 0 #4a2500, 2px -2px 0 #4a2500, 2px 0 0 #4a2500, 2px 2px 0 #4a2500, 0 0 26px rgba(232,114,42,.9), 0 4px 0 #7a2e00; opacity: 0; pointer-events: none; }
 .solve-veil.boo .solve-boo { animation: boo-flash 1.1s ease-out forwards; }
 @keyframes boo-flash {
   0% { opacity: 0; transform: scale(.4); }
@@ -196,8 +197,8 @@
 .solve-msg { opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s ease; }
 .solve-msg.show { opacity: 1; transform: none; }
 .solve-msg[hidden] { display: none; }
-.solve-gotcha { font-size: 26px; font-weight: 800; color: #f7e8c8; margin: 6px 0 10px; }
-.solve-msg p { color: #f0e6d2; font-size: 16px; line-height: 1.6; margin: 8px 0; }
+.solve-gotcha { font-size: 26px; font-weight: 800; color: #f7e8c8; margin: 6px 0 10px; text-shadow: 0 2px 8px rgba(0,0,0,.55); }
+.solve-msg p { color: #f0e6d2; font-size: 16px; line-height: 1.6; margin: 8px 0; text-shadow: 0 1px 6px rgba(0,0,0,.5); }
 .solve-msg strong { color: #e8a33d; }
 .solve-actions { display: flex; gap: 12px; justify-content: center; align-items: center; margin-top: 14px; flex-wrap: wrap; }
 .solve-close { background: #d9481c; color: #fff; font-size: 17px; font-weight: 800;
@@ -614,7 +615,7 @@ Your hunt begins! What are you waiting for?</p>
       <div class="solve-scare" aria-hidden="true">
         <img src="img/celebration/scarecrow.png" alt="A friendly scarecrow" width="170" height="224">
       </div>
-      <p class="solve-boo" aria-hidden="true">HOORAY!</p>
+      <p class="solve-boo" aria-hidden="true">Congratulations!</p>
     </div>
     <div class="solve-msg" id="solveMsg" hidden>
       <p class="solve-gotcha">Amazing! </p>
