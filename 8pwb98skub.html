@@ -521,6 +521,16 @@ window.HuntSfx = (function () {
         tone(seq[i], tt[i], i === seq.length - 1 ? 0.42 : 0.12, "triangle", 0.085);
       }
       tone(1318.5, 0.48, 0.42, "sine", 0.055);
+    }); },
+    shutter: function () { whenReady(function () {
+      /* letsgo-sfx: classic two-stage camera shutter snap */
+      tone(2400, 0, 0.025, "square", 0.045);
+      tone(1100, 0.035, 0.035, "square", 0.06);
+      tone(2900, 0.075, 0.02, "square", 0.035);
+    }); },
+    focus: function () { whenReady(function () {
+      /* letsgo-sfx: soft lens-wake blip as the camera comes up */
+      tone(740, 0, 0.1, "sine", 0.05, 1180);
     }); }
   };
 })();
@@ -721,7 +731,7 @@ window.HuntSfx = (function () {
     } catch (e) { /* not a URL */ }
     if (target) {
       msg.textContent = "Got it — taking you there…";
-      if (window.HuntSfx) { window.HuntSfx.collect(); }
+      if (window.HuntSfx) { window.HuntSfx.shutter(); window.HuntSfx.collect(); }
       stopAll();
       setTimeout(function(){ location.href = target; }, 500);
     } else if (Date.now() > coolUntil) {
@@ -766,6 +776,7 @@ window.HuntSfx = (function () {
       })
       .then(function () {
         msg.textContent = "Point at the pumpkin's QR code";
+        if (window.HuntSfx) { window.HuntSfx.focus(); }
         tick();
       })
       .catch(function () {
@@ -1013,5 +1024,45 @@ window.HuntSfx = (function () {
 /* Clean address bar: show /hunt instead of the token URL (History API; the page does not reload). */
 (function(){try{if(window.history&&history.replaceState&&location.pathname!=="/hunt"&&location.pathname!=="/hunt/"){history.replaceState(null,"","/hunt");}}catch(e){}})();
 </script>
+<!-- letsgo-fab: floating LET'S GO! camera quick-start -->
+<style>
+#letsGoFab { position: fixed; right: 18px; bottom: 18px; z-index: 9000; display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #d9481c, #e8722a 60%, #e8a33d); color: #fff; font-weight: 800; font-size: 15px;
+  letter-spacing: .5px; border: 2px solid rgba(255,255,255,.45); border-radius: 999px; padding: 12px 20px 12px 16px;
+  cursor: pointer; font-family: inherit; text-shadow: 0 1px 2px rgba(122,46,0,.45);
+  box-shadow: 0 6px 24px rgba(217,72,28,.55); animation: letsgo-pulse 2.6s ease-in-out infinite; }
+#letsGoFab .ico { width: 1.3em; height: 1.3em; }
+#letsGoFab:active { transform: scale(.95); }
+@keyframes letsgo-pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(217,72,28,.55); } 50% { box-shadow: 0 6px 34px rgba(232,163,61,.9); } }
+@media (prefers-reduced-motion: reduce) { #letsGoFab { animation: none; } }
+</style>
+<button type="button" id="letsGoFab" aria-label="Start the camera scanner"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg>LET&rsquo;S GO!</button>
+<script>
+(function () {
+  var go = document.getElementById("letsGoFab");
+  if (!go) return;
+  function dodge() {
+    try {
+      var fab = document.querySelector(".solve-replay-fab");
+      go.style.bottom = (fab && !fab.hidden) ? "88px" : "18px";
+    } catch (e) {}
+  }
+  dodge();
+  try {
+    var fab0 = document.querySelector(".solve-replay-fab");
+    if (fab0 && window.MutationObserver) {
+      new MutationObserver(dodge).observe(fab0, { attributes: true, attributeFilter: ["hidden"] });
+    }
+  } catch (e) {}
+  go.addEventListener("click", function () {
+    dodge();
+    if (window.HuntSfx) { try { window.HuntSfx.click(); } catch (e) {} }
+    var local = document.getElementById("scanBtn");
+    if (local) { local.click(); return; }
+    location.href = "map.html#scan";
+  });
+})();
+</script>
+
 </body>
 </html>

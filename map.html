@@ -1035,6 +1035,7 @@
     } catch (e) { /* not a URL */ }
     if (target) {
       msg.textContent = "Got it — taking you there…";
+      if (window.HuntSfx) { window.HuntSfx.shutter(); }
       stopAll();
       location.href = target;
     } else if (Date.now() > coolUntil) {
@@ -1059,6 +1060,7 @@
   }
 
   openBtn.addEventListener("click", function () {
+    if (window.HuntSfx) { window.HuntSfx.click(); }
     if (!window.jsQR) {
       msg.textContent = "Scanner couldn't load — check your connection and try again.";
       modal.hidden = false; return;
@@ -1078,6 +1080,7 @@
       })
       .then(function () {
         msg.textContent = "Point at the pumpkin's QR code";
+        if (window.HuntSfx) { window.HuntSfx.focus(); }
         tick();
       })
       .catch(function () {
@@ -1085,6 +1088,16 @@
       });
   });
   closeBtn.addEventListener("click", stopAll);
+})();</script>
+<script>
+/* letsgo-hash: open the camera scanner when arriving via map.html#scan (LET'S GO! button). */
+(function () {
+  try {
+    if (location.hash === "#scan") {
+      var b = document.getElementById("scanBtn");
+      if (b) b.click();
+    }
+  } catch (e) {}
 })();
 </script>
 <script>
@@ -1175,5 +1188,131 @@
 })();
 </script>
 <!-- celebration-plus -->
+<script>
+/* Procedural hunt sound effects (Web Audio, no files, offline-safe). */
+window.HuntSfx = (function () {
+  "use strict";
+  var ctx = null, queued = [], unlocked = false;
+  function ac() {
+    try {
+      if (!ctx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        ctx = new AC();
+      }
+      if (ctx.state === "suspended") { try { ctx.resume(); } catch (e) {} }
+      return ctx;
+    } catch (e) { return null; }
+  }
+  function tone(freq, delay, dur, type, vol, slideTo) {
+    var c = ac();
+    if (!c || c.state !== "running") return;
+    try {
+      var t = c.currentTime + delay;
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = type || "triangle";
+      o.frequency.setValueAtTime(freq, t);
+      if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol || 0.08, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(c.destination);
+      o.start(t); o.stop(t + dur + 0.05);
+    } catch (e) {}
+  }
+  function flush() {
+    if (unlocked) return;
+    unlocked = true;
+    var q = queued; queued = [];
+    for (var i = 0; i < q.length; i++) { try { q[i](); } catch (e) {} }
+  }
+  function whenReady(fn) { if (unlocked) { fn(); } else { queued.push(fn); } }
+  function unlock() {
+    var c = ac();
+    if (!c) return;
+    if (c.state === "running") flush();
+    else { try { c.resume().then(flush, function () {}); } catch (e) {} }
+  }
+  if (document.addEventListener) {
+    document.addEventListener("pointerdown", unlock);
+    document.addEventListener("keydown", unlock);
+    document.addEventListener("touchend", unlock);
+  }
+  return {
+    click: function () { whenReady(function () {
+      tone(620, 0, 0.07, "triangle", 0.06);
+      tone(830, 0.035, 0.06, "sine", 0.04);
+    }); },
+    collect: function () { whenReady(function () {
+      tone(523.25, 0, 0.11, "triangle", 0.085);
+      tone(659.25, 0.085, 0.11, "triangle", 0.085);
+      tone(783.99, 0.17, 0.14, "triangle", 0.085);
+      tone(1046.5, 0.255, 0.28, "sine", 0.075);
+    }); },
+    pop: function () { whenReady(function () {
+      tone(280, 0, 0.14, "square", 0.035, 880);
+      tone(1400, 0.05, 0.09, "sine", 0.045);
+    }); },
+    fanfare: function () { whenReady(function () {
+      var seq = [523.25, 523.25, 659.25, 783.99, 1046.5];
+      var tt = [0, 0.12, 0.24, 0.36, 0.48];
+      for (var i = 0; i < seq.length; i++) {
+        tone(seq[i], tt[i], i === seq.length - 1 ? 0.42 : 0.12, "triangle", 0.085);
+      }
+      tone(1318.5, 0.48, 0.42, "sine", 0.055);
+    }); },
+    shutter: function () { whenReady(function () {
+      /* letsgo-sfx: classic two-stage camera shutter snap */
+      tone(2400, 0, 0.025, "square", 0.045);
+      tone(1100, 0.035, 0.035, "square", 0.06);
+      tone(2900, 0.075, 0.02, "square", 0.035);
+    }); },
+    focus: function () { whenReady(function () {
+      /* letsgo-sfx: soft lens-wake blip as the camera comes up */
+      tone(740, 0, 0.1, "sine", 0.05, 1180);
+    }); }
+  };
+})();
+</script>
+<!-- letsgo-fab: floating LET'S GO! camera quick-start -->
+<style>
+#letsGoFab { position: fixed; right: 18px; bottom: 18px; z-index: 9000; display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #d9481c, #e8722a 60%, #e8a33d); color: #fff; font-weight: 800; font-size: 15px;
+  letter-spacing: .5px; border: 2px solid rgba(255,255,255,.45); border-radius: 999px; padding: 12px 20px 12px 16px;
+  cursor: pointer; font-family: inherit; text-shadow: 0 1px 2px rgba(122,46,0,.45);
+  box-shadow: 0 6px 24px rgba(217,72,28,.55); animation: letsgo-pulse 2.6s ease-in-out infinite; }
+#letsGoFab .ico { width: 1.3em; height: 1.3em; }
+#letsGoFab:active { transform: scale(.95); }
+@keyframes letsgo-pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(217,72,28,.55); } 50% { box-shadow: 0 6px 34px rgba(232,163,61,.9); } }
+@media (prefers-reduced-motion: reduce) { #letsGoFab { animation: none; } }
+</style>
+<button type="button" id="letsGoFab" aria-label="Start the camera scanner"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg>LET&rsquo;S GO!</button>
+<script>
+(function () {
+  var go = document.getElementById("letsGoFab");
+  if (!go) return;
+  function dodge() {
+    try {
+      var fab = document.querySelector(".solve-replay-fab");
+      go.style.bottom = (fab && !fab.hidden) ? "88px" : "18px";
+    } catch (e) {}
+  }
+  dodge();
+  try {
+    var fab0 = document.querySelector(".solve-replay-fab");
+    if (fab0 && window.MutationObserver) {
+      new MutationObserver(dodge).observe(fab0, { attributes: true, attributeFilter: ["hidden"] });
+    }
+  } catch (e) {}
+  go.addEventListener("click", function () {
+    dodge();
+    if (window.HuntSfx) { try { window.HuntSfx.click(); } catch (e) {} }
+    var local = document.getElementById("scanBtn");
+    if (local) { local.click(); return; }
+    location.href = "map.html#scan";
+  });
+})();
+</script>
+
 </body>
 </html>
