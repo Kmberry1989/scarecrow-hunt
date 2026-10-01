@@ -61,16 +61,14 @@
   .visit { display: inline-block; background: #d9481c; color: #fff; font-weight: 700;
             padding: .5rem 1rem; border-radius: 999px; font-size: .95rem;
             box-shadow: 0 6px 16px rgba(120,72,20,.25); }
-  .presented { text-align: center; margin-bottom: 2rem; padding: 1.75rem 1.5rem 1.5rem;
-               border: 2px solid #e8722a; border-radius: 14px; background: #fffdf6;
-               box-shadow: 0 12px 34px rgba(120,72,20,.24); }
-  .presented a { display: inline-block; text-decoration: none; }
-  .presented .logo-frame { margin: 0 auto .9rem; padding: 12px; }
-  .presented .logo-frame img { height: 96px; max-height: 96px; }
-  .presented .by { display: block; font-size: .85rem; letter-spacing: 3px; text-transform: uppercase;
-               margin-bottom: .6rem; color: #c85a17; }
-  .presented .org { display: block; font-size: 1.3rem; font-weight: 700; color: #173f6b; }
-  .presented .cent { display: block; font-size: .95rem; margin-top: .3rem; color: #6b5d49; }
+  .presented { text-align: center; margin: 4px auto 2px; max-width: 640px; }
+  .presented a { display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+               padding: 8px 20px; border-top: 1px solid rgba(200,90,23,.4);
+               border-bottom: 1px solid rgba(200,90,23,.4); }
+  .presented img { height: 44px; width: auto; }
+  .presented span { text-align: left; }
+  .presented strong { display: block; font-size: .95rem; font-weight: 700; color: #173f6b; }
+  .presented small { display: block; font-size: .75rem; letter-spacing: .5px; color: #8a6f4d; }
   footer { text-align: center; margin-top: 3rem; color: #6b5d49; font-size: .9rem; position: relative; z-index: 1; }
   @media (prefers-reduced-motion: reduce) {
     #leaves { display: none; opacity: .5;}
@@ -129,12 +127,23 @@
   </script>
     <div style="text-align:center;margin:6px 0 2px;position:relative;z-index:1;"><img src="img/brand/first-friday.png" alt="First Friday" style="width:min(320px,70vw);height:auto;"></div>
   <div class="wrap">
+<div id="ffCountdown" style="max-width:640px;margin:18px auto 8px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(120,72,20,.30);border:2px solid #e8722a;background:linear-gradient(150deg,#2e150b 0%,#6e2a10 40%,#a64d1c 70%,#cf7a2e 100%);">
+  <div style="position:relative;padding:28px 16px 24px;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(255,200,120,.28),transparent 62%);">
+    <p id="cdTitle" style="margin:0 0 4px;color:#fff8ea;font-weight:800;font-size:17px;letter-spacing:3px;text-transform:uppercase;text-shadow:0 2px 8px rgba(40,15,5,.7);">First Friday begins in</p>
+    <p style="margin:0 0 14px;color:#ffd9a0;font-size:12px;letter-spacing:1px;">Downtown Kokomo &middot; 5:30 PM</p>
+    <div style="display:flex;gap:8px;flex-wrap:nowrap;justify-content:center;">
+      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdD" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">days</span></div>
+      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdH" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">hrs</span></div>
+      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdM" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">min</span></div>
+      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdS" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">sec</span></div>
+    </div>
+    <p id="cdMsLine" style="margin:12px 0 0;color:#ffe9c4;font-size:12px;letter-spacing:1px;text-shadow:0 1px 6px rgba(40,15,5,.7);font-variant-numeric:tabular-nums;"><span id="cdMs">000</span> milliseconds to go</p>
+  </div>
+</div>
     <div class="presented">
       <a href="https://www.kaaonline.org" target="_blank" rel="noopener">
-        <span class="by">Presented by</span>
-        <span class="logo-frame"><img src="logos/kaa-logo.png" alt="Kokomo Art Association logo"></span>
-        <span class="org">Kokomo Art Association</span>
-        <span class="cent">Celebrating 100 years of art in Kokomo &mdash; 1926&ndash;2026</span>
+        <img src="logos/kaa-logo.png" alt="Kokomo Art Association logo">
+        <span><strong>Presented by the Kokomo Art Association</strong><small>Celebrating 100 years of art in Kokomo &middot; 1926&ndash;2026</small></span>
       </a>
     </div>
 <div class="howto" style="max-width:640px;margin:0 auto 8px;padding:18px 22px;border:1px solid rgba(200,90,23,.35);border-radius:16px;background:rgba(255,253,246,.85);text-align:left;">
@@ -157,19 +166,6 @@
    <p style="margin:8px 0 0;line-height:1.65;font-size:15px;">Totally optional, completely yours &mdash; but your future self will thank you.</p>
  </div>
 -->
-<div id="ffCountdown" style="max-width:640px;margin:18px auto 8px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(120,72,20,.30);border:2px solid #e8722a;background:linear-gradient(150deg,#2e150b 0%,#6e2a10 40%,#a64d1c 70%,#cf7a2e 100%);">
-  <div style="position:relative;padding:28px 16px 24px;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(255,200,120,.28),transparent 62%);">
-    <p id="cdTitle" style="margin:0 0 4px;color:#fff8ea;font-weight:800;font-size:17px;letter-spacing:3px;text-transform:uppercase;text-shadow:0 2px 8px rgba(40,15,5,.7);">First Friday begins in</p>
-    <p style="margin:0 0 14px;color:#ffd9a0;font-size:12px;letter-spacing:1px;">Downtown Kokomo &middot; 5:30 PM</p>
-    <div style="display:flex;gap:8px;flex-wrap:nowrap;justify-content:center;">
-      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdD" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">days</span></div>
-      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdH" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">hrs</span></div>
-      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdM" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">min</span></div>
-      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdS" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">sec</span></div>
-    </div>
-    <p id="cdMsLine" style="margin:12px 0 0;color:#ffe9c4;font-size:12px;letter-spacing:1px;text-shadow:0 1px 6px rgba(40,15,5,.7);font-variant-numeric:tabular-nums;"><span id="cdMs">000</span> milliseconds to go</p>
-  </div>
-</div>
 <script>
 (function(){
   var target = new Date('2026-10-02T17:30:00-04:00').getTime();
@@ -208,7 +204,7 @@ document.getElementById("getStartedBtn").addEventListener("click", function () {
       <div class="card" style="--d:0.06s">
         <a class="logo-link" href="https://www.kaaonline.org" target="_blank" rel="noopener"><span class="logo-frame"><img src="logos/logo-01.png" alt="Artworks Gallery logo" loading="lazy"></span></a>
         <span class="name">Artworks Gallery</span>
-        <span class="trivia">The Kokomo Art Association's downtown gallery at 210 N Main St — pick up your free passport at the door, and turn in your finished card upstairs to enter the Mystery Prize Basket drawing.</span>
+        <span class="trivia">The Kokomo Art Association's downtown gallery at 210 N Main St — pick up your free postcard at the door, and turn in your finished card upstairs to enter the Mystery Prize Basket drawing.</span>
         <a class="visit" href="https://www.kaaonline.org" target="_blank" rel="noopener">Visit official site&nbsp;&nearr;</a>
       </div>
       <div class="card" style="--d:0.12s">
