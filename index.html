@@ -81,6 +81,24 @@
       .on-white{background:#fff;border-radius:12px;padding:10px;box-shadow:0 4px 14px rgba(120,72,20,.35);}
 
   html { scroll-behavior: smooth; }
+  /* ---- odometer countdown: every reel rolls at its true speed ---- */
+  .cd-reels { display: flex; gap: 10px; justify-content: center; align-items: stretch; }
+  .cd-unit { flex: 2 1 0; min-width: 0; }
+  .cd-unit.cd-ms { flex: 3 1 0; }
+  .reel { height: 1.14em; overflow: hidden; position: relative;
+    font-size: clamp(2.5rem, 13vw, 6rem); font-weight: 800; color: #ffe9c4; line-height: 1.14;
+    font-variant-numeric: tabular-nums; background: rgba(255,235,200,.12);
+    border: 1px solid rgba(255,220,150,.5); border-radius: 12px; }
+  .reel::before, .reel::after { content: ""; position: absolute; left: 0; right: 0; height: 30%;
+    z-index: 2; pointer-events: none; }
+  .reel::before { top: 0; background: linear-gradient(to bottom, rgba(46,21,11,.6), transparent); }
+  .reel::after { bottom: 0; background: linear-gradient(to top, rgba(46,21,11,.6), transparent); }
+  .strip { will-change: transform; }
+  .strip > div { height: 1.14em; display: flex; align-items: center; justify-content: center; }
+  .cd-unit > span { display: block; color: #ffd9a0; font-size: clamp(.65rem, 2.4vw, .8rem);
+    letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; }
   /* ---- how the hunt works: steps + QR explainer pulled aside ---- */
   .howto-layout { display: grid; grid-template-columns: minmax(0,1fr) 252px; gap: 18px;
     max-width: 960px; margin: 0 auto 10px; align-items: start; }
@@ -153,16 +171,16 @@
     <div style="text-align:center;margin:6px 0 2px;position:relative;z-index:1;"><img src="img/brand/first-friday.png" alt="First Friday" style="width:min(320px,70vw);height:auto;"></div>
   <div class="wrap">
 <div id="ffCountdown" style="max-width:640px;margin:18px auto 8px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(120,72,20,.30);border:2px solid #e8722a;background:linear-gradient(150deg,#2e150b 0%,#6e2a10 40%,#a64d1c 70%,#cf7a2e 100%);">
-  <div style="position:relative;padding:28px 16px 24px;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(255,200,120,.28),transparent 62%);">
-    <p id="cdTitle" style="margin:0 0 4px;color:#fff8ea;font-weight:800;font-size:17px;letter-spacing:3px;text-transform:uppercase;text-shadow:0 2px 8px rgba(40,15,5,.7);">First Friday begins in</p>
-    <p style="margin:0 0 14px;color:#ffd9a0;font-size:12px;letter-spacing:1px;">Downtown Kokomo &middot; 5:30 PM</p>
-    <div style="display:flex;gap:8px;flex-wrap:nowrap;justify-content:center;">
-      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdD" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">days</span></div>
-      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdH" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">hrs</span></div>
-      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdM" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">min</span></div>
-      <div style="min-width:62px;padding:8px 6px;background:rgba(255,235,200,.12);border:1px solid rgba(255,220,150,.5);border-radius:10px;"><span id="cdS" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">sec</span></div>
+  <div style="position:relative;padding:30px 18px 28px;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(255,200,120,.28),transparent 62%);">
+    <p id="cdTitle" style="margin:0 0 6px;color:#fff8ea;font-weight:800;font-size:clamp(1.05rem,3.4vw,1.35rem);letter-spacing:3px;text-transform:uppercase;text-shadow:0 2px 8px rgba(40,15,5,.7);">First Friday begins in</p>
+    <p style="margin:0 0 18px;color:#ffd9a0;font-size:clamp(.8rem,2.6vw,1rem);letter-spacing:1px;">Downtown Kokomo &middot; 5:30 PM</p>
+    <div class="cd-reels" aria-hidden="true">
+      <div class="cd-unit"><div class="reel"><div class="strip" id="stripH"></div></div><span>hrs</span></div>
+      <div class="cd-unit"><div class="reel"><div class="strip" id="stripM"></div></div><span>min</span></div>
+      <div class="cd-unit"><div class="reel"><div class="strip" id="stripS"></div></div><span>sec</span></div>
+      <div class="cd-unit cd-ms"><div class="reel"><div class="strip" id="stripMs"></div></div><span>ms</span></div>
     </div>
-    <p id="cdMsLine" style="margin:12px 0 0;color:#ffe9c4;font-size:12px;letter-spacing:1px;text-shadow:0 1px 6px rgba(40,15,5,.7);font-variant-numeric:tabular-nums;"><span id="cdMs">000</span> milliseconds to go</p>
+    <p id="cdAlt" class="sr-only">Countdown to First Friday</p>
   </div>
 </div>
     <div class="presented">
@@ -202,29 +220,62 @@
 <script>
 (function(){
   var target = new Date('2026-10-02T17:30:00-04:00').getTime();
-  var dEl = document.getElementById('cdD'), hEl = document.getElementById('cdH'),
-      mEl = document.getElementById('cdM'), sEl = document.getElementById('cdS'),
-      msEl = document.getElementById('cdMs'), titleEl = document.getElementById('cdTitle'),
-      msLine = document.getElementById('cdMsLine');
+  var titleEl = document.getElementById('cdTitle'), altEl = document.getElementById('cdAlt');
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function pad(n, l){ n = String(n); l = l || 2; while (n.length < l) n = '0' + n; return n; }
-  function tick(){
-    var diff = target - Date.now();
-    if (diff <= 0) {
-      titleEl.textContent = 'It\u2019s First Friday!';
-      dEl.textContent = '0'; hEl.textContent = '00'; mEl.textContent = '00'; sEl.textContent = '00';
-      msLine.style.display = 'none';
-      return false;
-    }
-    dEl.textContent = Math.floor(diff / 864e5);
-    hEl.textContent = pad(Math.floor(diff / 36e5) % 24);
-    mEl.textContent = pad(Math.floor(diff / 6e4) % 60);
-    sEl.textContent = pad(Math.floor(diff / 1e3) % 60);
-    msEl.textContent = pad(Math.floor(diff % 1e3), 3);
-    return true;
+  function buildStrip(id, count, len){
+    var html = '';
+    for (var i = 0; i < count; i++) html += '<div>' + pad(i, len) + '</div>';
+    html += '<div>' + pad(0, len) + '</div>';
+    document.getElementById(id).innerHTML = html;
   }
-  tick();
-  var iv = setInterval(function(){ if (!tick()) clearInterval(iv); }, reduced ? 1000 : 47);
+  buildStrip('stripH', 100, 2); buildStrip('stripM', 100, 2);
+  buildStrip('stripS', 100, 2); buildStrip('stripMs', 1000, 3);
+  var strips = {
+    H: document.getElementById('stripH'), M: document.getElementById('stripM'),
+    S: document.getElementById('stripS'), MS: document.getElementById('stripMs')
+  };
+  var digitH = 0;
+  function measure(){ digitH = strips.H.parentNode.clientHeight || 0; }
+  measure();
+  window.addEventListener('resize', measure);
+  if (document.fonts && document.fonts.ready){ document.fonts.ready.then(measure).catch(function(){}); }
+  function setPos(el, pos){ el.style.transform = 'translate3d(0,' + (-pos * digitH) + 'px,0)'; }
+  function zeroAll(){ setPos(strips.H,0); setPos(strips.M,0); setPos(strips.S,0); setPos(strips.MS,0); }
+  function done(){ titleEl.textContent = 'It\u2019s First Friday!'; altEl.textContent = 'It is First Friday!'; zeroAll(); }
+  function parts(diff){
+    var ms = diff % 1000, s = Math.floor(diff / 1e3) % 60,
+        m = Math.floor(diff / 6e4) % 60, h = Math.floor(diff / 36e5);
+    return { h: h, m: m, s: s, ms: ms };
+  }
+  if (reduced) {
+    /* Reduced motion: plain numbers, updated once a second. */
+    setInterval(function(){
+      var diff = target - Date.now();
+      if (diff <= 0) { done(); return; }
+      var p = parts(diff);
+      setPos(strips.H, p.h); setPos(strips.M, p.m); setPos(strips.S, p.s); setPos(strips.MS, 0);
+      altEl.textContent = p.h + ' hours, ' + p.m + ' minutes, ' + p.s + ' seconds to First Friday';
+    }, 1000);
+    return;
+  }
+  var lastAlt = '';
+  function frame(){
+    var diff = target - Date.now();
+    if (diff <= 0) { done(); return; }
+    var p = parts(diff);
+    /* Each reel rolls continuously at its true rate: ms spins fastest,
+       seconds roll steadily, minutes and hours creep. */
+    var Spos = p.s + p.ms / 1000;
+    var Mpos = p.m + Spos / 60;
+    var Hpos = p.h + Mpos / 60;
+    setPos(strips.H, Hpos); setPos(strips.M, Mpos);
+    setPos(strips.S, Spos); setPos(strips.MS, p.ms);
+    var alt = p.h + ' hours, ' + p.m + ' minutes, ' + p.s + ' seconds to First Friday';
+    if (alt !== lastAlt) { altEl.textContent = alt; lastAlt = alt; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 })();
 </script>
 <p class="map-cta" style="text-align:center;margin:14px 0 26px;"><a id="getStartedBtn" href="map.html" style="display:inline-block;padding:18px 52px;border-radius:999px;background:linear-gradient(135deg,#d9481c,#e8722a 60%,#e8a33d);color:#fff;font-weight:800;font-size:20px;letter-spacing:1px;text-decoration:none;box-shadow:0 8px 30px rgba(217,72,28,.55);border:2px solid rgba(255,255,255,.5);">GET STARTED</a></p>
