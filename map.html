@@ -269,7 +269,7 @@
     #map .leaflet-tile-pane { filter: var(--map-filter); }
     /* Flashlight: a soft golden wash that glides toward wherever the visitor
        taps, like a flashlight being turned toward that spot. It lives on its
-       own pane above the tiles and footprints but below the pins, stays
+       own pane above the tiles and the route line but below the pins, stays
        translucent so everything beneath and above it remains readable, and
        never intercepts pointer input. */
     .map-flashlight {
@@ -445,7 +445,6 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .letter-bank .bank-slot.clickable { transition: none; }
-      .footprint.fp-draw { animation: none; }
       .pin-shell.pin-pop, .pin-bloom { animation: none !important; }
       .letter-bank .bank-word.word-done .bank-slot.found { animation: none; }
     }
@@ -464,16 +463,6 @@
       border-radius: 12px;
     }
     .location-row.drag-ghost { opacity: .35; }
-    .fp-wrap { background: none; border: none; }
-    .footprint { display: block; font-size: 21px; line-height: 1;
-      --fp-op: .92; opacity: var(--fp-op); transform: rotate(var(--brg, 0deg));
-      filter: drop-shadow(0 1px 1px rgba(60,35,10,.35)); }
-    .footprint.fp-done { --fp-op: .28; }
-    .footprint.fp-draw { animation: fp-draw .55s cubic-bezier(.3,.9,.3,1.2) both; }
-    @keyframes fp-draw {
-      0% { opacity: 0; transform: rotate(var(--brg, 0deg)) scale(.2); }
-      100% { opacity: var(--fp-op); transform: rotate(var(--brg, 0deg)) scale(1); }
-    }
     @media (prefers-reduced-motion: reduce) {
       .location-row { transition: none; }
     }
@@ -639,8 +628,9 @@
   .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
     background: linear-gradient(135deg,#d9481c,#e8722a 55%,#e8a33d); border: 2px solid rgba(255,255,255,.4); border-radius: 999px;
     padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 6px 22px rgba(200,90,23,.38); }
-  .topnav a { color: #fff; text-shadow: 0 1px 2px rgba(122,46,0,.45); font-weight: 700; text-decoration: none;
-    font-size: .95rem; white-space: nowrap; }
+  .topnav a { color: #fff; text-shadow: 0 1px 2px rgba(122,46,0,.45); font-weight: 800; text-decoration: none;
+    font-size: 1.15rem; white-space: nowrap; padding: .55rem .9rem; border-radius: 999px; }
+  .topnav a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   .topnav a:hover { color: #ffe9c4; }
   .topnav .navlinks { display: flex; flex: 1; justify-content: space-evenly; align-items: center; }
   .topnav { overflow: hidden; }
@@ -655,7 +645,7 @@
   
   
   @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; }
-    .topnav a { font-size: .85rem; } }
+    .topnav a { font-size: 1.02rem; padding: .45rem .6rem; } }
   .page-shell { position: relative; z-index: 1; }
   .ico { width: 1.15em; height: 1.15em; vertical-align: -0.2em; }
 </style>
@@ -1160,45 +1150,8 @@
         window.addEventListener("pointercancel", onUp);
       }
 
-      /* ---- route path: a faint line plus little footsteps stop to stop ---- */
+      /* ---- route path: a quiet dotted line connecting the stops ---- */
       var pathLayer = null;
-      function bearingDeg(lat1, lng1, lat2, lng2) {
-        var dLng = (lng2 - lng1) * Math.PI / 180;
-        var y = Math.sin(dLng) * Math.cos(lat2 * Math.PI / 180);
-        var x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
-                Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLng);
-        return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
-      }
-      function offsetPt(lat, lng, brgDeg, meters) {
-        var brg = brgDeg * Math.PI / 180;
-        return {
-          lat: lat + meters * Math.cos(brg) / 111320,
-          lng: lng + meters * Math.sin(brg) / (111320 * Math.cos(lat * Math.PI / 180))
-        };
-      }
-      function addFootprints(layer, a, b, visitedNow, delayBase) {
-        var dist = map.distance([a.lat, a.lng], [b.lat, b.lng]);
-        if (dist < 24) return 0;
-        var n = Math.min(36, Math.floor(dist / 30)), count = 0;
-        var legDone = placeIsDone(a, visitedNow) && placeIsDone(b, visitedNow);
-        for (var i = 1; i <= n; i++) {
-          var f = i / (n + 1);
-          if (f < 0.1 || f > 0.9) continue; /* keep the pins themselves clear */
-          var brg = bearingDeg(a.lat, a.lng, b.lat, b.lng);
-          var pt = offsetPt(a.lat + (b.lat - a.lat) * f, a.lng + (b.lng - a.lng) * f,
-                            brg + 90, (i % 2 ? 1 : -1) * 4);
-          var fDelay = (delayBase || 0) + count * 22;
-          var icon = L.divIcon({
-            className: "fp-wrap",
-            html: '<span class="footprint' + (legDone ? " fp-done" : "") + (reduceMotion ? "" : " fp-draw") +
-                  '" style="--brg:' + brg.toFixed(1) + 'deg' + (reduceMotion ? "" : ";animation-delay:" + fDelay + "ms") + '">&#x1F463;</span>',
-            iconSize: [24, 24], iconAnchor: [12, 12]
-          });
-          L.marker([pt.lat, pt.lng], { icon: icon, interactive: false, keyboard: false, pane: "routePane" }).addTo(layer);
-          count++;
-        }
-        return count;
-      }
       function drawPath() {
         if (!map || !window.L) return;
         if (pathLayer) { map.removeLayer(pathLayer); pathLayer = null; }
@@ -1206,11 +1159,7 @@
         if (order.length < 2) return;
         pathLayer = L.layerGroup();
         var latlngs = order.map(function (p) { return [p.lat, p.lng]; });
-        L.polyline(latlngs, { color: "#c85a17", weight: 3, opacity: 0.3, lineCap: "round" }).addTo(pathLayer);
-        var visitedNow = loadVisited(), prints = 0;
-        for (var i = 1; i < order.length && prints < 240; i++) {
-          prints += addFootprints(pathLayer, order[i - 1], order[i], visitedNow, prints * 22);
-        }
+        L.polyline(latlngs, { color: "#c85a17", weight: 4, opacity: 0.55, lineCap: "round", dashArray: "1 8" }).addTo(pathLayer);
         pathLayer.addTo(map);
       }
 
@@ -1312,17 +1261,15 @@
       function initMap() {
         if (!window.L) throw new Error("Leaflet did not load");
         map = L.map("map", {zoomControl:true, scrollWheelZoom:false, tap:true});
-        var routePane = map.createPane("routePane");
-        routePane.style.zIndex = 450; /* footprints: above the path line, below the pins */
-        routePane.style.pointerEvents = "none";
-        /* Street tiles: CARTO Positron (OSM data, minimal styling). The stock OSM
-           style bakes in visual noise we don't need here — red dashed route-relation
-           lines along streets, one-way arrows, railroad-crossing X marks — and none of
-           it can be toggled off per-layer. Positron renders none of that. */
-        var streetLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+        /* Street tiles: Esri World Street Map (no API key, no watermark).
+           CARTO's basemap tiles started requiring an API key in 2026, and the
+           stock OSM style bakes in visual noise we don't need here — red dashed
+           route-relation lines along streets, one-way arrows, railroad-crossing
+           X marks — none of it toggleable per-layer. Esri's street cartography
+           renders none of that. */
+        var streetLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
           maxZoom: 19,
-          subdomains: "abcd",
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, HERE, Garmin, OpenStreetMap contributors'
         });
         var satelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
           maxZoom: 19,
@@ -1377,7 +1324,7 @@
         drawPath();
         /* Flashlight: a soft golden wash that glides toward wherever the
            visitor taps, like a flashlight being turned toward that spot. It
-           rides its own pane above the tiles and footprints but below the
+           rides its own pane above the tiles and the route line but below the
            pins, stays translucent, and never intercepts pointer input. */
         try {
           var glowPane = map.createPane("glowPane");
