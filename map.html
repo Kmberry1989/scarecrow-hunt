@@ -313,6 +313,7 @@
 
     .list-head {
       display: flex;
+      flex-wrap: wrap;
       align-items: baseline;
       justify-content: space-between;
       gap: 1rem;
@@ -320,6 +321,9 @@
       border-bottom: 1px solid var(--line);
     }
     .list-head h2 { margin: 0; font-family: Rockwell, Georgia, serif; font-size: 1.2rem; }
+    .sort-toggle { display: inline-flex; gap: 4px; background: color-mix(in srgb, #000 30%, transparent); border-radius: 999px; padding: 3px; }
+    .sort-toggle button { border: 0; background: transparent; color: var(--muted); font-size: .72rem; font-weight: 800; padding: 6px 11px; border-radius: 999px; cursor: pointer; }
+    .sort-toggle button[aria-pressed="true"] { background: linear-gradient(135deg,#d9481c,#e8a33d); color: #fff; box-shadow: 0 2px 6px rgba(217,72,28,.4); }
     .result-count { color: var(--muted); font-size: .8rem; font-weight: 700; }
 
     .location-list {
@@ -344,7 +348,7 @@
       color: var(--ink);
       text-align: left;
       cursor: pointer;
-      transition: background .16s ease;
+      transition: background .16s ease, opacity .45s ease;
     }
     .location-card:hover, .location-card:focus-visible { background: color-mix(in srgb, var(--purple-soft) 50%, transparent); outline: none; }
 
@@ -415,7 +419,7 @@
       .letter-bank .bank-slot.clickable { transition: none; }
     }
     .blank-directions { margin: .6rem 0 0; font-size: .85rem; font-weight: 700; }
-    .location-card.visited { background: color-mix(in srgb, var(--gold) 9%, transparent); }
+    .location-card.visited { background: color-mix(in srgb, var(--gold) 9%, transparent); opacity: .5; }
     .stop-badge {
       display: inline-flex !important; align-items: center; justify-content: center;
       width: 1.5rem; height: 1.5rem; border-radius: 50%;
@@ -624,9 +628,11 @@
 
     <section class="toolbar" aria-label="Map controls">
       <label class="search-wrap">
-        <span class="skip-link">Search locations</span>
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <input id="search" class="search" type="search" placeholder="Search sponsor or address" autocomplete="off" />
+        <span class="skip-link">Jump to a scarecrow location</span>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="2"/></svg>
+        <select id="search" class="search" aria-label="Jump to a scarecrow location">
+          <option value="">All 21 locations</option>
+        </select>
       </label>
       <button id="near-me" class="action-btn" type="button" aria-label="Find scarecrows near me">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -653,6 +659,10 @@
       <aside class="list-panel" id="list-panel" aria-label="Scarecrow locations">
         <div class="list-head">
           <h2>Scarecrow locations</h2>
+          <div class="sort-toggle" role="group" aria-label="Sort locations">
+            <button type="button" data-sort="route" aria-pressed="true">Walking route</button>
+            <button type="button" data-sort="az" aria-pressed="false">A&ndash;Z</button>
+          </div>
           <span class="result-count" id="result-count">21 locations</span>
         </div>
         <div class="checklist-progress" id="checklist-progress">
@@ -733,6 +743,7 @@
         "Crossroads Community Church":"21"
       };
       var currentQuery = "";
+      var currentSort = "route"; /* default: logical walking-route order; toggle offers A-Z */
 
       function loadVisited() {
         try {
@@ -812,43 +823,94 @@
           "<a class=\"popup-directions\" href=\"" + directionsUrl(place) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Get directions ↗</a>";
       }
 
+      var rowCache = {}; /* sponsor -> li; rows are reused so checked-off rows glide, never jump */
+      var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      function stopNumOf(place) { return STOP_BY_SPONSOR[place.sponsor] || ""; }
+      function placeIsDone(place, visitedNow) {
+        var sn = stopNumOf(place);
+        return sn !== "" && visitedNow.indexOf(sn) !== -1;
+      }
+      function placeSortKey(place) {
+        if (currentSort === "az") return place.sponsor;
+        var n = parseInt(stopNumOf(place) || "99", 10);
+        return (n < 10 ? "0" + n : "" + n) + " " + place.sponsor;
+      }
+      function buildRow(place) {
+        var row = document.createElement("li");
+        row.className = "location-row";
+        var stopNum = stopNumOf(place);
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "location-card";
+        button.innerHTML =
+          "<span class=\"location-copy\"><strong>" +
+          (stopNum ? "<span class=\"stop-badge\" aria-hidden=\"true\">" + parseInt(stopNum, 10) + "</span>" : "") +
+          escapeHtml(place.sponsor) + "</strong>" +
+          "<span>" + escapeHtml(place.address) + "</span>" +
+          (place.source === "provisional" ? "<span class=\"badge tbd\">Provisional · subject to change</span>" : "") +
+          "</span>" +
+          "<svg class=\"row-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
+        button.addEventListener("click", function () { focusPlace(place); });
+        row.appendChild(button);
+        return row;
+      }
       function renderList(query) {
         var q = (query || "").trim().toLowerCase();
         var visible = locations.filter(function (place) {
           return !q || (place.sponsor + " " + place.address).toLowerCase().indexOf(q) !== -1;
-        }).sort(function (a, b) {
-          return a.sponsor.localeCompare(b.sponsor);
         });
-
         var visitedNow = loadVisited();
-        list.innerHTML = "";
-        visible.forEach(function (place) {
-          var row = document.createElement("li");
-          row.className = "location-row";
-          var stopNum = STOP_BY_SPONSOR[place.sponsor] || "";
-          var isDone = stopNum !== "" && visitedNow.indexOf(stopNum) !== -1;
-          var button = document.createElement("button");
-          button.type = "button";
-          button.className = "location-card" + (isDone ? " visited" : "");
-          button.innerHTML =
-            "<span class=\"location-copy\"><strong>" +
-            (stopNum ? "<span class=\"stop-badge\" aria-hidden=\"true\">" + parseInt(stopNum, 10) + "</span>" : "") +
-            escapeHtml(place.sponsor) + "</strong>" +
-            "<span>" + escapeHtml(place.address) + "</span>" +
-            (place.source === "provisional" ? "<span class=\"badge tbd\">Provisional · subject to change</span>" : "") +
-            "</span>" +
-            "<svg class=\"row-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
-          button.setAttribute("aria-label", "Show " + place.sponsor + " on the map");
-          button.addEventListener("click", function () { focusPlace(place); });
-          row.appendChild(button);
-          list.appendChild(row);
+        /* checked-off locations sink to the bottom, faded; each group keeps the chosen sort */
+        visible.sort(function (a, b) {
+          var d = placeIsDone(a, visitedNow), e = placeIsDone(b, visitedNow);
+          if (d !== e) return d ? 1 : -1;
+          var ka = placeSortKey(a), kb = placeSortKey(b);
+          return ka < kb ? -1 : (ka > kb ? 1 : 0);
         });
 
+        /* FLIP: record positions before the reorder so rows glide instead of jumping */
+        var first = {};
+        if (!reduceMotion) {
+          Object.keys(rowCache).forEach(function (name) {
+            var r = rowCache[name];
+            if (r.parentNode === list) first[name] = r.getBoundingClientRect().top;
+          });
+        }
+        var seen = {};
+        visible.forEach(function (place) {
+          var row = rowCache[place.sponsor] || (rowCache[place.sponsor] = buildRow(place));
+          seen[place.sponsor] = true;
+          row.style.display = "";
+          var btn = row.firstChild;
+          var done = placeIsDone(place, visitedNow);
+          if (done) btn.classList.add("visited"); else btn.classList.remove("visited");
+          btn.setAttribute("aria-label", "Show " + place.sponsor + " on the map" + (done ? " (checked off)" : ""));
+          list.appendChild(row); /* moves the existing node into its new slot */
+        });
+        Object.keys(rowCache).forEach(function (name) {
+          if (!seen[name]) rowCache[name].style.display = "none";
+        });
+        if (!reduceMotion) {
+          Object.keys(rowCache).forEach(function (name) {
+            var r = rowCache[name];
+            if (r.style.display === "none" || !(name in first)) return;
+            var dy = first[name] - r.getBoundingClientRect().top;
+            if (dy) r.animate(
+              [{ transform: "translateY(" + dy + "px)" }, { transform: "translateY(0)" }],
+              { duration: 450, easing: "cubic-bezier(.25,.7,.3,1)" });
+          });
+        }
+
+        var empty = list.querySelector(".empty-state");
         if (!visible.length) {
-          var empty = document.createElement("li");
-          empty.className = "empty-state";
-          empty.textContent = "No scarecrow locations match “" + (query || "") + ".”";
-          list.appendChild(empty);
+          if (!empty) {
+            empty = document.createElement("li");
+            empty.className = "empty-state";
+            list.appendChild(empty);
+          }
+          empty.textContent = "No scarecrow locations match \u201c" + (query || "") + ".\u201d";
+        } else if (empty) {
+          empty.parentNode.removeChild(empty);
         }
         count.textContent = visible.length + (visible.length === 1 ? " location" : " locations");
       }
@@ -1002,7 +1064,36 @@
         document.getElementById("map-fallback").style.display = "none";
       }
 
-      search.addEventListener("input", function () { currentQuery = search.value; renderList(currentQuery); });
+      (function buildSearchOptions() {
+        var ordered = locations.slice().sort(function (a, b) {
+          return parseInt(STOP_BY_SPONSOR[a.sponsor] || "99", 10) - parseInt(STOP_BY_SPONSOR[b.sponsor] || "99", 10);
+        });
+        ordered.forEach(function (place) {
+          var opt = document.createElement("option");
+          opt.value = place.sponsor;
+          var num = parseInt(STOP_BY_SPONSOR[place.sponsor] || "0", 10);
+          opt.textContent = (num ? num + " \u00b7 " : "") + place.sponsor;
+          search.appendChild(opt);
+        });
+      })();
+      search.addEventListener("change", function () {
+        currentQuery = search.value;
+        renderList(currentQuery);
+        if (currentQuery && PLACE_BY_SPONSOR[currentQuery]) focusPlace(PLACE_BY_SPONSOR[currentQuery]);
+      });
+      Array.prototype.forEach.call(document.querySelectorAll(".sort-toggle button"), function (btn) {
+        btn.addEventListener("click", function () {
+          currentSort = btn.getAttribute("data-sort");
+          Array.prototype.forEach.call(document.querySelectorAll(".sort-toggle button"), function (b) {
+            b.setAttribute("aria-pressed", String(b === btn));
+          });
+          renderList(currentQuery);
+        });
+      });
+      /* returning from a stop page: freshly checked-off rows glide down and fade */
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) renderList(currentQuery);
+      });
 
       document.getElementById("near-me").addEventListener("click", function () {
         if (!map) {
