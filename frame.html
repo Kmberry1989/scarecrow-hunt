@@ -73,8 +73,27 @@
   <nav class="topnav" aria-label="Site">
     <span class="navlinks"><a href="index.html">Home</a>
     <a href="map.html">Trail Map</a>
-    <a href="faq.html">FAQ</a></span>
+    <a href="faq.html">FAQ</a><a href="album.html" data-album-link hidden>My Album</a></span>
   </nav>
+<script>
+/* Nav: reveal "My Album" only after the visitor has saved at least one photo. */
+(function(){try{
+  var link=document.querySelector('[data-album-link]');if(!link)return;
+  if(!('indexedDB' in window))return;
+  var req=indexedDB.open('scarecrowJourney',1);
+  req.onupgradeneeded=function(){ try{req.result.createObjectStore('photos',{keyPath:'stop'});}catch(e){} };
+  req.onsuccess=function(){
+    var db=req.result;
+    try{
+      if(!db.objectStoreNames.contains('photos')){db.close();return;}
+      var tx=db.transaction('photos','readonly');
+      var c=tx.objectStore('photos').count();
+      c.onsuccess=function(){ if(c.result>0)link.removeAttribute('hidden'); db.close(); };
+      c.onerror=function(){ db.close(); };
+    }catch(e){ try{db.close();}catch(_){} }
+  };
+}catch(e){}})();
+</script>
   <script>
   /* Nav glow: the brightest point of the nav gradient sits behind the active page's link. */
   (function(){try{
