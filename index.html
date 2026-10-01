@@ -66,7 +66,7 @@
                padding: 8px 20px; border-top: 1px solid rgba(200,90,23,.4);
                border-bottom: 1px solid rgba(200,90,23,.4); }
   .presented img { height: 44px; width: auto; }
-  .presented span { text-align: left; }
+  .presented span { text-align: center; }
   .presented strong { display: block; font-size: .95rem; font-weight: 700; color: #173f6b; }
   .presented small { display: block; font-size: .75rem; letter-spacing: .5px; color: #8a6f4d; }
   footer { text-align: center; margin-top: 3rem; color: #6b5d49; font-size: .9rem; position: relative; z-index: 1; }
@@ -81,7 +81,7 @@
       .on-white{background:#fff;border-radius:12px;padding:10px;box-shadow:0 4px 14px rgba(120,72,20,.35);}
 
   html { scroll-behavior: smooth; }
-  /* ---- odometer countdown: every reel rolls at its true speed ---- */
+  /* ---- odometer countdown: one reel per digit; tens ease like a mechanical odometer ---- */
   .cd-reels { display: flex; gap: 10px; justify-content: center; align-items: stretch; }
   .cd-unit { flex: 2 1 0; min-width: 0; }
   .cd-unit.cd-ms { flex: 3 1 0; }
@@ -95,6 +95,8 @@
   .reel::after { bottom: 0; background: linear-gradient(to top, rgba(46,21,11,.6), transparent); }
   .strip { will-change: transform; }
   .strip > div { height: 1.14em; display: flex; align-items: center; justify-content: center; }
+  .reel.duo { display: flex; }
+  .reel.duo .strip { flex: 1 1 0; min-width: 0; }
   .cd-unit > span { display: block; color: #ffd9a0; font-size: clamp(.65rem, 2.4vw, .8rem);
     letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden;
@@ -127,8 +129,9 @@
   .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
     background: linear-gradient(135deg,#d9481c,#e8722a 55%,#e8a33d); border: 2px solid rgba(255,255,255,.4); border-radius: 999px;
     padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 6px 22px rgba(200,90,23,.38); }
-  .topnav a { color: #fff; text-shadow: 0 1px 2px rgba(122,46,0,.45); font-weight: 700; text-decoration: none;
-    font-size: .95rem; white-space: nowrap; }
+  .topnav a { color: #fff; text-shadow: 0 1px 2px rgba(122,46,0,.45); font-weight: 800; text-decoration: none;
+    font-size: 1.15rem; white-space: nowrap; padding: .55rem .9rem; border-radius: 999px; }
+  .topnav a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   .topnav a:hover { color: #ffe9c4; }
   .topnav .navlinks { display: flex; flex: 1; justify-content: space-evenly; align-items: center; }
   .topnav { overflow: hidden; }
@@ -143,7 +146,7 @@
   
   
   @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; }
-    .topnav a { font-size: .85rem; } }
+    .topnav a { font-size: 1.02rem; padding: .45rem .6rem; } }
   .ico { width: 1.15em; height: 1.15em; vertical-align: -0.2em; }
 </style>
 </head>
@@ -175,9 +178,9 @@
     <p id="cdTitle" style="margin:0 0 6px;color:#fff8ea;font-weight:800;font-size:clamp(1.05rem,3.4vw,1.35rem);letter-spacing:3px;text-transform:uppercase;text-shadow:0 2px 8px rgba(40,15,5,.7);">First Friday begins in</p>
     <p style="margin:0 0 18px;color:#ffd9a0;font-size:clamp(.8rem,2.6vw,1rem);letter-spacing:1px;">Downtown Kokomo &middot; 5:30 PM</p>
     <div class="cd-reels" aria-hidden="true">
-      <div class="cd-unit"><div class="reel"><div class="strip" id="stripH"></div></div><span>hrs</span></div>
-      <div class="cd-unit"><div class="reel"><div class="strip" id="stripM"></div></div><span>min</span></div>
-      <div class="cd-unit"><div class="reel"><div class="strip" id="stripS"></div></div><span>sec</span></div>
+      <div class="cd-unit"><div class="reel duo"><div class="strip" id="stripHT"></div><div class="strip" id="stripHO"></div></div><span>hrs</span></div>
+      <div class="cd-unit"><div class="reel duo"><div class="strip" id="stripMT"></div><div class="strip" id="stripMO"></div></div><span>min</span></div>
+      <div class="cd-unit"><div class="reel duo"><div class="strip" id="stripST"></div><div class="strip" id="stripSO"></div></div><span>sec</span></div>
       <div class="cd-unit cd-ms"><div class="reel"><div class="strip" id="stripMs"></div></div><span>ms</span></div>
     </div>
     <p id="cdAlt" class="sr-only">Countdown to First Friday</p>
@@ -185,7 +188,6 @@
 </div>
     <div class="presented">
       <a href="https://www.kaaonline.org" target="_blank" rel="noopener">
-        <img src="logos/kaa-logo.png" alt="Kokomo Art Association logo">
         <span><strong>Presented by the Kokomo Art Association</strong><small>Celebrating 100 years of art in Kokomo &middot; 1926&ndash;2026</small></span>
       </a>
     </div>
@@ -223,38 +225,45 @@
   var titleEl = document.getElementById('cdTitle'), altEl = document.getElementById('cdAlt');
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function pad(n, l){ n = String(n); l = l || 2; while (n.length < l) n = '0' + n; return n; }
+  /* One reel per digit: strips run 9..0 so a countdown rolls continuously.
+     The ones reel spins while its tens reel sits still; the tens reel then
+     eases into the next digit instead of snapping. */
+  function buildDigitStrip(id){
+    var html = '';
+    for (var d = 9; d >= 0; d--) html += '<div>' + d + '</div>';
+    document.getElementById(id).innerHTML = html;
+  }
   function buildStrip(id, count, len){
     var html = '';
     for (var i = 0; i < count; i++) html += '<div>' + pad(i, len) + '</div>';
     html += '<div>' + pad(0, len) + '</div>';
     document.getElementById(id).innerHTML = html;
   }
-  buildStrip('stripH', 100, 2); buildStrip('stripM', 100, 2);
-  buildStrip('stripS', 100, 2); buildStrip('stripMs', 1000, 3);
+  ['stripHT','stripHO','stripMT','stripMO','stripST','stripSO'].forEach(buildDigitStrip);
+  buildStrip('stripMs', 1000, 3);
   var strips = {
-    H: document.getElementById('stripH'), M: document.getElementById('stripM'),
-    S: document.getElementById('stripS'), MS: document.getElementById('stripMs')
+    HT: document.getElementById('stripHT'), HO: document.getElementById('stripHO'),
+    MT: document.getElementById('stripMT'), MO: document.getElementById('stripMO'),
+    ST: document.getElementById('stripST'), SO: document.getElementById('stripSO'),
+    MS: document.getElementById('stripMs')
   };
   var digitH = 0;
-  function measure(){ digitH = strips.H.parentNode.clientHeight || 0; }
+  function measure(){ digitH = strips.HT.parentNode.clientHeight || 0; }
   measure();
   window.addEventListener('resize', measure);
   if (document.fonts && document.fonts.ready){ document.fonts.ready.then(measure).catch(function(){}); }
   function setPos(el, pos){ el.style.transform = 'translate3d(0,' + (-pos * digitH) + 'px,0)'; }
-  function zeroAll(){ setPos(strips.H,0); setPos(strips.M,0); setPos(strips.S,0); setPos(strips.MS,0); }
+  function zeroAll(){ ['HT','HO','MT','MO','ST','SO'].forEach(function(k){ setPos(strips[k], 9); }); setPos(strips.MS, 0); }
   function done(){ titleEl.textContent = 'It\u2019s First Friday!'; altEl.textContent = 'It is First Friday!'; zeroAll();
     if (window.HuntSfx) { try { window.HuntSfx.fanfare(); } catch (e) {} }
     if (window.__wakeGetStarted) { try { window.__wakeGetStarted(); } catch (e) {} } }
-  var lastS = -1, lastM = -1, lastH = -1, lastFrameT = 0;
-  function chimeFor(p){
-    var now = Date.now(), Sfx = window.HuntSfx;
-    if (Sfx && lastFrameT && now - lastFrameT <= 1500) {
-      /* One voice per reel, highest rollover wins so they never stack. */
-      if (lastH !== -1 && p.h !== lastH) { try { Sfx.cdHour(); } catch (e) {} }
-      else if (lastM !== -1 && p.m !== lastM) { try { Sfx.cdMinute(); } catch (e) {} }
-      else if (lastS !== -1 && p.s !== lastS) { try { Sfx.cdTick(p.s); } catch (e) {} }
-    }
-    lastS = p.s; lastM = p.m; lastH = p.h; lastFrameT = now;
+  /* Tens reels hold their digit while the ones reel spins, then roll
+     gradually into the next digit (no ticking sounds anywhere). */
+  var shownT = { H: -1, M: -1, S: -1 };
+  function easeTens(key, target, dt){
+    if (shownT[key] < 0) shownT[key] = target;
+    shownT[key] += (target - shownT[key]) * Math.min(1, dt * 6);
+    setPos(strips[key], 9 - shownT[key]);
   }
   function parts(diff){
     var ms = diff % 1000, s = Math.floor(diff / 1e3) % 60,
@@ -262,30 +271,51 @@
     return { h: h, m: m, s: s, ms: ms };
   }
   if (reduced) {
-    /* Reduced motion: plain numbers, updated once a second. */
+    /* Reduced motion: plain numbers, updated once a second, silent. */
     setInterval(function(){
       var diff = target - Date.now();
       if (diff <= 0) { done(); return; }
       var p = parts(diff);
-      setPos(strips.H, p.h); setPos(strips.M, p.m); setPos(strips.S, p.s); setPos(strips.MS, 0);
-      chimeFor(p);
+      setPos(strips.HT, 9 - Math.floor(p.h / 10)); setPos(strips.HO, 9 - (p.h % 10));
+      setPos(strips.MT, 9 - Math.floor(p.m / 10)); setPos(strips.MO, 9 - (p.m % 10));
+      setPos(strips.ST, 9 - Math.floor(p.s / 10)); setPos(strips.SO, 9 - (p.s % 10));
+      setPos(strips.MS, 0);
       altEl.textContent = p.h + ' hours, ' + p.m + ' minutes, ' + p.s + ' seconds to First Friday';
     }, 1000);
     return;
   }
-  var lastAlt = '';
-  function frame(){
+  var lastAlt = '', lastFrameT = 0, lastT = null;
+  var posSO = 0, posMO = 0, posHO = 0;
+  /* Ones-reel positions advance incrementally with elapsed time, so the
+     0 -> 9 wrap rolls smoothly instead of snapping. The digit shown always
+     matches the reel by construction. */
+  function initOnes(T){
+    function initPos(total, per){
+      var units = total / per, d = Math.floor(units) % 10, f = units - Math.floor(units);
+      if (f === 0) f = 1;
+      return (9 - d) + (1 - f);
+    }
+    posSO = initPos(T, 1); posMO = initPos(T, 60); posHO = initPos(T, 3600);
+  }
+  function frame(now){
     var diff = target - Date.now();
     if (diff <= 0) { done(); return; }
+    var dt = lastFrameT ? Math.min(0.25, (now - lastFrameT) / 1000) : 0.016; lastFrameT = now;
+    var T = diff / 1000;
+    if (lastT === null) { initOnes(T); }
+    else {
+      var d = lastT - T; if (d < 0) d = 0;
+      posSO += d; posMO += d / 60; posHO += d / 3600;
+    }
+    lastT = T;
     var p = parts(diff);
-    /* Each reel rolls continuously at its true rate: ms spins fastest,
-       seconds roll steadily, minutes and hours creep. */
-    var Spos = p.s + p.ms / 1000;
-    var Mpos = p.m + Spos / 60;
-    var Hpos = p.h + Mpos / 60;
-    setPos(strips.H, Hpos); setPos(strips.M, Mpos);
-    setPos(strips.S, Spos); setPos(strips.MS, p.ms);
-    chimeFor(p);
+    setPos(strips.SO, posSO % 10);
+    setPos(strips.MO, posMO % 10);
+    setPos(strips.HO, posHO % 10);
+    easeTens('ST', Math.floor(p.s / 10), dt);
+    easeTens('MT', Math.floor(p.m / 10), dt);
+    easeTens('HT', Math.floor(p.h / 10), dt);
+    setPos(strips.MS, p.ms);
     var alt = p.h + ' hours, ' + p.m + ' minutes, ' + p.s + ' seconds to First Friday';
     if (alt !== lastAlt) { altEl.textContent = alt; lastAlt = alt; }
     requestAnimationFrame(frame);
@@ -689,17 +719,6 @@ window.HuntSfx = (function () {
       tone(1318.5, 0.96, 0.8, "sine", 0.05);
       buzz([20, 60, 20, 60, 40]);
     }); },
-    /* Countdown odometer voices: one light voice per reel. These skip the
-       whenReady queue on purpose -- a tick every second must never pile up
-       before the first tap; tone() itself no-ops until audio is unlocked. */
-    cdTick: function (s) { if (!unlocked) return;
-      tone(s % 2 === 0 ? 700 : 560, 0, 0.05, "triangle", 0.028); },
-    cdMinute: function () { if (!unlocked) return;
-      tone(523.25, 0, 0.1, "triangle", 0.05);
-      tone(659.25, 0.09, 0.12, "sine", 0.045); },
-    cdHour: function () { if (!unlocked) return;
-      tone(392, 0, 0.14, "sine", 0.055);
-      tone(523.25, 0.12, 0.16, "sine", 0.05); },
     setMuted: function (m) {
       muted = !!m;
       try { localStorage.setItem("kokomoScarecrowsMuted", muted ? "1" : "0"); } catch (e) {}
