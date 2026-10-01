@@ -81,6 +81,31 @@
       .on-white{background:#fff;border-radius:12px;padding:10px;box-shadow:0 4px 14px rgba(120,72,20,.35);}
 
   html { scroll-behavior: smooth; }
+  /* ---- how the hunt works: steps + QR explainer pulled aside ---- */
+  .howto-layout { display: grid; grid-template-columns: minmax(0,1fr) 252px; gap: 18px;
+    max-width: 960px; margin: 0 auto 10px; align-items: start; }
+  .howto { padding: 26px 30px; border: 1px solid rgba(200,90,23,.35); border-radius: 16px;
+    background: rgba(255,253,246,.85); text-align: left; }
+  .howto h2 { margin: 0 0 14px; font-size: clamp(1.35rem, 3vw, 1.65rem); text-align: center;
+    text-decoration: underline; color: #173f6b; }
+  .howto .howto-date { margin: 6px 0 4px; text-align: center; font-size: 1.02rem; }
+  .howto .event-note { margin: 12px 0; font-size: 15px; line-height: 1.6; background: #fdf6e7;
+    border: 1px dashed rgba(200,90,23,.4); border-radius: 10px; padding: 12px 16px; }
+  .howto ul { margin: 10px 0; padding-left: 22px; line-height: 1.6; list-style: disc; font-size: 1rem; }
+  .howto li + li { margin-top: 12px; }
+  .howto .family-note { margin: 14px 0 0; font-size: 15px; line-height: 1.6; opacity: .88; text-align: center; }
+  .qr-aside { border: 2px dashed rgba(200,90,23,.45); border-radius: 16px; background: #fffdf6;
+    padding: 20px 18px; text-align: center; box-shadow: 0 6px 18px rgba(120,72,20,.12);
+    position: sticky; top: 84px; }
+  .qr-aside img { border: 2px solid #e7d9bd; border-radius: 8px; background: #fff; margin-bottom: 10px; }
+  .qr-aside h3 { font-size: 1.12rem; color: #173f6b; margin: 0 0 8px; }
+  .qr-aside p { font-size: 14px; line-height: 1.55; color: #6b5d49; margin: 0 0 10px; }
+  .qr-aside p:last-child { margin-bottom: 0; }
+  @media (max-width: 760px) {
+    .howto-layout { grid-template-columns: 1fr; }
+    .howto { padding: 20px; }
+    .qr-aside { position: static; }
+  }
   .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
     background: linear-gradient(135deg,#d9481c,#e8722a 55%,#e8a33d); border: 2px solid rgba(255,255,255,.4); border-radius: 999px;
     padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 6px 22px rgba(200,90,23,.38); }
@@ -146,17 +171,25 @@
         <span><strong>Presented by the Kokomo Art Association</strong><small>Celebrating 100 years of art in Kokomo &middot; 1926&ndash;2026</small></span>
       </a>
     </div>
-<div class="howto" style="max-width:640px;margin:0 auto 8px;padding:18px 22px;border:1px solid rgba(200,90,23,.35);border-radius:16px;background:rgba(255,253,246,.85);text-align:left;">
-   <h2 style="margin:0 0 10px;font-size:22px;text-align:center;text-decoration:underline;">How the Scarecrow Scavenger Hunt Works</h2>
-   <p style="margin:6px 0;text-align:center;"><strong>Friday, October 2</strong> &mdash; downtown Kokomo</p>
-   <p style="margin:8px 0;font-size:14px;line-height:1.55;background:#fdf6e7;border:1px dashed rgba(200,90,23,.4);border-radius:10px;padding:10px 14px;"><strong>5:30&ndash;8:00 PM</strong> is the official First Friday event time &mdash; but the hunt runs on <em>your</em> schedule. The QR codes stay up after the event, so you&rsquo;re welcome to play at your own convenience, for as long as the QR codes remain posted.</p>
-   <ul style="margin:8px 0;padding-left:22px;line-height:1.65;list-style:disc;">
+<div class="howto-layout">
+ <div class="howto">
+   <h2>How the Scarecrow Scavenger Hunt Works</h2>
+   <p class="howto-date"><strong>Friday, October 2</strong> &mdash; downtown Kokomo</p>
+   <p class="event-note"><strong>5:30&ndash;8:00 PM</strong> is the official First Friday event time &mdash; but the hunt runs on <em>your</em> schedule. The QR codes stay up after the event, so you&rsquo;re welcome to play at your own convenience, for as long as the QR codes remain posted.</p>
+   <ul>
      <li><strong>Grab a hunt card</strong> &mdash; free at Artworks Gallery (210 N Main St) or Fired Arts Studio (111 W Sycamore St).</li>
-     <li><strong>Find the 21 scarecrows</strong> &mdash; start at any scarecrow and visit in any order. Scan each pumpkin&rsquo;s QR code with your phone&rsquo;s camera to bank its letter automatically and unlock the full experience.<br><img src="img/sample-qr.svg" alt="Sample QR code" width="96" height="96" style="margin:8px 0 2px;border:2px solid #e7d9bd;border-radius:8px;background:#fff;"><br><span style="font-size:13px;opacity:.8;">New to QR codes? They look like this &mdash; point your phone&rsquo;s camera at one and tap the link that pops up.</span><br><span style="font-size:13px;opacity:.85;"><strong>No phone? No problem</strong> &mdash; the back of each pumpkin shows its letter and blank number, so you can play on paper and still enter the prize drawing. <a href="faq.html">Details in the FAQ</a>.</span></li>
+     <li><strong>Find the 21 scarecrows</strong> &mdash; start at any scarecrow and visit in any order. Scan each pumpkin&rsquo;s QR code with your phone&rsquo;s camera to bank its letter automatically and unlock the full experience.</li>
      <li><strong>Turn in your finished card</strong> &mdash; drop it off at the front desk of Artworks Gallery. Every completed card enters the Mystery Prize Basket drawing &mdash; late finishes count, too (Artworks Gallery takes cards until 9 PM).</li>
    </ul>
-   <p style="margin:8px 0 0;font-size:14px;opacity:.85;text-align:center;">A family-friendly evening &mdash; kids are encouraged to come hunt with a parent or guardian. Please use crosswalks, and bring a phone and/or flashlight after dark.</p>
+   <p class="family-note">A family-friendly evening &mdash; kids are encouraged to come hunt with a parent or guardian. Please use crosswalks, and bring a phone and/or flashlight after dark.</p>
  </div>
+ <aside class="qr-aside" aria-label="New to QR codes?">
+   <img src="img/sample-qr.svg" alt="Sample QR code" width="120" height="120">
+   <h3>New to QR codes?</h3>
+   <p>They look like this &mdash; point your phone&rsquo;s camera at one and tap the link that pops up.</p>
+   <p><strong>No phone? No problem</strong> &mdash; the back of each pumpkin shows its letter and blank number, so you can play on paper and still enter the prize drawing. <a href="faq.html">Details in the FAQ</a>.</p>
+ </aside>
+</div>
 
 <!-- HIDDEN 2026-10-01: "Scarecrow Selfie Story" keepsake section parked until the Storybook concept is settled. Restore by deleting this comment wrapper.
 <div class="keepsake" style="max-width:640px;margin:18px auto 8px;padding:20px 24px;border:2px solid #e8722a;border-radius:16px;background:linear-gradient(165deg,#fffef9,#fdf3e0);text-align:left;box-shadow:0 10px 30px rgba(120,72,20,.18);">
