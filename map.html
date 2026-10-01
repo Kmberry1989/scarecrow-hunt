@@ -400,6 +400,21 @@
       border-style: solid; border-color: var(--gold); color: var(--gold);
       background: color-mix(in srgb, var(--gold) 30%, transparent);
     }
+    .letter-bank .bank-slot.clickable {
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+    }
+    .letter-bank .bank-slot.clickable:hover { transform: scale(1.14); }
+    .letter-bank .bank-slot.active {
+      transform: scale(1.3);
+      background: linear-gradient(135deg, #d9481c, #e8722a 55%, #e8a33d);
+      border-style: solid; border-color: #c23f16; color: #fff;
+      box-shadow: 0 4px 14px rgba(217,72,28,.45);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .letter-bank .bank-slot.clickable { transition: none; }
+    }
+    .blank-directions { margin: .6rem 0 0; font-size: .85rem; font-weight: 700; }
     .location-card.visited { background: color-mix(in srgb, var(--gold) 9%, transparent); }
     .stop-badge {
       display: inline-flex !important; align-items: center; justify-content: center;
@@ -524,7 +539,7 @@
       .map-layout { display: block; max-height: none; min-height: 0; }
       .map-panel { min-height: 58vh; height: 500px; }
       .list-panel { border-left: 0; border-top: 1px solid var(--line); }
-      .list-panel.collapsed { display: none; }
+      
       .location-list { max-height: none; overflow: visible; }
       .list-head { position: sticky; top: 0; z-index: 5; background: var(--panel); }
       footer { grid-template-columns: 1fr; }
@@ -621,10 +636,6 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8h3l2-2h6l2 2h3v11H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" stroke="currentColor" stroke-width="2"/></svg>
         <span class="wide-label">Scan a QR</span>
       </button>
-      <button id="list-toggle" class="action-btn secondary" type="button" aria-label="Show scarecrow location list" aria-expanded="false" aria-controls="list-panel">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>
-        <span class="wide-label">Show list</span>
-      </button>
     </section>
 
     <section class="map-layout" aria-label="Scarecrow trail">
@@ -649,6 +660,7 @@
             <span id="checklist-count">0 of 21 checked off</span>
           </div>
           <div class="letter-bank" id="letter-bank" aria-label="Letters gathered so far"></div>
+          <p class="blank-directions" id="blank-directions" role="status" aria-live="polite" hidden></p>
         </div>
         <ol class="location-list" id="location-list"></ol>
       </aside>
@@ -700,12 +712,12 @@
       var map = null;
       var markerBySponsor = {};
       var userMarker = null;
+      var lastUserPos = null;
       var list = document.getElementById("location-list");
       var search = document.getElementById("search");
       var count = document.getElementById("result-count");
       var statusBox = document.getElementById("map-status");
       var listPanel = document.getElementById("list-panel");
-      var listToggle = document.getElementById("list-toggle");
 
       var VISIT_KEY = "kokomoScarecrowsVisitedV2";
       var LETTER_KEY = "kokomoScarecrowsLettersV2";
@@ -757,9 +769,13 @@
                 s.title = "Pre-printed on your card";
               } else {
                 var k = ("0" + slot).slice(-2);
-                s.className = "bank-slot" + (letters[k] ? " found" : "");
+                s.className = "bank-slot clickable" + (letters[k] ? " found" : "");
                 s.textContent = letters[k] || slot;
-                s.title = "Blank #" + slot + (letters[k] ? ": letter " + letters[k] : " (not visited)");
+                s.title = "Blank #" + slot + (letters[k] ? ": letter " + letters[k] : " (not visited)") + " \u2014 tap to find it";
+                s.setAttribute("data-slot", String(slot));
+                s.setAttribute("role", "button");
+                s.setAttribute("tabindex", "0");
+                s.setAttribute("aria-label", "Blank " + slot + ": zoom to stop " + slot + " on the map");
               }
               w.appendChild(s);
             });
@@ -846,6 +862,94 @@
         }
       }
 
+      var SPONSOR_BY_STOP = {};
+      Object.keys(STOP_BY_SPONSOR).forEach(function (name) { SPONSOR_BY_STOP[STOP_BY_SPONSOR[name]] = name; });
+      var PLACE_BY_SPONSOR = {};
+      locations.forEach(function (place) { PLACE_BY_SPONSOR[place.sponsor] = place; });
+
+      function geoInfo(lat1, lng1, lat2, lng2) {
+        var toRad = Math.PI / 180, R = 6371000;
+        var dLat = (lat2 - lat1) * toRad, dLng = (lng2 - lng1) * toRad;
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(lat1 * toRad) * Math.cos(lat2 * toRad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        var meters = 2 * R * Math.asin(Math.sqrt(a));
+        var y = Math.sin(dLng) * Math.cos(lat2 * toRad);
+        var x = Math.cos(lat1 * toRad) * Math.sin(lat2 * toRad) -
+          Math.sin(lat1 * toRad) * Math.cos(lat2 * toRad) * Math.cos(dLng);
+        var brng = (Math.atan2(y, x) / toRad + 360) % 360;
+        var names = ["north","northeast","east","southeast","south","southwest","west","northwest"];
+        return {meters: meters, compass: names[Math.round(brng / 45) % 8]};
+      }
+
+      function speakText(text) {
+        try {
+          if (!("speechSynthesis" in window)) return;
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+        } catch (e) { /* speech is a nice-to-have */ }
+      }
+
+      function showBlankDirections(message, speak) {
+        var el = document.getElementById("blank-directions");
+        if (el) { el.textContent = message; el.hidden = false; }
+        if (speak) speakText(message);
+      }
+
+      function directionsFromUser(place, stopNum) {
+        function describe(lat, lng) {
+          var info = geoInfo(lat, lng, place.lat, place.lng);
+          var feet = info.meters * 3.28084;
+          var dist = feet < 1000
+            ? "about " + Math.round(feet / 10) * 10 + " feet"
+            : "about " + (feet / 5280).toFixed(1) + " miles";
+          showBlankDirections(
+            "Stop " + stopNum + ", " + place.sponsor + ", is " + dist + " " + info.compass +
+            " of you (straight line). Tap \u201CGet directions\uE467\u201D on the pin for turn-by-turn.",
+            true);
+        }
+        if (lastUserPos) { describe(lastUserPos.lat, lastUserPos.lng); return; }
+        if (!navigator.geolocation) {
+          showBlankDirections("Zoomed to stop " + stopNum + ". Location isn\u2019t available in this browser, so I can\u2019t measure from where you are.", false);
+          return;
+        }
+        showBlankDirections("Zoomed to stop " + stopNum + ". Finding your location for directions\u2026", false);
+        navigator.geolocation.getCurrentPosition(function (position) {
+          lastUserPos = {lat: position.coords.latitude, lng: position.coords.longitude};
+          describe(lastUserPos.lat, lastUserPos.lng);
+        }, function (error) {
+          showBlankDirections(
+            "Zoomed to stop " + stopNum + ". Allow location access (or tap \u201CScarecrows near me\u201D) to hear directions from where you are.",
+            false);
+        }, {enableHighAccuracy: true, timeout: 9000, maximumAge: 60000});
+      }
+
+      function onBlankActivate(slotEl) {
+        var slot = parseInt(slotEl.getAttribute("data-slot"), 10);
+        if (!slot) return;
+        var prev = document.querySelector(".bank-slot.active");
+        if (prev) prev.classList.remove("active");
+        slotEl.classList.add("active");
+        var key = ("0" + slot).slice(-2);
+        var sponsor = SPONSOR_BY_STOP[key];
+        var place = sponsor ? PLACE_BY_SPONSOR[sponsor] : null;
+        if (!place) {
+          showBlankDirections("Hmm, I couldn\u2019t find stop " + slot + " on the map.", false);
+          return;
+        }
+        focusPlace(place);
+        directionsFromUser(place, slot);
+      }
+
+      document.getElementById("letter-bank").addEventListener("click", function (event) {
+        var slotEl = event.target.closest ? event.target.closest(".bank-slot.clickable") : null;
+        if (slotEl) onBlankActivate(slotEl);
+      });
+      document.getElementById("letter-bank").addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        var slotEl = event.target.closest ? event.target.closest(".bank-slot.clickable") : null;
+        if (slotEl) { event.preventDefault(); onBlankActivate(slotEl); }
+      });
+
       function showStatus(message, autoHide) {
         statusBox.textContent = message;
         statusBox.hidden = false;
@@ -913,6 +1017,7 @@
         navigator.geolocation.getCurrentPosition(function (position) {
           var lat = position.coords.latitude;
           var lng = position.coords.longitude;
+          lastUserPos = {lat: lat, lng: lng};
           if (userMarker) map.removeLayer(userMarker);
           userMarker = L.marker([lat,lng], {icon:L.divIcon({className:"", html:"<div class=\"user-location\" aria-hidden=\"true\"></div>", iconSize:[18,18], iconAnchor:[9,9]}), title:"Your location"}).addTo(map).bindPopup("<strong>You are here</strong>");
           map.setView([lat,lng], 15);
@@ -924,25 +1029,7 @@
         }, {enableHighAccuracy:true, timeout:9000, maximumAge:60000});
       });
 
-      listToggle.addEventListener("click", function () {
-        var isCollapsed = listPanel.classList.toggle("collapsed");
-        listToggle.setAttribute("aria-expanded", String(!isCollapsed));
-        listToggle.setAttribute("aria-label", isCollapsed ? "Show scarecrow location list" : "Hide scarecrow location list");
-        var label = listToggle.querySelector(".wide-label");
-        if (label) label.textContent = isCollapsed ? "Show list" : "Hide list";
-        if (!isCollapsed) listPanel.scrollIntoView({behavior:"smooth", block:"start"});
-      });
-
       function syncMobileList() {
-        if (window.innerWidth <= 860) {
-          if (!listPanel.classList.contains("mobile-initialized")) {
-            listPanel.classList.add("mobile-initialized", "collapsed");
-            listToggle.setAttribute("aria-expanded", "false");
-          }
-        } else {
-          listPanel.classList.remove("collapsed", "mobile-initialized");
-          listToggle.setAttribute("aria-expanded", "true");
-        }
         if (map) window.setTimeout(function () { map.invalidateSize(); }, 80);
       }
 
