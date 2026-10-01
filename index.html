@@ -242,7 +242,19 @@
   if (document.fonts && document.fonts.ready){ document.fonts.ready.then(measure).catch(function(){}); }
   function setPos(el, pos){ el.style.transform = 'translate3d(0,' + (-pos * digitH) + 'px,0)'; }
   function zeroAll(){ setPos(strips.H,0); setPos(strips.M,0); setPos(strips.S,0); setPos(strips.MS,0); }
-  function done(){ titleEl.textContent = 'It\u2019s First Friday!'; altEl.textContent = 'It is First Friday!'; zeroAll(); }
+  function done(){ titleEl.textContent = 'It\u2019s First Friday!'; altEl.textContent = 'It is First Friday!'; zeroAll();
+    if (window.HuntSfx) { try { window.HuntSfx.fanfare(); } catch (e) {} } }
+  var lastS = -1, lastM = -1, lastH = -1, lastFrameT = 0;
+  function chimeFor(p){
+    var now = Date.now(), Sfx = window.HuntSfx;
+    if (Sfx && lastFrameT && now - lastFrameT <= 1500) {
+      /* One voice per reel, highest rollover wins so they never stack. */
+      if (lastH !== -1 && p.h !== lastH) { try { Sfx.cdHour(); } catch (e) {} }
+      else if (lastM !== -1 && p.m !== lastM) { try { Sfx.cdMinute(); } catch (e) {} }
+      else if (lastS !== -1 && p.s !== lastS) { try { Sfx.cdTick(p.s); } catch (e) {} }
+    }
+    lastS = p.s; lastM = p.m; lastH = p.h; lastFrameT = now;
+  }
   function parts(diff){
     var ms = diff % 1000, s = Math.floor(diff / 1e3) % 60,
         m = Math.floor(diff / 6e4) % 60, h = Math.floor(diff / 36e5);
@@ -255,6 +267,7 @@
       if (diff <= 0) { done(); return; }
       var p = parts(diff);
       setPos(strips.H, p.h); setPos(strips.M, p.m); setPos(strips.S, p.s); setPos(strips.MS, 0);
+      chimeFor(p);
       altEl.textContent = p.h + ' hours, ' + p.m + ' minutes, ' + p.s + ' seconds to First Friday';
     }, 1000);
     return;
@@ -271,6 +284,7 @@
     var Hpos = p.h + Mpos / 60;
     setPos(strips.H, Hpos); setPos(strips.M, Mpos);
     setPos(strips.S, Spos); setPos(strips.MS, p.ms);
+    chimeFor(p);
     var alt = p.h + ' hours, ' + p.m + ' minutes, ' + p.s + ' seconds to First Friday';
     if (alt !== lastAlt) { altEl.textContent = alt; lastAlt = alt; }
     requestAnimationFrame(frame);
@@ -643,6 +657,17 @@ window.HuntSfx = (function () {
       tone(1318.5, 0.96, 0.8, "sine", 0.05);
       buzz([20, 60, 20, 60, 40]);
     }); },
+    /* Countdown odometer voices: one light voice per reel. These skip the
+       whenReady queue on purpose -- a tick every second must never pile up
+       before the first tap; tone() itself no-ops until audio is unlocked. */
+    cdTick: function (s) { if (!unlocked) return;
+      tone(s % 2 === 0 ? 700 : 560, 0, 0.05, "triangle", 0.028); },
+    cdMinute: function () { if (!unlocked) return;
+      tone(523.25, 0, 0.1, "triangle", 0.05);
+      tone(659.25, 0.09, 0.12, "sine", 0.045); },
+    cdHour: function () { if (!unlocked) return;
+      tone(392, 0, 0.14, "sine", 0.055);
+      tone(523.25, 0.12, 0.16, "sine", 0.05); },
     setMuted: function (m) {
       muted = !!m;
       try { localStorage.setItem("kokomoScarecrowsMuted", muted ? "1" : "0"); } catch (e) {}
