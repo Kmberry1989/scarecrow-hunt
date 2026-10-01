@@ -339,7 +339,7 @@
     .location-card {
       width: 100%;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: auto minmax(0, 1fr) auto;
       gap: .75rem;
       align-items: start;
       border: 0;
@@ -420,6 +420,26 @@
     }
     .blank-directions { margin: .6rem 0 0; font-size: .85rem; font-weight: 700; }
     .location-card.visited { background: color-mix(in srgb, var(--gold) 9%, transparent); opacity: .5; }
+    .drag-grip {
+      touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
+      align-self: center; padding: .55rem .35rem; margin-left: -.35rem; border-radius: 8px;
+      color: var(--muted); font-size: .95rem; letter-spacing: 1px; line-height: 1;
+    }
+    .drag-grip:active { cursor: grabbing; background: color-mix(in srgb, var(--purple-soft) 55%, transparent); }
+    .location-row.dragging { position: relative; z-index: 60; }
+    .location-row.dragging .location-card {
+      background: var(--paper, #fffdf6);
+      box-shadow: 0 14px 30px rgba(60,35,10,.28);
+      border-radius: 12px;
+    }
+    .location-row.drag-ghost { opacity: .35; }
+    .fp-wrap { background: none; border: none; }
+    .footprint { display: block; font-size: 21px; line-height: 1; opacity: .92;
+      filter: drop-shadow(0 1px 1px rgba(60,35,10,.35)); }
+    .footprint.fp-done { opacity: .28; }
+    @media (prefers-reduced-motion: reduce) {
+      .location-row { transition: none; }
+    }
     .stop-badge {
       display: inline-flex !important; align-items: center; justify-content: center;
       width: 1.5rem; height: 1.5rem; border-radius: 50%;
@@ -662,6 +682,7 @@
           <div class="sort-toggle" role="group" aria-label="Sort locations">
             <button type="button" data-sort="route" aria-pressed="true">Walking route</button>
             <button type="button" data-sort="az" aria-pressed="false">A&ndash;Z</button>
+            <button type="button" data-sort="custom" aria-pressed="false" title="Arrange your own route by dragging cards">My route</button>
           </div>
           <span class="result-count" id="result-count">21 locations</span>
         </div>
@@ -743,7 +764,27 @@
         "Crossroads Community Church":"21"
       };
       var currentQuery = "";
-      var currentSort = "route"; /* default: logical walking-route order; toggle offers A-Z */
+      var currentSort = "route"; /* walking-route default; toggle offers A-Z and My route */
+      var customOrder = null; /* zero-padded stop numbers in the visitor's own route order */
+      try {
+        var savedSort = JSON.parse(localStorage.getItem("kokomoScarecrowsSortV1") || "null");
+        if (savedSort === "route" || savedSort === "az" || savedSort === "custom") currentSort = savedSort;
+        var savedOrder = JSON.parse(localStorage.getItem("kokomoScarecrowsMyRouteV1") || "null");
+        if (Array.isArray(savedOrder) && savedOrder.length === 21) {
+          var seenStops = {};
+          customOrder = savedOrder.filter(function (sn) {
+            if (seenStops[sn] || !/^(0[1-9]|1[0-9]|2[1])$/.test(sn)) return false;
+            seenStops[sn] = true; return true;
+          });
+          if (customOrder.length !== 21) customOrder = null;
+        }
+      } catch (e) {}
+      function saveRoutePrefs() {
+        try {
+          localStorage.setItem("kokomoScarecrowsSortV1", JSON.stringify(currentSort));
+          localStorage.setItem("kokomoScarecrowsMyRouteV1", JSON.stringify(customOrder));
+        } catch (e) {}
+      }
 
       function loadVisited() {
         try {
@@ -832,17 +873,32 @@
       }
       function placeSortKey(place) {
         if (currentSort === "az") return place.sponsor;
+        if (currentSort === "custom" && customOrder) {
+          var idx = customOrder.indexOf(stopNumOf(place));
+          var c = idx < 0 ? "99" : (idx < 10 ? "0" + idx : "" + idx);
+          return c + " " + place.sponsor;
+        }
         var n = parseInt(stopNumOf(place) || "99", 10);
         return (n < 10 ? "0" + n : "" + n) + " " + place.sponsor;
       }
+      /* full 21-stop route in the current order, ignoring filters and checked-off sinking */
+      function routeOrderPlaces() {
+        return locations.slice().sort(function (a, b) {
+          var ka = placeSortKey(a), kb = placeSortKey(b);
+          return ka < kb ? -1 : (ka > kb ? 1 : 0);
+        });
+      }
+      var dragJustEnded = false; /* suppress the tap-to-focus click right after a drag */
       function buildRow(place) {
         var row = document.createElement("li");
         row.className = "location-row";
+        row.setAttribute("data-stop", stopNumOf(place));
         var stopNum = stopNumOf(place);
         var button = document.createElement("button");
         button.type = "button";
         button.className = "location-card";
         button.innerHTML =
+          "<span class=\"drag-grip\" aria-hidden=\"true\" title=\"Drag to reroute\">&#8942;&#8942;</span>" +
           "<span class=\"location-copy\"><strong>" +
           (stopNum ? "<span class=\"stop-badge\" aria-hidden=\"true\">" + parseInt(stopNum, 10) + "</span>" : "") +
           escapeHtml(place.sponsor) + "</strong>" +
@@ -850,7 +906,13 @@
           (place.source === "provisional" ? "<span class=\"badge tbd\">Provisional · subject to change</span>" : "") +
           "</span>" +
           "<svg class=\"row-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
-        button.addEventListener("click", function () { focusPlace(place); });
+        button.addEventListener("click", function () {
+          if (dragJustEnded) { dragJustEnded = false; return; }
+          if (window.HuntSfx) { try { window.HuntSfx.tap(); } catch (e) {} }
+          focusPlace(place);
+        });
+        var grip = button.querySelector(".drag-grip");
+        grip.addEventListener("pointerdown", function (e) { beginCardDrag(e, row, place); });
         row.appendChild(button);
         return row;
       }
@@ -860,10 +922,13 @@
           return !q || (place.sponsor + " " + place.address).toLowerCase().indexOf(q) !== -1;
         });
         var visitedNow = loadVisited();
-        /* checked-off locations sink to the bottom, faded; each group keeps the chosen sort */
+        /* checked-off locations sink to the bottom, faded; each group keeps the chosen sort.
+           In My route the visitor's own arrangement wins, so nothing sinks (checked stops still fade). */
         visible.sort(function (a, b) {
-          var d = placeIsDone(a, visitedNow), e = placeIsDone(b, visitedNow);
-          if (d !== e) return d ? 1 : -1;
+          if (currentSort !== "custom") {
+            var d = placeIsDone(a, visitedNow), e = placeIsDone(b, visitedNow);
+            if (d !== e) return d ? 1 : -1;
+          }
           var ka = placeSortKey(a), kb = placeSortKey(b);
           return ka < kb ? -1 : (ka > kb ? 1 : 0);
         });
@@ -913,6 +978,7 @@
           empty.parentNode.removeChild(empty);
         }
         count.textContent = visible.length + (visible.length === 1 ? " location" : " locations");
+        drawPath();
       }
 
       function focusPlace(place) {
@@ -922,6 +988,172 @@
         if (window.innerWidth <= 860) {
           document.querySelector(".map-panel").scrollIntoView({behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start"});
         }
+      }
+
+      /* ---- My route: drag cards to arrange your own path ---- */
+      function visibleRows() {
+        var out = [], kids = list.children;
+        for (var i = 0; i < kids.length; i++) {
+          var k = kids[i];
+          if (k.classList && k.classList.contains("location-row") &&
+              !k.classList.contains("dragging") && !k.classList.contains("drag-ghost") &&
+              k.style.display !== "none") out.push(k);
+        }
+        return out;
+      }
+      function flipRows(mutate) {
+        var rows = visibleRows(), first = {};
+        if (!reduceMotion) rows.forEach(function (r) { first[r.getAttribute("data-stop")] = r.getBoundingClientRect().top; });
+        mutate();
+        if (!reduceMotion) rows.forEach(function (r) {
+          var dy = (first[r.getAttribute("data-stop")] || 0) - r.getBoundingClientRect().top;
+          if (dy) r.animate(
+            [{ transform: "translateY(" + dy + "px)" }, { transform: "translateY(0)" }],
+            { duration: 220, easing: "cubic-bezier(.25,.7,.3,1)" });
+        });
+      }
+      function ensureCustomMode() {
+        if (currentSort === "custom" && customOrder) return;
+        /* adopt the cards exactly as the visitor sees them */
+        customOrder = [];
+        var seen = {};
+        visibleRows().forEach(function (r) {
+          var sn = r.getAttribute("data-stop");
+          if (sn && !seen[sn]) { seen[sn] = true; customOrder.push(sn); }
+        });
+        locations.slice().sort(function (a, b) {
+          var ka = placeSortKey(a), kb = placeSortKey(b);
+          return ka < kb ? -1 : (ka > kb ? 1 : 0);
+        }).forEach(function (p) {
+          var sn = stopNumOf(p);
+          if (!seen[sn]) { seen[sn] = true; customOrder.push(sn); }
+        });
+        currentSort = "custom";
+        Array.prototype.forEach.call(document.querySelectorAll(".sort-toggle button"), function (b) {
+          b.setAttribute("aria-pressed", String(b.getAttribute("data-sort") === "custom"));
+        });
+        saveRoutePrefs();
+      }
+      function commitCustomOrder() {
+        var order = [], seen = {};
+        visibleRows().forEach(function (r) {
+          var sn = r.getAttribute("data-stop");
+          if (sn && !seen[sn]) { seen[sn] = true; order.push(sn); }
+        });
+        if (customOrder) customOrder.forEach(function (sn) { if (!seen[sn]) { seen[sn] = true; order.push(sn); } });
+        locations.forEach(function (p) {
+          var sn = stopNumOf(p);
+          if (!seen[sn]) { seen[sn] = true; order.push(sn); }
+        });
+        customOrder = order;
+        saveRoutePrefs();
+      }
+      function beginCardDrag(e, row) {
+        e.preventDefault();
+        e.stopPropagation();
+        var startY = e.clientY, startX = e.clientX, active = false, ghost = null;
+        function onMove(ev) {
+          if (!active) {
+            if (Math.abs(ev.clientY - startY) < 8 && Math.abs(ev.clientX - startX) < 8) return;
+            active = true;
+            ensureCustomMode();
+            var rect = row.getBoundingClientRect();
+            ghost = document.createElement("li");
+            ghost.className = "location-row drag-ghost";
+            ghost.style.height = rect.height + "px";
+            ghost.setAttribute("aria-hidden", "true");
+            row.parentNode.insertBefore(ghost, row);
+            row.classList.add("dragging");
+            row.style.position = "fixed";
+            row.style.left = rect.left + "px";
+            row.style.top = rect.top + "px";
+            row.style.width = rect.width + "px";
+            row.style.margin = "0";
+            if (window.HuntSfx) { try { window.HuntSfx.tap(); } catch (err) {} }
+          }
+          row.style.transform = "translateY(" + (ev.clientY - startY) + "px)";
+          var rows = visibleRows(), target = null;
+          for (var i = 0; i < rows.length; i++) {
+            var r = rows[i].getBoundingClientRect();
+            if (ev.clientY < r.top + r.height / 2) { target = rows[i]; break; }
+          }
+          if (target && ghost.nextSibling !== target) {
+            flipRows(function () { list.insertBefore(ghost, target); });
+          } else if (!target && ghost.nextSibling) {
+            flipRows(function () { list.appendChild(ghost); });
+          }
+        }
+        function onUp() {
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("pointerup", onUp);
+          window.removeEventListener("pointercancel", onUp);
+          if (!active) return;
+          dragJustEnded = true;
+          list.insertBefore(row, ghost);
+          list.removeChild(ghost);
+          row.classList.remove("dragging");
+          row.style.position = ""; row.style.left = ""; row.style.top = "";
+          row.style.width = ""; row.style.margin = ""; row.style.transform = "";
+          commitCustomOrder();
+          renderList(currentQuery);
+          if (window.HuntSfx) { try { window.HuntSfx.toggle(); } catch (err) {} }
+        }
+        window.addEventListener("pointermove", onMove);
+        window.addEventListener("pointerup", onUp);
+        window.addEventListener("pointercancel", onUp);
+      }
+
+      /* ---- route path: a faint line plus little footsteps stop to stop ---- */
+      var pathLayer = null;
+      function bearingDeg(lat1, lng1, lat2, lng2) {
+        var dLng = (lng2 - lng1) * Math.PI / 180;
+        var y = Math.sin(dLng) * Math.cos(lat2 * Math.PI / 180);
+        var x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
+                Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLng);
+        return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+      }
+      function offsetPt(lat, lng, brgDeg, meters) {
+        var brg = brgDeg * Math.PI / 180;
+        return {
+          lat: lat + meters * Math.cos(brg) / 111320,
+          lng: lng + meters * Math.sin(brg) / (111320 * Math.cos(lat * Math.PI / 180))
+        };
+      }
+      function addFootprints(layer, a, b, visitedNow) {
+        var dist = map.distance([a.lat, a.lng], [b.lat, b.lng]);
+        if (dist < 24) return 0;
+        var n = Math.min(36, Math.floor(dist / 30)), count = 0;
+        var legDone = placeIsDone(a, visitedNow) && placeIsDone(b, visitedNow);
+        for (var i = 1; i <= n; i++) {
+          var f = i / (n + 1);
+          if (f < 0.1 || f > 0.9) continue; /* keep the pins themselves clear */
+          var brg = bearingDeg(a.lat, a.lng, b.lat, b.lng);
+          var pt = offsetPt(a.lat + (b.lat - a.lat) * f, a.lng + (b.lng - a.lng) * f,
+                            brg + 90, (i % 2 ? 1 : -1) * 4);
+          var icon = L.divIcon({
+            className: "fp-wrap",
+            html: '<span class="footprint' + (legDone ? " fp-done" : "") +
+                  '" style="transform:rotate(' + brg.toFixed(1) + 'deg)">&#x1F463;</span>',
+            iconSize: [24, 24], iconAnchor: [12, 12]
+          });
+          L.marker([pt.lat, pt.lng], { icon: icon, interactive: false, keyboard: false, pane: "routePane" }).addTo(layer);
+          count++;
+        }
+        return count;
+      }
+      function drawPath() {
+        if (!map || !window.L) return;
+        if (pathLayer) { map.removeLayer(pathLayer); pathLayer = null; }
+        var order = routeOrderPlaces();
+        if (order.length < 2) return;
+        pathLayer = L.layerGroup();
+        var latlngs = order.map(function (p) { return [p.lat, p.lng]; });
+        L.polyline(latlngs, { color: "#c85a17", weight: 3, opacity: 0.3, lineCap: "round" }).addTo(pathLayer);
+        var visitedNow = loadVisited(), prints = 0;
+        for (var i = 1; i < order.length && prints < 240; i++) {
+          prints += addFootprints(pathLayer, order[i - 1], order[i], visitedNow);
+        }
+        pathLayer.addTo(map);
       }
 
       var SPONSOR_BY_STOP = {};
@@ -986,6 +1218,7 @@
       }
 
       function onBlankActivate(slotEl) {
+        if (window.HuntSfx) { try { window.HuntSfx.tap(); } catch (e) {} }
         var slot = parseInt(slotEl.getAttribute("data-slot"), 10);
         if (!slot) return;
         var prev = document.querySelector(".bank-slot.active");
@@ -1021,6 +1254,9 @@
       function initMap() {
         if (!window.L) throw new Error("Leaflet did not load");
         map = L.map("map", {zoomControl:true, scrollWheelZoom:false, tap:true});
+        var routePane = map.createPane("routePane");
+        routePane.style.zIndex = 450; /* footprints: above the path line, below the pins */
+        routePane.style.pointerEvents = "none";
         var streetLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
           maxZoom: 19,
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -1062,6 +1298,7 @@
         extraMarkers.forEach(function (place) { allBounds.extend([place.lat, place.lng]); });
         map.fitBounds(allBounds, {padding:[44,44], maxZoom:16});
         document.getElementById("map-fallback").style.display = "none";
+        drawPath();
       }
 
       (function buildSearchOptions() {
@@ -1077,18 +1314,25 @@
         });
       })();
       search.addEventListener("change", function () {
+        if (window.HuntSfx) { try { window.HuntSfx.select(); } catch (e) {} }
         currentQuery = search.value;
         renderList(currentQuery);
         if (currentQuery && PLACE_BY_SPONSOR[currentQuery]) focusPlace(PLACE_BY_SPONSOR[currentQuery]);
       });
       Array.prototype.forEach.call(document.querySelectorAll(".sort-toggle button"), function (btn) {
         btn.addEventListener("click", function () {
+          if (window.HuntSfx) { try { window.HuntSfx.toggle(); } catch (e) {} }
           currentSort = btn.getAttribute("data-sort");
           Array.prototype.forEach.call(document.querySelectorAll(".sort-toggle button"), function (b) {
             b.setAttribute("aria-pressed", String(b === btn));
           });
+          saveRoutePrefs();
           renderList(currentQuery);
         });
+      });
+      /* reflect a saved sort mode (e.g. My route from a previous visit) */
+      Array.prototype.forEach.call(document.querySelectorAll(".sort-toggle button"), function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-sort") === currentSort));
       });
       /* returning from a stop page: freshly checked-off rows glide down and fade */
       document.addEventListener("visibilitychange", function () {
@@ -1096,6 +1340,7 @@
       });
 
       document.getElementById("near-me").addEventListener("click", function () {
+        if (window.HuntSfx) { try { window.HuntSfx.tap(); } catch (e) {} }
         if (!map) {
           showStatus("The interactive map is unavailable, but every scarecrow location is listed below.", true);
           return;
@@ -1380,6 +1625,8 @@
 window.HuntSfx = (function () {
   "use strict";
   var ctx = null, queued = [], unlocked = false;
+  var muted = false;
+  try { muted = localStorage.getItem("kokomoScarecrowsMuted") === "1"; } catch (e) {}
   function ac() {
     try {
       if (!ctx) {
@@ -1392,6 +1639,7 @@ window.HuntSfx = (function () {
     } catch (e) { return null; }
   }
   function tone(freq, delay, dur, type, vol, slideTo) {
+    if (muted) return;
     var c = ac();
     if (!c || c.state !== "running") return;
     try {
@@ -1406,6 +1654,9 @@ window.HuntSfx = (function () {
       o.connect(g); g.connect(c.destination);
       o.start(t); o.stop(t + dur + 0.05);
     } catch (e) {}
+  }
+  function buzz(pattern) {
+    try { if (!muted && "vibrate" in navigator) navigator.vibrate(pattern); } catch (e) {}
   }
   function flush() {
     if (unlocked) return;
@@ -1464,7 +1715,57 @@ window.HuntSfx = (function () {
     focus: function () { whenReady(function () {
       /* letsgo-sfx: soft lens-wake blip as the camera comes up */
       tone(740, 0, 0.1, "sine", 0.05, 1180);
-    }); }
+    }); },
+    /* Touch-feedback palette: short, soft, never jarring. Each input type gets
+       its own voice, each paired with a matching haptic. */
+    tap: function () { whenReady(function () {
+      tone(520, 0, 0.06, "sine", 0.05);
+      buzz(8);
+    }); },
+    toggle: function () { whenReady(function () {
+      tone(440, 0, 0.05, "triangle", 0.05);
+      tone(660, 0.06, 0.07, "triangle", 0.05);
+      buzz([10, 30, 10]);
+    }); },
+    select: function () { whenReady(function () {
+      tone(392, 0, 0.09, "triangle", 0.06);
+      tone(523.25, 0.07, 0.1, "sine", 0.05);
+      buzz(12);
+    }); },
+    undoSfx: function () { whenReady(function () {
+      tone(600, 0, 0.12, "sine", 0.055, 300);
+      buzz(15);
+    }); },
+    redoSfx: function () { whenReady(function () {
+      tone(300, 0, 0.12, "sine", 0.055, 600);
+      buzz(15);
+    }); },
+    shareSfx: function () { whenReady(function () {
+      tone(500, 0, 0.18, "sine", 0.045, 1200);
+      buzz([10, 40, 10]);
+    }); },
+    error: function () { whenReady(function () {
+      tone(180, 0, 0.15, "sine", 0.06);
+      buzz(40);
+    }); },
+    back: function () { whenReady(function () {
+      tone(660, 0, 0.06, "sine", 0.05, 440);
+      buzz(8);
+    }); },
+    complete: function () { whenReady(function () {
+      /* cinematic shimmer for 21/21: a slow, unhurried rising arpeggio */
+      var seq = [523.25, 587.33, 659.25, 783.99, 880, 1046.5];
+      for (var i = 0; i < seq.length; i++) {
+        tone(seq[i], i * 0.16, 0.3, "sine", 0.06);
+      }
+      tone(1318.5, 0.96, 0.8, "sine", 0.05);
+      buzz([20, 60, 20, 60, 40]);
+    }); },
+    setMuted: function (m) {
+      muted = !!m;
+      try { localStorage.setItem("kokomoScarecrowsMuted", muted ? "1" : "0"); } catch (e) {}
+    },
+    isMuted: function () { return muted; },
   };
 })();
 </script>

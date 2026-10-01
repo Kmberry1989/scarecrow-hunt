@@ -423,6 +423,8 @@ document.getElementById("getStartedBtn").addEventListener("click", function () {
 window.HuntSfx = (function () {
   "use strict";
   var ctx = null, queued = [], unlocked = false;
+  var muted = false;
+  try { muted = localStorage.getItem("kokomoScarecrowsMuted") === "1"; } catch (e) {}
   function ac() {
     try {
       if (!ctx) {
@@ -435,6 +437,7 @@ window.HuntSfx = (function () {
     } catch (e) { return null; }
   }
   function tone(freq, delay, dur, type, vol, slideTo) {
+    if (muted) return;
     var c = ac();
     if (!c || c.state !== "running") return;
     try {
@@ -449,6 +452,9 @@ window.HuntSfx = (function () {
       o.connect(g); g.connect(c.destination);
       o.start(t); o.stop(t + dur + 0.05);
     } catch (e) {}
+  }
+  function buzz(pattern) {
+    try { if (!muted && "vibrate" in navigator) navigator.vibrate(pattern); } catch (e) {}
   }
   function flush() {
     if (unlocked) return;
@@ -507,7 +513,57 @@ window.HuntSfx = (function () {
     focus: function () { whenReady(function () {
       /* letsgo-sfx: soft lens-wake blip as the camera comes up */
       tone(740, 0, 0.1, "sine", 0.05, 1180);
-    }); }
+    }); },
+    /* Touch-feedback palette: short, soft, never jarring. Each input type gets
+       its own voice, each paired with a matching haptic. */
+    tap: function () { whenReady(function () {
+      tone(520, 0, 0.06, "sine", 0.05);
+      buzz(8);
+    }); },
+    toggle: function () { whenReady(function () {
+      tone(440, 0, 0.05, "triangle", 0.05);
+      tone(660, 0.06, 0.07, "triangle", 0.05);
+      buzz([10, 30, 10]);
+    }); },
+    select: function () { whenReady(function () {
+      tone(392, 0, 0.09, "triangle", 0.06);
+      tone(523.25, 0.07, 0.1, "sine", 0.05);
+      buzz(12);
+    }); },
+    undoSfx: function () { whenReady(function () {
+      tone(600, 0, 0.12, "sine", 0.055, 300);
+      buzz(15);
+    }); },
+    redoSfx: function () { whenReady(function () {
+      tone(300, 0, 0.12, "sine", 0.055, 600);
+      buzz(15);
+    }); },
+    shareSfx: function () { whenReady(function () {
+      tone(500, 0, 0.18, "sine", 0.045, 1200);
+      buzz([10, 40, 10]);
+    }); },
+    error: function () { whenReady(function () {
+      tone(180, 0, 0.15, "sine", 0.06);
+      buzz(40);
+    }); },
+    back: function () { whenReady(function () {
+      tone(660, 0, 0.06, "sine", 0.05, 440);
+      buzz(8);
+    }); },
+    complete: function () { whenReady(function () {
+      /* cinematic shimmer for 21/21: a slow, unhurried rising arpeggio */
+      var seq = [523.25, 587.33, 659.25, 783.99, 880, 1046.5];
+      for (var i = 0; i < seq.length; i++) {
+        tone(seq[i], i * 0.16, 0.3, "sine", 0.06);
+      }
+      tone(1318.5, 0.96, 0.8, "sine", 0.05);
+      buzz([20, 60, 20, 60, 40]);
+    }); },
+    setMuted: function (m) {
+      muted = !!m;
+      try { localStorage.setItem("kokomoScarecrowsMuted", muted ? "1" : "0"); } catch (e) {}
+    },
+    isMuted: function () { return muted; },
   };
 })();
 </script>
