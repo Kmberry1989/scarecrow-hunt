@@ -146,12 +146,55 @@
    <p style="margin:8px 0 0;font-size:14px;opacity:.85;text-align:center;">A family-friendly evening &mdash; kids are encouraged to come hunt with a parent or guardian. Please use crosswalks, and bring a phone and/or flashlight after dark.</p>
  </div>
 
+<!-- HIDDEN 2026-10-01: "Scarecrow Selfie Story" keepsake section parked until the Storybook concept is settled. Restore by deleting this comment wrapper.
 <div class="keepsake" style="max-width:640px;margin:18px auto 8px;padding:20px 24px;border:2px solid #e8722a;border-radius:16px;background:linear-gradient(165deg,#fffef9,#fdf3e0);text-align:left;box-shadow:0 10px 30px rgba(120,72,20,.18);">
    <h2 style="margin:0 0 10px;font-size:22px;text-align:center;color:#173f6b;">Scarecrow Selfie Story</h2>
    <p style="margin:8px 0;line-height:1.65;">The hunt card is the game &mdash; but your camera can make it <em>unforgettable</em>. Snap a photo at each scarecrow &mdash; a selfie, the scarecrow itself, or the scene around it &mdash; and build your own <strong>Scarecrow Selfie Story slideshow</strong>: every stop framed in fall designs <strong>you</strong> pick, each photo carrying its sponsor&rsquo;s name.</p>
    <p style="margin:8px 0;line-height:1.65;">It&rsquo;s the perfect share &mdash; post your favorites with <strong>#KokomoScarecrows2026</strong> and <strong>#FirstFridayKokomo</strong> and give the local businesses behind the hunt a little spotlight of their own. Your photos stay on <strong>your</strong> phone &mdash; the site never uploads anything. The only time a photo leaves your phone is when you share it yourself, to your social media or with friends and family.</p>
    <p style="margin:8px 0 0;line-height:1.65;font-size:15px;">Totally optional, completely yours &mdash; but your future self will thank you.</p>
  </div>
+-->
+<div id="ffCountdown" style="max-width:640px;margin:18px auto 8px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(120,72,20,.28);border:2px solid #e8722a;background:#7a4a1f;">
+  <img src="img/countdown-frame-pumpkin.jpg" alt="A large pumpkin on a pile of autumn leaves" style="width:100%;display:block;" loading="eager">
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px;text-align:center;">
+    <p id="cdTitle" style="margin:0;color:#fff8ea;font-weight:800;font-size:17px;letter-spacing:2px;text-transform:uppercase;text-shadow:0 2px 8px rgba(60,25,5,.85);">First Friday begins in</p>
+    <div style="display:flex;gap:8px;flex-wrap:nowrap;justify-content:center;">
+      <div style="min-width:62px;padding:8px 6px;background:rgba(28,14,5,.55);border:1px solid rgba(255,220,150,.55);border-radius:10px;"><span id="cdD" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">days</span></div>
+      <div style="min-width:62px;padding:8px 6px;background:rgba(28,14,5,.55);border:1px solid rgba(255,220,150,.55);border-radius:10px;"><span id="cdH" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">hrs</span></div>
+      <div style="min-width:62px;padding:8px 6px;background:rgba(28,14,5,.55);border:1px solid rgba(255,220,150,.55);border-radius:10px;"><span id="cdM" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">min</span></div>
+      <div style="min-width:62px;padding:8px 6px;background:rgba(28,14,5,.55);border:1px solid rgba(255,220,150,.55);border-radius:10px;"><span id="cdS" style="display:block;color:#ffe9c4;font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;">&ndash;</span><span style="display:block;color:#ffd9a0;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">sec</span></div>
+    </div>
+    <p id="cdMsLine" style="margin:0;color:#ffe9c4;font-size:12px;letter-spacing:1px;text-shadow:0 1px 6px rgba(60,25,5,.85);font-variant-numeric:tabular-nums;"><span id="cdMs">000</span> milliseconds to go</p>
+  </div>
+</div>
+<script>
+(function(){
+  var target = new Date('2026-10-02T17:30:00-04:00').getTime();
+  var dEl = document.getElementById('cdD'), hEl = document.getElementById('cdH'),
+      mEl = document.getElementById('cdM'), sEl = document.getElementById('cdS'),
+      msEl = document.getElementById('cdMs'), titleEl = document.getElementById('cdTitle'),
+      msLine = document.getElementById('cdMsLine');
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function pad(n, l){ n = String(n); l = l || 2; while (n.length < l) n = '0' + n; return n; }
+  function tick(){
+    var diff = target - Date.now();
+    if (diff <= 0) {
+      titleEl.textContent = 'It\u2019s First Friday!';
+      dEl.textContent = '0'; hEl.textContent = '00'; mEl.textContent = '00'; sEl.textContent = '00';
+      msLine.style.display = 'none';
+      return false;
+    }
+    dEl.textContent = Math.floor(diff / 864e5);
+    hEl.textContent = pad(Math.floor(diff / 36e5) % 24);
+    mEl.textContent = pad(Math.floor(diff / 6e4) % 60);
+    sEl.textContent = pad(Math.floor(diff / 1e3) % 60);
+    msEl.textContent = pad(Math.floor(diff % 1e3), 3);
+    return true;
+  }
+  tick();
+  var iv = setInterval(function(){ if (!tick()) clearInterval(iv); }, reduced ? 1000 : 47);
+})();
+</script>
 <p class="map-cta" style="text-align:center;margin:14px 0 26px;"><a id="getStartedBtn" href="map.html#scan" style="display:inline-block;padding:18px 52px;border-radius:999px;background:linear-gradient(135deg,#d9481c,#e8722a 60%,#e8a33d);color:#fff;font-weight:800;font-size:20px;letter-spacing:1px;text-decoration:none;box-shadow:0 8px 30px rgba(217,72,28,.55);border:2px solid rgba(255,255,255,.5);">GET STARTED</a></p>
 <script>
 document.getElementById("getStartedBtn").addEventListener("click", function () {
