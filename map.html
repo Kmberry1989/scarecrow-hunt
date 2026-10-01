@@ -267,6 +267,24 @@
     .map-panel { position: relative; min-height: 630px; background: #2a2230; }
     #map { position: absolute; inset: 0; z-index: 1; }
     #map .leaflet-tile-pane { filter: var(--map-filter); }
+    /* Flashlight: a soft golden wash that glides toward wherever the visitor
+       taps, like a flashlight being turned toward that spot. It lives on its
+       own pane above the tiles and footprints but below the pins, stays
+       translucent so everything beneath and above it remains readable, and
+       never intercepts pointer input. */
+    .map-flashlight {
+      position: absolute; left: 0; top: 0; width: 360px; height: 360px;
+      margin: -180px 0 0 -180px; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle,
+        rgba(255, 196, 110, .50) 0%,
+        rgba(255, 182, 96, .26) 34%,
+        rgba(255, 172, 92, .11) 56%,
+        rgba(255, 172, 92, 0) 72%);
+      opacity: 0; will-change: transform, opacity;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .map-flashlight { transition: none; }
+    }
     #map .leaflet-control-zoom a { color: #24172a; background: #fffaf4; }
     #map .leaflet-control-attribution { color: #2e2433; background: rgba(255, 250, 244, .9); }
     #map .leaflet-control-attribution a { color: #5e246f; }
@@ -1297,9 +1315,14 @@
         var routePane = map.createPane("routePane");
         routePane.style.zIndex = 450; /* footprints: above the path line, below the pins */
         routePane.style.pointerEvents = "none";
-        var streetLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        /* Street tiles: CARTO Positron (OSM data, minimal styling). The stock OSM
+           style bakes in visual noise we don't need here — red dashed route-relation
+           lines along streets, one-way arrows, railroad-crossing X marks — and none of
+           it can be toggled off per-layer. Positron renders none of that. */
+        var streetLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
           maxZoom: 19,
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          subdomains: "abcd",
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         });
         var satelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
           maxZoom: 19,
@@ -1336,9 +1359,69 @@
 
         var allBounds = L.latLngBounds(locations.map(function (place) { return [place.lat, place.lng]; }));
         extraMarkers.forEach(function (place) { allBounds.extend([place.lat, place.lng]); });
-        map.fitBounds(allBounds, {padding:[44,44], maxZoom:16});
+        /* Auto-fit: frame every stop on load. The container can still be settling
+           its final size when init runs, so fit once now, then re-fit after layout
+           (and once more shortly after) so the map always opens on the whole hunt. */
+        function fitAll() {
+          try {
+            map.invalidateSize();
+            map.fitBounds(allBounds, {padding:[44,44], maxZoom:16});
+          } catch (e) {}
+        }
+        fitAll();
+        setTimeout(fitAll, 450);
+        if (window.addEventListener) {
+          window.addEventListener("load", function () { setTimeout(fitAll, 120); });
+        }
         document.getElementById("map-fallback").style.display = "none";
         drawPath();
+        /* Flashlight: a soft golden wash that glides toward wherever the
+           visitor taps, like a flashlight being turned toward that spot. It
+           rides its own pane above the tiles and footprints but below the
+           pins, stays translucent, and never intercepts pointer input. */
+        try {
+          var glowPane = map.createPane("glowPane");
+          glowPane.style.zIndex = 460;
+          glowPane.style.pointerEvents = "none";
+          var glowEl = document.createElement("div");
+          glowEl.className = "map-flashlight";
+          glowEl.setAttribute("aria-hidden", "true");
+          glowPane.appendChild(glowEl);
+          var glowReduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var glow = { x: 0, y: 0, a: 0, init: false, raf: 0 };
+          function glowRender(px, py, alpha, scale) {
+            glowEl.style.transform = "translate(" + Math.round(px) + "px," + Math.round(py) + "px) scale(" + scale.toFixed(3) + ")";
+            glowEl.style.opacity = Math.max(0, Math.min(1, alpha)).toFixed(3);
+          }
+          function glowTo(tx, ty) {
+            if (glow.raf) { cancelAnimationFrame(glow.raf); glow.raf = 0; }
+            if (!glow.init) {
+              var size0 = map.getSize();
+              glow.x = size0.x / 2; glow.y = size0.y / 2; glow.a = 0; glow.init = true;
+            }
+            if (glowReduceMotion) {
+              glow.x = tx; glow.y = ty; glow.a = 0.62;
+              glowRender(tx, ty, 0.62, 1);
+              return;
+            }
+            var fx = glow.x, fy = glow.y, fa = glow.a;
+            var dur = 750, t0 = performance.now();
+            function ease(k) { return k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; }
+            function frame(now) {
+              var k = Math.min(1, (now - t0) / dur), e = ease(k);
+              glow.x = fx + (tx - fx) * e;
+              glow.y = fy + (ty - fy) * e;
+              glow.a = fa + ((k < 1 ? 0.9 : 0.62) - fa) * e;
+              var swell = 1 + 0.10 * Math.sin(e * Math.PI);
+              glowRender(glow.x, glow.y, glow.a, swell);
+              glow.raf = k < 1 ? requestAnimationFrame(frame) : 0;
+            }
+            glow.raf = requestAnimationFrame(frame);
+          }
+          map.on("click", function (e) {
+            if (e && e.containerPoint) glowTo(e.containerPoint.x, e.containerPoint.y);
+          });
+        } catch (e) {}
       }
 
       (function buildSearchOptions() {
