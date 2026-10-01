@@ -416,37 +416,24 @@
     }
     .letter-bank .bank-slot.next {
       opacity: 1; border-style: solid; border-color: var(--gold); color: var(--gold);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 30%, transparent);
     }
-    .letter-bank .bank-word.word-done .bank-slot.found { animation: bank-wordglow 2.4s ease-in-out 2; }
-    @keyframes bank-wordglow {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.4); }
-    }
-    .letter-bank .bank-slot.found {
+    .letter-bank .bank-slot.found,
+    .letter-bank .bank-slot.pre {
       opacity: 1; border-style: solid; border-color: var(--gold); color: var(--ink);
       background: color-mix(in srgb, var(--gold) 20%, transparent);
-      box-shadow: 0 0 10px color-mix(in srgb, var(--gold) 55%, transparent);
-    }
-    .letter-bank .bank-slot.pre {
-      opacity: 1; border-style: solid; border-color: var(--gold); color: var(--gold);
-      background: color-mix(in srgb, var(--gold) 30%, transparent);
     }
     .letter-bank .bank-slot.clickable {
       cursor: pointer;
-      transition: transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+      transition: transform .18s ease, background .18s ease, color .18s ease;
     }
-    .letter-bank .bank-slot.clickable:hover { transform: scale(1.14); }
+    .letter-bank .bank-slot.clickable:hover { transform: scale(1.08); }
     .letter-bank .bank-slot.active {
-      opacity: 1; transform: scale(1.3);
-      background: linear-gradient(135deg, #d9481c, #e8722a 55%, #e8a33d);
-      border-style: solid; border-color: #c23f16; color: #fff;
-      box-shadow: 0 4px 14px rgba(217,72,28,.45);
+      opacity: 1; transform: none;
+      outline: 2px solid var(--ink); outline-offset: 2px;
     }
     @media (prefers-reduced-motion: reduce) {
       .letter-bank .bank-slot.clickable { transition: none; }
       .pin-shell.pin-pop, .pin-bloom { animation: none !important; }
-      .letter-bank .bank-word.word-done .bank-slot.found { animation: none; }
     }
     .blank-directions { margin: .6rem 0 0; font-size: .85rem; font-weight: 700; }
     .location-card.visited { background: color-mix(in srgb, var(--gold) 9%, transparent); opacity: .5; }
@@ -855,7 +842,6 @@
           WORDS.forEach(function (word) {
             var w = document.createElement("span");
             w.className = "bank-word";
-            var wordComplete = true;
             word.forEach(function (slot) {
               var s = document.createElement("span");
               if (slot === "O") {
@@ -869,7 +855,6 @@
                 s.textContent = letters[k] || slot;
                 s.title = "Blank #" + slot + (letters[k] ? ": letter " + letters[k] :
                   (slot === nextSlot ? " (find this one next)" : " (not visited)")) + " \u2014 tap to find it";
-                if (!got) wordComplete = false;
                 s.setAttribute("data-slot", String(slot));
                 s.setAttribute("role", "button");
                 s.setAttribute("tabindex", "0");
@@ -877,7 +862,6 @@
               }
               w.appendChild(s);
             });
-            if (wordComplete) w.classList.add("word-done");
             bank.appendChild(w);
           });
         }
