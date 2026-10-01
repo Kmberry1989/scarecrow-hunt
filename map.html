@@ -1421,6 +1421,20 @@
           map.on("click", function (e) {
             if (e && e.containerPoint) glowTo(e.containerPoint.x, e.containerPoint.y);
           });
+          /* Idle autumn-breath: the glow drifts in a slow liquid wander when
+             untouched, echoing the candlelit reference. Paused while gliding
+             toward a tap and under reduced motion. */
+          if (!glowReduceMotion) {
+            var driftPhase = 0;
+            (function driftTick() {
+              driftPhase += 0.016;
+              if (glow.init && !glow.raf) {
+                var dx = 14 * Math.sin(driftPhase * 0.5), dy = 11 * Math.cos(driftPhase * 0.37);
+                glowRender(glow.x + dx, glow.y + dy, glow.a, 1);
+              }
+              requestAnimationFrame(driftTick);
+            })();
+          }
         } catch (e) {}
       }
 
