@@ -42,6 +42,14 @@
   #stage { margin: 14px auto 0; max-width: 420px; width: 100%; }
   #stage[hidden] { display: none; }
   #stage canvas { width: 100%; height: auto; border-radius: 14px; box-shadow: 0 8px 30px rgba(120,72,20,.25); }
+  /* keepsake reveal: the framed photo settles in with a slow zoom and a breath of golden light. */
+  #stage.keep-reveal canvas { animation: keep-settle 1.5s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes keep-settle {
+    0% { transform: scale(1.07); filter: brightness(.82) saturate(.9); }
+    55% { filter: brightness(1.05) saturate(1.05); box-shadow: 0 0 38px rgba(232,163,61,.55); }
+    100% { transform: scale(1); filter: none; box-shadow: 0 8px 30px rgba(120,72,20,.25); }
+  }
+  @media (prefers-reduced-motion: reduce) { #stage.keep-reveal canvas { animation: none; } }
   #saveBtn { display: none; background: #173f6b; color: #fff; font-weight: 800; font-size: 1.12rem;
     border: none; border-radius: 999px; padding: 16px 38px; cursor: pointer; margin-top: 14px; }
   #saveBtn:active { transform: scale(.97); }
@@ -394,6 +402,9 @@ window.HuntSfx = (function () {
       stage.hidden = false;
       saveBtn.style.display = "inline-block";
       donePanel.hidden = true;
+      stage.classList.remove("keep-reveal");
+      void stage.offsetWidth;
+      stage.classList.add("keep-reveal");
       preview.scrollIntoView({ block: "nearest", behavior: "smooth" });
     };
     img.onerror = function () {

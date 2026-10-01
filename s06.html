@@ -504,6 +504,31 @@ Scan the tag — there&#x27;s joy to share!</p>
     font-size:21px; font-weight:800; color:#173f6b; background:rgba(255,253,246,.85); }
   .lb-cell.lb-empty { border-style:dashed; color:#b3a488; font-size:13px; font-weight:700; }
   .lb-cell.lb-pre { border-color:#e8722a; background:rgba(232,114,42,.14); }
+  /* blank states: upcoming blanks sit back, the next blank steps forward, collected letters glow. */
+  .lb-cell.lb-empty { opacity:.55; }
+  .lb-cell.lb-empty.lb-next { opacity:1; border-color:#e8a33d;
+    box-shadow:0 0 0 3px rgba(232,163,61,.28), 0 2px 8px rgba(200,90,23,.25); }
+  .lb-cell.lb-found { border-color:#e8a33d; background:rgba(255,248,230,.95);
+    box-shadow:0 0 12px rgba(232,163,61,.45); }
+  /* letter cascade: banked letters flip in one after another on page load. */
+  .lb-cell.lb-cascade { animation: lb-cascade .8s cubic-bezier(.3,.9,.3,1.1) both; }
+  @keyframes lb-cascade {
+    0% { transform: perspective(420px) rotateY(88deg) scale(.6); opacity:0; }
+    60% { transform: perspective(420px) rotateY(-8deg) scale(1.05); opacity:1; }
+    100% { transform: perspective(420px) rotateY(0deg) scale(1); opacity:1; }
+  }
+  /* word completion: the finished word glows twice, then settles into the found glow. */
+  .lb-word.lb-word-done .lb-cell.lb-found:not(.lb-just-banked):not(.lb-cascade) {
+    animation: lb-wordglow 2.4s ease-in-out 2; }
+  @keyframes lb-wordglow {
+    0%, 100% { box-shadow:0 0 12px rgba(232,163,61,.45); filter:brightness(1); }
+    50% { box-shadow:0 0 26px rgba(232,163,61,.95); filter:brightness(1.18); }
+  }
+  .leaf-fall { position:fixed; inset:0; width:100vw; height:100vh; z-index:9998; pointer-events:none; }
+  @media (prefers-reduced-motion: reduce) {
+    .lb-cell.lb-cascade,
+    .lb-word.lb-word-done .lb-cell.lb-found:not(.lb-just-banked):not(.lb-cascade) { animation:none; }
+  }
 </style>
 <script>
 /* Hunt sound effects: a tiny procedural Web Audio kit (no audio files, no
@@ -751,12 +776,76 @@ window.HuntSfx = (function () {
         }); });
       }
     }
+    /* A brief shower of autumn leaves, e.g. when a whole word is completed. */
+    function leafFall() {
+      try {
+        var cv = document.createElement("canvas");
+        cv.className = "leaf-fall";
+        cv.setAttribute("aria-hidden", "true");
+        var W = window.innerWidth || 400, H = window.innerHeight || 700;
+        var dpr = Math.min(2, window.devicePixelRatio || 1);
+        cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+        document.body.appendChild(cv);
+        var ctx = cv.getContext("2d");
+        ctx.scale(dpr, dpr);
+        var colors = ["#e8722a", "#e8a33d", "#c85a17", "#a8642a", "#d9481c", "#8a5a2a"];
+        var leaves = [];
+        for (var i = 0; i < 34; i++) {
+          leaves.push({
+            x: Math.random() * W, y: -24 - Math.random() * H * 0.45,
+            s: 7 + Math.random() * 9, vy: 60 + Math.random() * 80,
+            ph: Math.random() * 6.283, sw: 24 + Math.random() * 48,
+            rot: Math.random() * 6.283, vr: (Math.random() - 0.5) * 3.2,
+            c: colors[(Math.random() * colors.length) | 0], a: 0.7 + Math.random() * 0.3
+          });
+        }
+        var t0 = performance.now(), last = t0, DUR = 6000;
+        function drawLeaf(l) {
+          ctx.save();
+          ctx.translate(l.x, l.y);
+          ctx.rotate(l.rot);
+          ctx.globalAlpha = l.a;
+          ctx.fillStyle = l.c;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, l.s, l.s * 0.55, 0, 0, 6.29);
+          ctx.fill();
+          ctx.strokeStyle = "rgba(90,50,20,.45)";
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(-l.s, 0); ctx.lineTo(l.s, 0); ctx.stroke();
+          ctx.restore();
+        }
+        function frame(now) {
+          var dt = Math.min(0.05, (now - last) / 1000); last = now;
+          var t = (now - t0) / 1000;
+          ctx.clearRect(0, 0, W, H);
+          var alive = false;
+          for (var i = 0; i < leaves.length; i++) {
+            var l = leaves[i];
+            l.y += l.vy * dt;
+            l.x += Math.sin(t * 1.7 + l.ph) * l.sw * dt;
+            l.rot += l.vr * dt;
+            if (l.y < H + 30) { drawLeaf(l); alive = true; }
+          }
+          if ((now - t0) < DUR && alive) requestAnimationFrame(frame);
+          else if (cv.parentNode) cv.parentNode.removeChild(cv);
+        }
+        requestAnimationFrame(frame);
+      } catch (e) {}
+    }
     var grid = document.createElement("div");
     grid.className = "letter-bank";
     grid.setAttribute("aria-label", "Letters placed in their card blanks");
+    var nextSlot = 0;
+    for (var ns = 1; ns <= 21; ns++) {
+      if (!letters[("0" + ns).slice(-2)]) { nextSlot = ns; break; }
+    }
+    var reduceCine = false;
+    try { reduceCine = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    var cascadeDelay = 0, justDoneWords = [];
     WORDS.forEach(function (word) {
       var w = document.createElement("div");
       w.className = "lb-word";
+      var wordComplete = true, wordHasNew = false;
       word.forEach(function (slot) {
         var c = document.createElement("span");
         if (slot === "O") {
@@ -766,16 +855,33 @@ window.HuntSfx = (function () {
         } else {
           var k = ("0" + slot).slice(-2);
           var L = letters[k];
+          var isNew = isNewLetter && L && k === stop;
           c.className = "lb-cell" + (L ? " lb-found" : " lb-empty") +
-            (isNewLetter && L && k === stop ? " lb-just-banked" : "");
+            (isNew ? " lb-just-banked" : "") +
+            (!L && slot === nextSlot ? " lb-next" : "");
           c.textContent = L || slot;
-          c.title = "Blank #" + slot + (L ? ": letter " + L : " (not found yet)");
+          c.title = "Blank #" + slot + (L ? ": letter " + L :
+            (slot === nextSlot ? " (find this one next)" : " (not found yet)"));
+          if (!L) wordComplete = false;
+          if (isNew) wordHasNew = true;
+          if (L && !isNew && !reduceCine) {
+            c.classList.add("lb-cascade");
+            c.style.animationDelay = cascadeDelay + "ms";
+            cascadeDelay += 65;
+          }
         }
         w.appendChild(c);
       });
+      if (wordComplete && wordHasNew) justDoneWords.push(w);
       grid.appendChild(w);
     });
     wrap.appendChild(grid);
+    /* Word completion: the finished word glows, leaves fall, a soft milestone chime. */
+    justDoneWords.forEach(function (w) { w.classList.add("lb-word-done"); });
+    if (justDoneWords.length && !reduceCine) {
+      if (window.HuntSfx) { try { window.HuntSfx.milestone(); } catch (e) {} }
+      leafFall();
+    }
     var anchor = document.querySelector(".letter-line");
     if (anchor && anchor.insertAdjacentElement) anchor.insertAdjacentElement("afterend", wrap);
     else document.body.appendChild(wrap);

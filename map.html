@@ -394,14 +394,24 @@
     .letter-bank .bank-slot {
       width: 1.7rem; height: 1.7rem; display: inline-flex; align-items: center; justify-content: center;
       border: 1px dashed var(--muted); border-radius: .45rem;
-      font-size: .82rem; font-weight: 800; color: var(--muted);
+      font-size: .82rem; font-weight: 800; color: var(--muted); opacity: .55;
+    }
+    .letter-bank .bank-slot.next {
+      opacity: 1; border-style: solid; border-color: var(--gold); color: var(--gold);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 30%, transparent);
+    }
+    .letter-bank .bank-word.word-done .bank-slot.found { animation: bank-wordglow 2.4s ease-in-out 2; }
+    @keyframes bank-wordglow {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.4); }
     }
     .letter-bank .bank-slot.found {
-      border-style: solid; border-color: var(--gold); color: var(--ink);
+      opacity: 1; border-style: solid; border-color: var(--gold); color: var(--ink);
       background: color-mix(in srgb, var(--gold) 20%, transparent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--gold) 55%, transparent);
     }
     .letter-bank .bank-slot.pre {
-      border-style: solid; border-color: var(--gold); color: var(--gold);
+      opacity: 1; border-style: solid; border-color: var(--gold); color: var(--gold);
       background: color-mix(in srgb, var(--gold) 30%, transparent);
     }
     .letter-bank .bank-slot.clickable {
@@ -410,13 +420,16 @@
     }
     .letter-bank .bank-slot.clickable:hover { transform: scale(1.14); }
     .letter-bank .bank-slot.active {
-      transform: scale(1.3);
+      opacity: 1; transform: scale(1.3);
       background: linear-gradient(135deg, #d9481c, #e8722a 55%, #e8a33d);
       border-style: solid; border-color: #c23f16; color: #fff;
       box-shadow: 0 4px 14px rgba(217,72,28,.45);
     }
     @media (prefers-reduced-motion: reduce) {
       .letter-bank .bank-slot.clickable { transition: none; }
+      .footprint.fp-draw { animation: none; }
+      .pin-shell.pin-pop, .pin-bloom { animation: none !important; }
+      .letter-bank .bank-word.word-done .bank-slot.found { animation: none; }
     }
     .blank-directions { margin: .6rem 0 0; font-size: .85rem; font-weight: 700; }
     .location-card.visited { background: color-mix(in srgb, var(--gold) 9%, transparent); opacity: .5; }
@@ -434,9 +447,15 @@
     }
     .location-row.drag-ghost { opacity: .35; }
     .fp-wrap { background: none; border: none; }
-    .footprint { display: block; font-size: 21px; line-height: 1; opacity: .92;
+    .footprint { display: block; font-size: 21px; line-height: 1;
+      --fp-op: .92; opacity: var(--fp-op); transform: rotate(var(--brg, 0deg));
       filter: drop-shadow(0 1px 1px rgba(60,35,10,.35)); }
-    .footprint.fp-done { opacity: .28; }
+    .footprint.fp-done { --fp-op: .28; }
+    .footprint.fp-draw { animation: fp-draw .55s cubic-bezier(.3,.9,.3,1.2) both; }
+    @keyframes fp-draw {
+      0% { opacity: 0; transform: rotate(var(--brg, 0deg)) scale(.2); }
+      100% { opacity: var(--fp-op); transform: rotate(var(--brg, 0deg)) scale(1); }
+    }
     @media (prefers-reduced-motion: reduce) {
       .location-row { transition: none; }
     }
@@ -489,6 +508,19 @@
       background: #1b1021;
       color: #fff;
       box-shadow: 0 4px 14px rgba(0,0,0,.42);
+    }
+    .pin-shell.pin-pop { animation: pin-pop .55s cubic-bezier(.3,1.4,.4,1); }
+    @keyframes pin-pop {
+      0% { transform: rotate(-45deg) scale(.7); }
+      60% { transform: rotate(-45deg) scale(1.14); }
+      100% { transform: rotate(-45deg) scale(1); }
+    }
+    .pin-bloom { position: absolute; inset: -7px; border-radius: 50%;
+      border: 3px solid rgba(232,163,61,.9); pointer-events: none;
+      animation: pin-bloom 1.25s ease-out both; }
+    @keyframes pin-bloom {
+      0% { transform: scale(.4); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
     }
     .pin-shell::after {
       content: "";
@@ -810,9 +842,12 @@
         if (bank) {
           bank.innerHTML = "";
           var WORDS = [["O",1,15],[6,10,18,4,13,8,17],[3,16,21,11,19,7,14],[20,2],[5,9,12]];
+          var nextSlot = 0;
+          for (var ns = 1; ns <= 21; ns++) { if (!letters[("0" + ns).slice(-2)]) { nextSlot = ns; break; } }
           WORDS.forEach(function (word) {
             var w = document.createElement("span");
             w.className = "bank-word";
+            var wordComplete = true;
             word.forEach(function (slot) {
               var s = document.createElement("span");
               if (slot === "O") {
@@ -821,9 +856,12 @@
                 s.title = "Pre-printed on your card";
               } else {
                 var k = ("0" + slot).slice(-2);
-                s.className = "bank-slot clickable" + (letters[k] ? " found" : "");
+                var got = !!letters[k];
+                s.className = "bank-slot clickable" + (got ? " found" : "") + (!got && slot === nextSlot ? " next" : "");
                 s.textContent = letters[k] || slot;
-                s.title = "Blank #" + slot + (letters[k] ? ": letter " + letters[k] : " (not visited)") + " \u2014 tap to find it";
+                s.title = "Blank #" + slot + (letters[k] ? ": letter " + letters[k] :
+                  (slot === nextSlot ? " (find this one next)" : " (not visited)")) + " \u2014 tap to find it";
+                if (!got) wordComplete = false;
                 s.setAttribute("data-slot", String(slot));
                 s.setAttribute("role", "button");
                 s.setAttribute("tabindex", "0");
@@ -831,6 +869,7 @@
               }
               w.appendChild(s);
             });
+            if (wordComplete) w.classList.add("word-done");
             bank.appendChild(w);
           });
         }
@@ -1119,7 +1158,7 @@
           lng: lng + meters * Math.sin(brg) / (111320 * Math.cos(lat * Math.PI / 180))
         };
       }
-      function addFootprints(layer, a, b, visitedNow) {
+      function addFootprints(layer, a, b, visitedNow, delayBase) {
         var dist = map.distance([a.lat, a.lng], [b.lat, b.lng]);
         if (dist < 24) return 0;
         var n = Math.min(36, Math.floor(dist / 30)), count = 0;
@@ -1130,10 +1169,11 @@
           var brg = bearingDeg(a.lat, a.lng, b.lat, b.lng);
           var pt = offsetPt(a.lat + (b.lat - a.lat) * f, a.lng + (b.lng - a.lng) * f,
                             brg + 90, (i % 2 ? 1 : -1) * 4);
+          var fDelay = (delayBase || 0) + count * 22;
           var icon = L.divIcon({
             className: "fp-wrap",
-            html: '<span class="footprint' + (legDone ? " fp-done" : "") +
-                  '" style="transform:rotate(' + brg.toFixed(1) + 'deg)">&#x1F463;</span>',
+            html: '<span class="footprint' + (legDone ? " fp-done" : "") + (reduceMotion ? "" : " fp-draw") +
+                  '" style="--brg:' + brg.toFixed(1) + 'deg' + (reduceMotion ? "" : ";animation-delay:" + fDelay + "ms") + '">&#x1F463;</span>',
             iconSize: [24, 24], iconAnchor: [12, 12]
           });
           L.marker([pt.lat, pt.lng], { icon: icon, interactive: false, keyboard: false, pane: "routePane" }).addTo(layer);
@@ -1151,7 +1191,7 @@
         L.polyline(latlngs, { color: "#c85a17", weight: 3, opacity: 0.3, lineCap: "round" }).addTo(pathLayer);
         var visitedNow = loadVisited(), prints = 0;
         for (var i = 1; i < order.length && prints < 240; i++) {
-          prints += addFootprints(pathLayer, order[i - 1], order[i], visitedNow);
+          prints += addFootprints(pathLayer, order[i - 1], order[i], visitedNow, prints * 22);
         }
         pathLayer.addTo(map);
       }
@@ -1336,8 +1376,44 @@
       });
       /* returning from a stop page: freshly checked-off rows glide down and fade */
       document.addEventListener("visibilitychange", function () {
-        if (!document.hidden) renderList(currentQuery);
+        if (!document.hidden) { renderList(currentQuery); bloomNewlyVisited(); }
       });
+      /* checked pin bloom: a pin blooms the first time its stop is seen checked off. */
+      var bloomedStops = {};
+      function noteVisitedSilent() {
+        loadVisited().forEach(function (sn) { bloomedStops[sn] = true; });
+      }
+      function bloomPin(place) {
+        if (!map || reduceMotion) return;
+        try {
+          var marker = markerBySponsor[place.sponsor];
+          var el = marker && marker.getElement ? marker.getElement() : null;
+          var shell = el && el.querySelector ? el.querySelector(".pin-shell") : null;
+          if (!shell || shell.querySelector(".pin-bloom")) return;
+          var ring = document.createElement("div");
+          ring.className = "pin-bloom";
+          shell.appendChild(ring);
+          shell.classList.add("pin-pop");
+          setTimeout(function () {
+            if (ring.parentNode) ring.parentNode.removeChild(ring);
+            shell.classList.remove("pin-pop");
+          }, 1400);
+        } catch (e) {}
+      }
+      function bloomNewlyVisited() {
+        var fresh = [];
+        loadVisited().forEach(function (sn) {
+          if (!bloomedStops[sn]) { bloomedStops[sn] = true; fresh.push(sn); }
+        });
+        fresh.forEach(function (sn, i) {
+          setTimeout(function () {
+            var sponsor = SPONSOR_BY_STOP[sn];
+            var place = sponsor ? PLACE_BY_SPONSOR[sponsor] : null;
+            if (place) bloomPin(place);
+          }, i * 180);
+        });
+      }
+      noteVisitedSilent();
 
       document.getElementById("near-me").addEventListener("click", function () {
         if (window.HuntSfx) { try { window.HuntSfx.tap(); } catch (e) {} }

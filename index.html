@@ -243,7 +243,8 @@
   function setPos(el, pos){ el.style.transform = 'translate3d(0,' + (-pos * digitH) + 'px,0)'; }
   function zeroAll(){ setPos(strips.H,0); setPos(strips.M,0); setPos(strips.S,0); setPos(strips.MS,0); }
   function done(){ titleEl.textContent = 'It\u2019s First Friday!'; altEl.textContent = 'It is First Friday!'; zeroAll();
-    if (window.HuntSfx) { try { window.HuntSfx.fanfare(); } catch (e) {} } }
+    if (window.HuntSfx) { try { window.HuntSfx.fanfare(); } catch (e) {} }
+    if (window.__wakeGetStarted) { try { window.__wakeGetStarted(); } catch (e) {} } }
   var lastS = -1, lastM = -1, lastH = -1, lastFrameT = 0;
   function chimeFor(p){
     var now = Date.now(), Sfx = window.HuntSfx;
@@ -292,11 +293,42 @@
   requestAnimationFrame(frame);
 })();
 </script>
+<style>
+#getStartedBtn.is-dormant { filter:grayscale(.5); opacity:.7; cursor:not-allowed;
+  box-shadow:0 4px 14px rgba(120,110,95,.35); }
+#getStartedBtn.deny { animation:gs-deny .4s ease; }
+@keyframes gs-deny { 0%,100% { transform:translateX(0); } 25% { transform:translateX(-7px); }
+  50% { transform:translateX(6px); } 75% { transform:translateX(-3px); } }
+@media (prefers-reduced-motion: reduce) { #getStartedBtn.deny { animation:none; } }
+</style>
 <p class="map-cta" style="text-align:center;margin:14px 0 26px;"><a id="getStartedBtn" href="map.html" style="display:inline-block;padding:18px 52px;border-radius:999px;background:linear-gradient(135deg,#d9481c,#e8722a 60%,#e8a33d);color:#fff;font-weight:800;font-size:20px;letter-spacing:1px;text-decoration:none;box-shadow:0 8px 30px rgba(217,72,28,.55);border:2px solid rgba(255,255,255,.5);">GET STARTED</a></p>
 <script>
-document.getElementById("getStartedBtn").addEventListener("click", function () {
-  if (window.HuntSfx) { try { window.HuntSfx.click(); } catch (e) {} }
-});
+(function () {
+  var btn = document.getElementById("getStartedBtn");
+  if (!btn) return;
+  var EVENT_AT = new Date('2026-10-02T17:30:00-04:00').getTime();
+  function live() { return Date.now() >= EVENT_AT; }
+  function refresh() {
+    var on = live();
+    btn.classList.toggle("is-dormant", !on);
+    if (on) { btn.removeAttribute("aria-disabled"); }
+    else { btn.setAttribute("aria-disabled", "true"); }
+  }
+  btn.addEventListener("click", function (e) {
+    if (live()) {
+      if (window.HuntSfx) { try { window.HuntSfx.click(); } catch (e2) {} }
+      return;
+    }
+    e.preventDefault();
+    btn.classList.remove("deny");
+    void btn.offsetWidth;
+    btn.classList.add("deny");
+    if (window.HuntSfx) { try { window.HuntSfx.back(); } catch (e3) {} }
+  });
+  refresh();
+  /* wake the button the moment the countdown hits zero, no reload needed */
+  window.__wakeGetStarted = refresh;
+})();
 </script>
     <div class="grid">
       <div class="card" style="--d:0.06s">
