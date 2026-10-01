@@ -672,7 +672,7 @@
       var locations = [
         {sponsor:"Artworks Gallery", address:"210 N Main St.", lat:40.4877572, lng:-86.1309403, source:"exact"},
         {sponsor:"Community First Bank of Indiana", address:"201 W. Sycamore St.", lat:40.486419, lng:-86.132794, source:"exact"},
-        {sponsor:"Community Foundation", address:"N Buckeye St. near W Sycamore (dropped pin, approx.)", lat:40.4866, lng:-86.1327, source:"approx"},
+        {sponsor:"Community Foundation", address:"215 W Sycamore St.", lat:40.486372, lng:-86.133167, source:"exact"},
         {sponsor:"Crossroads Community Church", address:"Near 122 N. Main St.", lat:40.48727, lng:-86.13107, source:"approx"},
         {sponsor:"Dechert Law Office", address:"217 N. Main St.", lat:40.487474, lng:-86.131426, source:"exact"},
         {sponsor:"Fired Arts Studio", address:"111 W Sycamore St.", lat:40.4863943, lng:-86.1319176, source:"exact"},
@@ -683,7 +683,7 @@
         {sponsor:"Kokomo Tribune", address:"123 N. Buckeye St.", lat:40.487258, lng:-86.132557, source:"exact"},
         {sponsor:"Lucky Raven Tattoo Lounge", address:"200 N. Main St.", lat:40.487553, lng:-86.131196, source:"exact"},
         {sponsor:"Oscar's Pizza", address:"515 N. Buckeye St.", lat:40.490476, lng:-86.132909, source:"exact"},
-        {sponsor:"PF Hendricks LLC", address:"101 N. Buckeye St.", lat:40.486522, lng:-86.132658, source:"exact"},
+        {sponsor:"P.F. Hendricks & Co.", address:"101 N. Buckeye St.", lat:40.486522, lng:-86.132658, source:"exact"},
         {sponsor:"Pix Pots Pottery", address:"Buckeye St. & Artist Alley Entrance", lat:40.48645, lng:-86.131059, source:"exact"},
         {sponsor:"SUTE", address:"521 N. Buckeye St.", lat:40.49064, lng:-86.132928, source:"exact"},
         {sponsor:"The Coterie", address:"Near 109 W. Sycamore St.", lat:40.48628, lng:-86.13168, source:"approx"},
@@ -713,7 +713,7 @@
         "Artworks Gallery":"01","Lucky Raven Tattoo Lounge":"02","Dechert Law Office":"03",
         "The Hardie Group Real Estate Company":"04","Kokomo Area Lions":"05",
         "UpCreations (Urban Outreach)":"06","Oscar's Pizza":"07","SUTE":"08",
-        "Kokomo Tribune":"09","Community Foundation":"10","PF Hendricks LLC":"11",
+        "Kokomo Tribune":"09","P.F. Hendricks & Co.":"10","Community Foundation":"11",
         "Community First Bank of Indiana":"12","Fired Arts Studio":"13","The Coterie":"14",
         "First Farmers Bank & Trust":"15","Pix Pots Pottery":"16",
         "IUK SNAHP (Nursing & Allied Health)":"17","YMCA of Kokomo":"18",
@@ -788,7 +788,7 @@
       }
 
       function extraPopupHtml(place) {
-        var detail = "<div class=\"popup-note\">Turn in your finished hunt card here (upstairs) or at Fired Arts Studio, 111 W Sycamore. Every completed card enters the Mystery Prize Basket drawing &mdash; late finishes count, too (Artworks Gallery takes cards until 9 PM).</div>";
+        var detail = "<div class=\"popup-note\">Turn in your finished hunt card here (front desk) or at Fired Arts Studio, 111 W Sycamore. Every completed card enters the Mystery Prize Basket drawing &mdash; late finishes count, too (Artworks Gallery takes cards until 9 PM).</div>";
         return "<div class=\"popup-kicker\">Card turn-in</div>" +
           "<div class=\"popup-title\">" + escapeHtml(place.title) + "</div>" +
           "<div class=\"popup-address\">" + escapeHtml(place.address) + "</div>" +
