@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>New to QR codes? Let&rsquo;s practice! &mdash; printable handout</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #3d3428;
+    background: #e8e0d0; }
+  .toolbar { text-align: center; padding: 1rem; }
+  .toolbar button { padding: .7rem 2rem; font-size: 1rem; font-weight: 700; border-radius: 999px;
+    border: none; background: #d9481c; color: #fff; cursor: pointer; }
+  .sheet { background: #fffdf6; width: 7.5in; min-height: 10in; margin: 0 auto 2rem;
+    padding: .6in .75in; box-shadow: 0 10px 40px rgba(0,0,0,.25); text-align: center; }
+  .brand { font-size: 11pt; letter-spacing: 2.5px; text-transform: uppercase; color: #c85a17;
+    font-weight: 700; margin-bottom: 6pt; }
+  h1 { font-size: 30pt; color: #173f6b; margin-bottom: 4pt; }
+  .sub { font-size: 12pt; color: #6b5d49; margin-bottom: 14pt; }
+  .qr { width: 2.4in; height: 2.4in; border: 3px solid #e7d9bd; border-radius: 12px;
+    margin: 0 auto 12pt; display: block; }
+  .try { font-size: 14pt; font-weight: 700; color: #173f6b; margin-bottom: 8pt; }
+  ol.steps { list-style: none; margin: 0 auto 14pt; max-width: 5.6in; text-align: left;
+    font-size: 12.5pt; line-height: 1.5; counter-reset: step; }
+  ol.steps li { counter-increment: step; margin-bottom: 8pt; padding-left: 2.4em; position: relative; }
+  ol.steps li::before { content: counter(step); position: absolute; left: 0; top: 1pt;
+    width: 1.7em; height: 1.7em; border-radius: 50%; background: #e8722a; color: #fff;
+    font-weight: 800; font-size: 11pt; display: flex; align-items: center; justify-content: center; }
+  .tips { display: flex; gap: 12pt; margin-bottom: 14pt; text-align: left; }
+  .tip { flex: 1; border: 1.5px solid #e7d9bd; border-radius: 10px; padding: 10pt 12pt;
+    font-size: 10.5pt; line-height: 1.5; background: #fff; }
+  .tip strong { display: block; color: #173f6b; margin-bottom: 4pt; font-size: 11pt; }
+  .note { font-size: 11.5pt; line-height: 1.55; background: #fdf6e7; border: 1.5px dashed rgba(200,90,23,.5);
+    border-radius: 10px; padding: 10pt 14pt; margin-bottom: 12pt; }
+  .ask { font-size: 13pt; margin-bottom: 14pt; }
+  .ask strong { color: #c85a17; }
+  footer { font-size: 9.5pt; color: #8a6f4d; border-top: 1px solid #e7d9bd; padding-top: 8pt; }
+  @page { size: letter; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none; }
+    .sheet { width: auto; min-height: auto; margin: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="toolbar"><button onclick="window.print()">Print this sheet</button></div>
+  <main class="sheet">
+    <p class="brand">First Friday Scarecrow Scavenger Hunt</p>
+    <h1>New to QR codes? Let&rsquo;s practice!</h1>
+    <p class="sub">The square below is a real QR code &mdash; give it a try right now.</p>
+    <img class="qr" src="img/qr-practice.png" alt="Practice QR code &mdash; scan me with your phone camera">
+    <p class="try">Try it &mdash; it takes about ten seconds:</p>
+    <ol class="steps">
+      <li><strong>Open your phone&rsquo;s camera app.</strong> No special app needed &mdash; the regular camera does it.</li>
+      <li><strong>Point it at the square above</strong> and hold steady for a moment.</li>
+      <li><strong>Tap the notification or link</strong> that pops up on your screen.</li>
+    </ol>
+    <div class="tips">
+      <div class="tip"><strong>iPhone</strong>The Camera app scans automatically. If nothing pops up, check Settings &gt; Camera &gt; Scan QR Codes is on.</div>
+      <div class="tip"><strong>Android</strong>Most Android cameras scan automatically too. If nothing pops up, look for a QR mode or &ldquo;Scan QR codes&rdquo; in your Camera settings.</div>
+    </div>
+    <p class="note"><strong>Did it work? Hooray &mdash; you&rsquo;re ready to hunt!</strong> Each scarecrow&rsquo;s pumpkin has a QR code just like this one. Scan it to collect its letter.<br><strong>No phone? No problem</strong> &mdash; the back of each pumpkin shows its letter and blank number, so you can play on paper and still enter the prize drawing.</p>
+    <p class="ask"><strong>Questions? Just ask anyone here &mdash; we&rsquo;re happy to help!</strong></p>
+    <footer>Friday, October 2 &middot; 5:30&ndash;8:00 PM &middot; Downtown Kokomo &middot; kokomoscarecrows.com<br>Presented by the Kokomo Art Association &middot; celebrating 100 years of art in Kokomo, 1926&ndash;2026</footer>
+  </main>
+</body>
+</html>
