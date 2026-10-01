@@ -574,11 +574,14 @@ window.HuntSfx = (function () {
     var letter = letterEl ? letterEl.textContent.trim().toUpperCase() : "";
     var VKEY = "kokomoScarecrowsVisitedV2";
     var LKEY = "kokomoScarecrowsLettersV2";
+    var UXKEY = "kokomoScarecrowsUndoneV2";
     var visited = JSON.parse(localStorage.getItem(VKEY) || "[]");
     var letters = JSON.parse(localStorage.getItem(LKEY) || "{}");
-    var isNewLetter = visited.indexOf(stop) === -1;
+    var undone = JSON.parse(localStorage.getItem(UXKEY) || "[]");
+    var wasUndone = undone.indexOf(stop) !== -1;
+    var isNewLetter = !wasUndone && visited.indexOf(stop) === -1;
     if (isNewLetter) visited.push(stop);
-    if (/^[A-Z]$/.test(letter)) letters[stop] = letter;
+    if (!wasUndone && /^[A-Z]$/.test(letter)) letters[stop] = letter;
     localStorage.setItem(VKEY, JSON.stringify(visited));
     localStorage.setItem(LKEY, JSON.stringify(letters));
     var WORDS = [["O",1,15],[6,10,18,4,13,8,17],[3,16,21,11,19,7,14],[20,2],[5,9,12]];
@@ -666,6 +669,7 @@ window.HuntSfx = (function () {
           var k = ("0" + slot).slice(-2);
           var L = letters[k];
           c.className = "lb-cell" + (L ? " lb-found" : " lb-empty");
+          c.setAttribute("data-slot", k);
           c.textContent = L || slot;
           c.title = "Blank #" + slot + (L ? ": letter " + L : " (not found yet)");
         }
@@ -674,6 +678,65 @@ window.HuntSfx = (function () {
       grid.appendChild(w);
     });
     wrap.appendChild(grid);
+    /* Undo/redo: fix an accidental bank without rescanning. The button appears
+       once this stop is marked done; undo flips it into a redo button. */
+    var undoStyle = document.createElement("style");
+    undoStyle.textContent = ".bank-undo{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.55);background:linear-gradient(135deg,#d9481c,#e8722a 60%,#e8a33d);color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(217,72,28,.35);margin-left:10px;vertical-align:middle;padding:0}.bank-undo:active{transform:scale(.93)}.bank-undo svg{width:18px;height:18px}.letter-bank-title{display:flex;align-items:center;justify-content:center}";
+    document.head.appendChild(undoStyle);
+    var UNDO_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>';
+    var REDO_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>';
+    var undoBtn = document.createElement("button");
+    undoBtn.type = "button";
+    undoBtn.className = "bank-undo";
+    function paintUndo() {
+      var banked = visited.indexOf(stop) !== -1;
+      undoBtn.innerHTML = banked ? UNDO_SVG : REDO_SVG;
+      var label = banked ? "Undo: remove this stop\u2019s letter (it was an accident)" : "Redo: put this stop\u2019s letter back";
+      undoBtn.setAttribute("aria-label", label);
+      undoBtn.title = label;
+    }
+    function saveAll() {
+      localStorage.setItem(VKEY, JSON.stringify(visited));
+      localStorage.setItem(LKEY, JSON.stringify(letters));
+      localStorage.setItem(UXKEY, JSON.stringify(undone));
+    }
+    function refreshBankUI() {
+      var n = 0, k2;
+      for (k2 in letters) { if (/^[A-Z]$/.test(letters[k2])) n++; }
+      n = Math.min(n, 21);
+      var cell = grid.querySelector('[data-slot="' + stop + '"]');
+      var L2 = letters[stop];
+      if (cell) {
+        cell.textContent = L2 || String(parseInt(stop, 10));
+        cell.className = "lb-cell" + (L2 ? " lb-found" : " lb-empty");
+        cell.title = "Blank #" + parseInt(stop, 10) + (L2 ? ": letter " + L2 : " (not found yet)");
+      }
+      var segs = track.querySelectorAll(".seg");
+      for (var si2 = 0; si2 < segs.length; si2++) segs[si2].classList.toggle("full", si2 < n);
+      track.className = "hunt-progress-track" + (n >= 21 ? " done" : "");
+      track.setAttribute("aria-valuenow", String(n));
+      var remain = 21 - n;
+      plabel.textContent = n + " of 21 scarecrows found" + (remain > 0 && remain <= 3 ? " - almost there, just " + remain + " to go!" : "");
+    }
+    undoBtn.addEventListener("click", function () {
+      if (window.HuntSfx) { try { window.HuntSfx.click(); } catch (e) {} }
+      var banked = visited.indexOf(stop) !== -1;
+      if (banked) {
+        visited = visited.filter(function (v) { return v !== stop; });
+        delete letters[stop];
+        if (undone.indexOf(stop) === -1) undone.push(stop);
+      } else {
+        if (visited.indexOf(stop) === -1) visited.push(stop);
+        if (/^[A-Z]$/.test(letter)) letters[stop] = letter;
+        undone = undone.filter(function (v) { return v !== stop; });
+      }
+      saveAll();
+      refreshBankUI();
+      paintUndo();
+    });
+    paintUndo();
+    title.appendChild(undoBtn);
+
     var anchor = document.querySelector(".letter-line");
     if (anchor && anchor.insertAdjacentElement) anchor.insertAdjacentElement("afterend", wrap);
     else document.body.appendChild(wrap);
