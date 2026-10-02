@@ -125,6 +125,7 @@
           <button type="button" data-frame="harvest" aria-pressed="true"><canvas width="108" height="135"></canvas><span>Golden Harvest</span></button>
           <button type="button" data-frame="dusk" aria-pressed="false"><canvas width="108" height="135"></canvas><span>Orchard Dusk</span></button>
           <button type="button" data-frame="cream" aria-pressed="false"><canvas width="108" height="135"></canvas><span>Cream Minimal</span></button>
+          <button type="button" data-frame="none" aria-pressed="false"><canvas width="108" height="135"></canvas><span>No frame</span></button>
         </div>
       </div>
       <div id="stage" hidden><canvas id="preview"></canvas></div>
@@ -355,7 +356,7 @@ window.HuntSfx = (function () {
   markFrameBtns();
   function renderThumbs(){
     if (!currentImg) return;
-    var styles = ["harvest", "dusk", "cream"];
+    var styles = ["harvest", "dusk", "cream", "none"];
     for (var ti = 0; ti < frameBtns.length; ti++) {
       (function (btn, st) {
         var c = document.createElement("canvas");
@@ -391,6 +392,20 @@ window.HuntSfx = (function () {
   var lastBlob = null;
   var pick = document.getElementById("photoPick");
 
+  /* ?camera=1 (from the stop page's selfie prompt): open the camera directly. */
+  (function () {
+    var m = /[?&]camera=1/.test(location.search);
+    if (!m) return;
+    try { pick.setAttribute("capture", "environment"); } catch (e) {}
+    var tried = false;
+    function tryOpen() {
+      if (tried) return; tried = true;
+      try { pick.click(); } catch (e) {}
+    }
+    if (document.readyState === "complete") setTimeout(tryOpen, 500);
+    else window.addEventListener("load", function () { setTimeout(tryOpen, 500); });
+  })();
+
   function escapeHtml(s) {
     return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
@@ -407,6 +422,7 @@ window.HuntSfx = (function () {
         Frames.draw(preview, img, frameStyle, stop.tag);
         renderThumbs();
         framePick.hidden = false;
+        if (window.SnapTutorialPhotoTaken) { try { window.SnapTutorialPhotoTaken(); } catch (e) {} }
       } catch (e) {
         doneText.textContent = "That photo couldn't be framed — please try another.";
         donePanel.hidden = false;
@@ -506,6 +522,34 @@ window.HuntSfx = (function () {
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',render);}else{render();}
   window.addEventListener('load',render);
 }catch(e){}})();
+</script>
+<script src="tutorial.js"></script>
+<script>
+/* First-visit walkthrough: camera button now, frame + save after the photo. */
+(function () {
+  function ready(fn) {
+    if (document.readyState === "complete" || document.readyState === "interactive") setTimeout(fn, 500);
+    else document.addEventListener("DOMContentLoaded", function () { setTimeout(fn, 500); });
+  }
+  ready(function () {
+    if (!window.CoachMarks) return;
+    window.CoachMarks.run("snap1", [
+      { sel: "label.pick", title: "Say cheese!",
+        text: "Tap here to open your camera and snap your selfie with the scarecrow." }
+    ]);
+  });
+  window.SnapTutorialPhotoTaken = function () {
+    if (!window.CoachMarks) return;
+    setTimeout(function () {
+      window.CoachMarks.run("snap2", [
+        { sel: "#framePick", title: "Pick a frame",
+          text: "Choose a fall frame for your photo \u2014 or \u201cNo frame\u201d for just the picture." },
+        { sel: "#saveBtn", title: "Save it!",
+          text: "Happy with it? Save it to your album. 21 selfies become your Scarecrow Selfie Storybook." }
+      ]);
+    }, 600);
+  };
+})();
 </script>
 </body>
 </html>

@@ -384,5 +384,22 @@
   window.addEventListener('load',render);
 }catch(e){}})();
 </script>
+<script src="tutorial.js"></script>
+<script>
+/* First-visit walkthrough: point at the storybook button. */
+(function () {
+  function ready(fn) {
+    if (document.readyState === "complete" || document.readyState === "interactive") setTimeout(fn, 600);
+    else document.addEventListener("DOMContentLoaded", function () { setTimeout(fn, 600); });
+  }
+  ready(function () {
+    if (!window.CoachMarks) return;
+    window.CoachMarks.run("album", [
+      { sel: "#storybookBtn", title: "Your book awaits!",
+        text: "When your album fills up, tap here to turn your 21 selfies into your Scarecrow Selfie Storybook." }
+    ]);
+  });
+})();
+</script>
 </body>
 </html>

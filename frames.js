@@ -159,6 +159,7 @@ window.Frames = (function(){
       var dw = iw * sc, dh = ih * sc;
       ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
     }
+    if (style === "none") return; /* no frame: just the photo, no tags or decor */
     var g = ctx.createRadialGradient(W/2, H/2, H*0.35, W/2, H/2, H*0.75);
     g.addColorStop(0, "rgba(0,0,0,0)");
     g.addColorStop(1, "rgba(90,48,24,0.28)");
