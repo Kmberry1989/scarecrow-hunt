@@ -38,7 +38,13 @@
     border: none; border-radius: 999px; padding: 16px 38px; cursor: pointer; margin: 14px 0 4px;
     box-shadow: 0 0 22px rgba(217,72,28,.40); }
   .pick:active { transform: scale(.97); }
-  input[type=file] { display: none; }
+  /* Visually hidden but keyboard/screen-reader focusable (finding 11). */
+  input[type=file] {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap; border: 0;
+  }
+  #captureBox:focus-within .pick { outline: 3px solid #173f6b; outline-offset: 3px; }
   #stage { margin: 14px auto 0; max-width: 420px; width: 100%; }
   #stage[hidden] { display: none; }
   #stage canvas { width: 100%; height: auto; border-radius: 14px; box-shadow: 0 8px 30px rgba(120,72,20,.25); }
