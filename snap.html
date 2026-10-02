@@ -91,6 +91,11 @@
     background: rgba(247,241,227,.92); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(200,90,23,.25); }
   .topnav .navlinks a { color: #6b4a2a; font-weight: 800; text-decoration: none; margin-left: 14px; font-size: 1.15rem; padding: .5rem .7rem; border-radius: 999px; }
   .topnav .navlinks a:focus-visible { outline: 3px solid #6b4a2a; outline-offset: 2px; }
+  .topnav .navmute { flex: 0 0 auto; background: #fffdf6; border: 2px solid rgba(200,90,23,.4);
+    border-radius: 999px; width: 2.5rem; height: 2.5rem; font-size: 1.2rem; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; padding: 0; color: #6b4a2a; }
+  .topnav .navmute:focus-visible { outline: 3px solid #6b4a2a; outline-offset: 2px; }
+
   #framePick { margin: 16px auto 0; max-width: 440px; }
   #framePick[hidden] { display: none; }
   .framelabel { color: #6b4a2a; font-weight: 700; margin-bottom: 8px; }
@@ -105,6 +110,7 @@
 <body>
   <nav class="topnav" aria-label="Site">
     <span class="navlinks"><a href="index.html">Home</a><a href="map.html">Trail Map</a><a href="faq.html">FAQ</a></span>
+    <button type="button" class="navmute" data-mute-btn aria-pressed="false" aria-label="Mute sounds">🔊</button>
   </nav>
   <main>
     <p class="kicker">Scarecrow Selfie Story</p>
@@ -479,6 +485,27 @@ window.HuntSfx = (function () {
     pick.click();
   });
 })();
+</script>
+<script>
+/* Nav mute toggle: visible control for the HuntSfx mute state (audit finding 12). */
+(function(){try{
+  var btn=document.querySelector('[data-mute-btn]');if(!btn)return;
+  function sfx(){return window.HuntSfx||null;}
+  function render(){
+    var S=sfx(),m=S&&S.isMuted?!!S.isMuted():false;
+    btn.textContent=m?'\uD83D\uDD07':'\uD83D\uDD0A';
+    btn.setAttribute('aria-pressed',m?'true':'false');
+    btn.setAttribute('aria-label',m?'Unmute sounds':'Mute sounds');
+  }
+  btn.addEventListener('click',function(){
+    var S=sfx();if(!S||!S.setMuted)return;
+    try{S.setMuted(!S.isMuted());}catch(e){}
+    render();
+    try{if(S.tap)S.tap();}catch(e){}
+  });
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',render);}else{render();}
+  window.addEventListener('load',render);
+}catch(e){}})();
 </script>
 </body>
 </html>

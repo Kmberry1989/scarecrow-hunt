@@ -133,6 +133,10 @@
     font-size: 1.15rem; white-space: nowrap; padding: .55rem .9rem; border-radius: 999px; }
   .topnav a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   .topnav a:hover { color: #ffe9c4; }
+  .topnav .navmute { flex: 0 0 auto; background: rgba(255,255,255,.16); border: 2px solid rgba(255,255,255,.45);
+    border-radius: 999px; width: 2.5rem; height: 2.5rem; font-size: 1.2rem; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+  .topnav .navmute:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
   .topnav .navlinks { display: flex; flex: 1; justify-content: space-evenly; align-items: center; }
   .topnav { overflow: hidden; }
   .topnav::before { content: ""; position: absolute; top: -35%; bottom: -35%; left: var(--glow-x, 50%); width: 260px; transform: translateX(-50%);
@@ -156,6 +160,7 @@
     <span class="navlinks"><a href="index.html">Home</a>
     <a href="map.html">Trail Map</a>
     <a href="faq.html">FAQ</a></span>
+    <button type="button" class="navmute" data-mute-btn aria-pressed="false" aria-label="Mute sounds">🔊</button>
   </nav>
   <script>
   /* Nav glow: the brightest point of the nav gradient sits behind the active page's link. */
@@ -766,6 +771,27 @@ window.HuntSfx = (function () {
     location.href = "map.html#scan";
   });
 })();
+</script>
+<script>
+/* Nav mute toggle: visible control for the HuntSfx mute state (audit finding 12). */
+(function(){try{
+  var btn=document.querySelector('[data-mute-btn]');if(!btn)return;
+  function sfx(){return window.HuntSfx||null;}
+  function render(){
+    var S=sfx(),m=S&&S.isMuted?!!S.isMuted():false;
+    btn.textContent=m?'\uD83D\uDD07':'\uD83D\uDD0A';
+    btn.setAttribute('aria-pressed',m?'true':'false');
+    btn.setAttribute('aria-label',m?'Unmute sounds':'Mute sounds');
+  }
+  btn.addEventListener('click',function(){
+    var S=sfx();if(!S||!S.setMuted)return;
+    try{S.setMuted(!S.isMuted());}catch(e){}
+    render();
+    try{if(S.tap)S.tap();}catch(e){}
+  });
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',render);}else{render();}
+  window.addEventListener('load',render);
+}catch(e){}})();
 </script>
 </body>
 </html>
