@@ -108,14 +108,12 @@ window.Frames = (function(){
       for (si = 0; si < stars.length; si++) {
         sparkle(ctx, stars[si][0], stars[si][1], stars[si][2], "rgba(255,236,190,.9)");
       }
-      drawTag(ctx, "#e8a33d", "#181230", "#181230", 58, 108, H - bw - 108 - 46);
     } else if (style === "cream") {
       ctx.strokeStyle = "#f7f1e3"; ctx.lineWidth = 10;
       ctx.strokeRect(16, 16, W - 32, H - 32);
       ctx.strokeStyle = "#e8a33d"; ctx.lineWidth = 3;
       ctx.strokeRect(34, 34, W - 68, H - 68);
       leafCluster(ctx, W - 92, H - 92, Math.PI * 1.78, 40);
-      drawTag(ctx, "#173f6b", "#e8a33d", "#f7f1e3", 44, 88, H - 152);
     } else {
       bw = 56;
       bg = ctx.createLinearGradient(0, 0, W, H);
@@ -132,21 +130,6 @@ window.Frames = (function(){
       leafCluster(ctx, W - bw - cs, bw + cs, Math.PI * 0.22, 46);
       leafCluster(ctx, bw + cs, H - bw - cs, Math.PI * 1.22, 46);
       leafCluster(ctx, W - bw - cs, H - bw - cs, Math.PI * 1.78, 46);
-      drawTag(ctx, "#173f6b", "#e8a33d", "#f7f1e3", 58, 108, H - bw - 108 - 46);
-    }
-    /* sponsor tag along the bottom edge, for the per-stop keepsake */
-    if (sponsorTag) {
-      ctx.save();
-      var label = String(sponsorTag);
-      ctx.font = "800 34px -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-      while (ctx.measureText(label).width > W - 120 && label.length > 8) { label = label.slice(0, -2); }
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      var tw2 = ctx.measureText(label).width;
-      ctx.fillStyle = "rgba(0,0,0,.45)";
-      ctx.fillRect(W/2 - tw2/2 - 18, H - 52, tw2 + 36, 44);
-      ctx.fillStyle = "#f7f1e3";
-      ctx.fillText(label, W/2, H - 29);
-      ctx.restore();
     }
   }
 
