@@ -96,8 +96,6 @@
     display: inline-flex; align-items: center; justify-content: center; padding: 0; color: #6b4a2a; }
   .topnav .navmute:focus-visible { outline: 3px solid #6b4a2a; outline-offset: 2px; }
 
-  #framePick { margin: 16px auto 0; max-width: 440px; }
-  #framePick[hidden] { display: none; }
   .framelabel { color: #6b4a2a; font-weight: 700; margin-bottom: 8px; }
   .framebtns { display: flex; gap: 10px; justify-content: center; }
   .framebtns button { background: #fffdf6; border: 2px solid rgba(200,90,23,.35); border-radius: 12px;
@@ -119,15 +117,6 @@
     <div id="captureBox">
       <label class="pick" for="photoPick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /><circle cx="12" cy="13" r="3" /></svg> Take your photo</label>
       <input type="file" id="photoPick" accept="image/*">
-      <div id="framePick" hidden>
-        <p class="framelabel">Pick a fall frame for this stop:</p>
-        <div class="framebtns" role="group" aria-label="Choose a frame">
-          <button type="button" data-frame="harvest" aria-pressed="true"><canvas width="108" height="135"></canvas><span>Golden Harvest</span></button>
-          <button type="button" data-frame="dusk" aria-pressed="false"><canvas width="108" height="135"></canvas><span>Orchard Dusk</span></button>
-          <button type="button" data-frame="cream" aria-pressed="false"><canvas width="108" height="135"></canvas><span>Cream Minimal</span></button>
-          <button type="button" data-frame="none" aria-pressed="false"><canvas width="108" height="135"></canvas><span>No frame</span></button>
-        </div>
-      </div>
       <div id="stage" hidden><canvas id="preview"></canvas></div>
       <button type="button" id="saveBtn">Save to my album</button>
     </div>
@@ -344,43 +333,7 @@ window.HuntSfx = (function () {
   }
   title.textContent = "Scarecrow #" + stop.n + " \u2014 " + stop.name;
   note.innerHTML = "Take a selfie with the " + escapeHtml(stop.name) + " scarecrow &mdash; or just photograph the scarecrow and the scene &mdash; for your Scarecrow Selfie Story.";
-  var frameStyle = "harvest";
-  try { frameStyle = localStorage.getItem("scarecrow.frameStyle") || "harvest"; } catch (e) {}
-  var framePick = document.getElementById("framePick");
-  var frameBtns = framePick.querySelectorAll("button");
-  function markFrameBtns(){
-    for (var fi = 0; fi < frameBtns.length; fi++) {
-      frameBtns[fi].setAttribute("aria-pressed", frameBtns[fi].getAttribute("data-frame") === frameStyle ? "true" : "false");
-    }
-  }
-  markFrameBtns();
-  function renderThumbs(){
-    if (!currentImg) return;
-    var styles = ["harvest", "dusk", "cream", "none"];
-    for (var ti = 0; ti < frameBtns.length; ti++) {
-      (function (btn, st) {
-        var c = document.createElement("canvas");
-        try {
-          Frames.draw(c, currentImg, st, stop.tag);
-          var tc = btn.querySelector("canvas");
-          var tctx = tc.getContext("2d");
-          tctx.clearRect(0, 0, tc.width, tc.height);
-          tctx.drawImage(c, 0, 0, tc.width, tc.height);
-        } catch (e) {}
-      })(frameBtns[ti], styles[ti]);
-    }
-  }
-  for (var fb = 0; fb < frameBtns.length; fb++) {
-    (function (btn) {
-      btn.addEventListener("click", function () {
-        frameStyle = btn.getAttribute("data-frame");
-        try { localStorage.setItem("scarecrow.frameStyle", frameStyle); } catch (e) {}
-        markFrameBtns();
-        if (window.HuntSfx) { try { window.HuntSfx.click(); } catch (e) {} }
-        if (currentImg) { try { Frames.draw(preview, currentImg, frameStyle, stop.tag); } catch (e) {} }
-      });
-    })(frameBtns[fb]);
-  }
+  var frameStyle = "none"; /* frames retired 2026-10-02: keepsakes are just the photo */
   var stage = document.getElementById("stage");
   var preview = document.getElementById("preview");
   var saveBtn = document.getElementById("saveBtn");
@@ -420,8 +373,6 @@ window.HuntSfx = (function () {
       currentImg = img;
       try {
         Frames.draw(preview, img, frameStyle, stop.tag);
-        renderThumbs();
-        framePick.hidden = false;
         if (window.SnapTutorialPhotoTaken) { try { window.SnapTutorialPhotoTaken(); } catch (e) {} }
       } catch (e) {
         doneText.textContent = "That photo couldn't be framed — please try another.";
@@ -542,10 +493,8 @@ window.HuntSfx = (function () {
     if (!window.CoachMarks) return;
     setTimeout(function () {
       window.CoachMarks.run("snap2", [
-        { sel: "#framePick", title: "Pick a frame",
-          text: "Choose a fall frame for your photo \u2014 or \u201cNo frame\u201d for just the picture." },
         { sel: "#saveBtn", title: "Save it!",
-          text: "Happy with it? Save it to your album. 21 selfies become your Scarecrow Selfie Storybook." }
+          text: "Happy with your photo? Save it to your album. 21 selfies become your Scarecrow Selfie Storybook." }
       ]);
     }, 600);
   };
