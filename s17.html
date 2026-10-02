@@ -1332,7 +1332,7 @@ window.HuntSfx = (function () {
           order++;
           var L = document.createElement("div");
           L.className = "solve-letter";
-          L.textContent = (typeof blank === "string") ? blank : (letters[blank] || "?");
+          L.textContent = (typeof blank === "string") ? blank : (letters[("0" + blank).slice(-2)] || letters[blank] || "?");
           L.style.transitionDelay = (order * 55) + "ms";
           word.appendChild(L);
         });
