@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="My Scarecrow Selfie Storybook — Scarecrow Scavenger Hunt">
+<meta property="og:description" content="Your 21 scarecrow selfies, bound into a keepsake storybook. Made on your phone, from your album.">
+<meta property="og:image" content="https://kokomoscarecrows.com/img/og-share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
+<title>My Scarecrow Selfie Storybook &mdash; First Friday Scavenger Hunt</title>
+<style>
+  @font-face { font-family: 'Fredoka'; src: url('fonts/Fredoka-VF.ttf') format('truetype'); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: 'Cormorant Garamond'; src: url('fonts/CormorantGaramond-VF.ttf') format('truetype'); font-weight: 300 700; font-display: swap; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f7f1e3; color: #4c4132; min-height: 100vh; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; padding: calc(64px + env(safe-area-inset-top, 0px)) 20px 40px;
+  }
+  main { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 560px; }
+  .kicker { color: #c85a17; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 8px 0 6px; color: #173f6b; }
+  .sub { color: #6b5d49; font-size: 16px; margin-bottom: 14px; max-width: 440px; line-height: 1.5; }
+  .prog { color: #6b5d49; font-size: 15px; margin-bottom: 14px; }
+  .prog strong { color: #c85a17; }
+  .name-row { margin: 0 0 16px; }
+  .name-row label { display: block; font-size: 14px; color: #6b5d49; margin-bottom: 6px; }
+  .name-row input {
+    font-size: 18px; padding: 10px 16px; border-radius: 999px; text-align: center;
+    border: 2px solid rgba(200,90,23,.4); background: #fffdf6; color: #4c4132; width: min(320px, 80vw);
+  }
+  #viewer { position: relative; width: min(92vw, 420px); margin: 0 auto; }
+  #pageCanvas {
+    width: 100%; height: auto; border-radius: 10px; display: block; touch-action: pan-y;
+    box-shadow: 0 14px 44px rgba(120,72,20,.28); background: #fffdf6;
+  }
+  .pagenav { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 14px 0 4px; }
+  .pagenav button {
+    background: #fffdf6; color: #c85a17; font-size: 22px; font-weight: 800;
+    border: 2px solid rgba(200,90,23,.55); border-radius: 999px; width: 52px; height: 52px; cursor: pointer;
+  }
+  .pagenav button:disabled { opacity: .35; cursor: default; }
+  .pagenav button:active:not(:disabled) { transform: scale(.94); }
+  #pageCount { color: #6b5d49; font-size: 15px; min-width: 90px; }
+  .hint { color: #a3937a; font-size: 13px; margin-bottom: 18px; }
+  .actions { display: flex; flex-direction: column; gap: 12px; align-items: center; margin-bottom: 18px; width: 100%; }
+  .btn {
+    display: inline-block; background: #d9481c; color: #fff; font-weight: 800; font-size: 1.05rem;
+    border: none; border-radius: 999px; padding: 14px 34px; cursor: pointer;
+    box-shadow: 0 0 18px rgba(217,72,28,.35); text-decoration: none; font-family: inherit;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .5; }
+  .btn.ghost { background: #fffdf6; color: #c85a17; border: 2px solid rgba(200,90,23,.55); box-shadow: none; }
+  .privacy { color: #6b5d49; font-size: 14px; line-height: 1.6; max-width: 420px; margin-bottom: 8px; }
+  .privacy strong { color: #4c4132; }
+  #status { color: #c85a17; font-size: 15px; font-weight: 700; min-height: 22px; margin-bottom: 10px; }
+  .topnav { position: sticky; top: .6rem; z-index: 500; display: flex; align-items: center; gap: 1rem;
+    background: linear-gradient(135deg,#d9481c,#e8722a 55%,#e8a33d); border: 2px solid rgba(255,255,255,.4); border-radius: 999px;
+    padding: .45rem 1.15rem; margin-bottom: 1.4rem; box-shadow: 0 6px 22px rgba(200,90,23,.38); }
+  .topnav a { color: #fff; text-shadow: 0 1px 2px rgba(122,46,0,.45); font-weight: 800; text-decoration: none;
+    font-size: 1.15rem; white-space: nowrap; padding: .55rem .9rem; border-radius: 999px; }
+  .topnav .navlinks { display: flex; flex: 1; justify-content: space-evenly; align-items: center; }
+  @media (max-width: 600px) { .topnav { gap: .65rem; padding: .45rem .9rem; } .topnav a { font-size: 1.02rem; padding: .45rem .6rem; } }
+  @media print {
+    body { padding: 0; background: #fff; }
+    .topnav, .kicker, h1, .sub, .prog, .name-row, .pagenav, .hint, .actions, .privacy, #status { display: none !important; }
+    #printPages { display: block !important; }
+    #viewer { display: none !important; }
+  }
+  #printPages { display: none; }
+  #printPages img { width: 100%; page-break-after: always; }
+  @page { size: 8in 10in; margin: 0; }
+</style>
+</head>
+<body>
+  <nav class="topnav" aria-label="Site">
+    <span class="navlinks"><a href="index.html">Home</a>
+    <a href="map.html">Trail Map</a>
+    <a href="album.html">My Album</a>
+    <a href="faq.html">FAQ</a></span>
+  </nav>
+  <main>
+    <p class="kicker">First Friday Scarecrow Scavenger Hunt</p>
+    <h1>My Scarecrow Selfie Storybook</h1>
+    <p class="sub">Your 21 scarecrow selfies, bound into a keepsake book &mdash; made right here on your phone, from your album.</p>
+    <p class="prog" id="progLine"><strong>0</strong> of 21 selfies in your album</p>
+    <div class="name-row">
+      <label for="nameInput">This book belongs to</label>
+      <input id="nameInput" type="text" maxlength="40" placeholder="Write your name here" autocomplete="off">
+    </div>
+    <div id="viewer">
+      <canvas id="pageCanvas" width="1080" height="1350"></canvas>
+    </div>
+    <div class="pagenav">
+      <button id="prevBtn" aria-label="Previous page">&larr;</button>
+      <span id="pageCount">1 / 24</span>
+      <button id="nextBtn" aria-label="Next page">&rarr;</button>
+    </div>
+    <p class="hint">Swipe or use the arrows to flip through your book.</p>
+    <div class="actions">
+      <button class="btn" id="pdfBtn">Download my storybook (PDF)</button>
+      <button class="btn ghost" id="printBtn">Print it</button>
+      <a class="btn ghost" id="albumLink" href="album.html" hidden>Add missing selfies in My Album</a>
+    </div>
+    <p id="status" role="status"></p>
+    <p class="privacy">Your photos <strong>never leave your phone</strong> &mdash; this book is assembled entirely on your device. The only time a photo leaves your phone is when you share it yourself.</p>
+    <div id="printPages"></div>
+  </main>
+<script src="journey.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script>
+(function () {
+  "use strict";
+  var W = 1080, H = 1350, CX = 540;
+  var PAPER = "#f7efdc", INK = "#4a2f14", VERSE = "#6b4a1f",
+      GREEN = "#2e5d43", GOLD = "#caa22f", FOLIO = "#a08a5a", CREAMTXT = "#ffecbe";
+
+  var NAMES = {
+    1: "Artworks Gallery", 2: "Lucky Raven Tattoo Lounge", 3: "Dechert Law Office",
+    4: "The Hardie Group", 5: "Kokomo Area Lions", 6: "UpCreations",
+    7: "Oscar's Pizza", 8: "SUTE", 9: "Kokomo Tribune",
+    10: "Community Foundation", 11: "PF Hendricks LLC", 12: "Community First Bank",
+    13: "Fired Arts Studio", 14: "The Coterie", 15: "First Farmers Bank & Trust",
+    16: "Pix Pots Pottery", 17: "IUK SNAHP", 18: "YMCA of Kokomo",
+    19: "Indiana Underdog Martial Arts", 20: "Tip Top Car Washes",
+    21: "Crossroads Community Church"
+  };
+  var COUPLETS = {
+    1: ["Where colors climb the gallery wall,", "This scarecrow stands the friendliest of all."],
+    2: ["The raven drew with inky black", "A lucky feather on his back."],
+    3: ["He read the law books through and through,", "And promised always to be true."],
+    4: ["The Hardie folks find house and home", "For every scarecrow fit to roam."],
+    5: ["With Lions Club both proud and strong,", "He sang his merry straw-stuffed song."],
+    6: ["UpCreations dreamed up something new,", "In autumn gold and sky-blue."],
+    7: ["He sniffed the pizza, hot and cheesy,", "And felt so warm and nice and easy."],
+    8: ["At SUTE the grill went sizzle-sweet,", "What a tasty, toasty treat!"],
+    9: ["The Tribune printed, big and clear,", "\u2018The scarecrows\u2019 big day is here!\u2019"],
+    10: ["For Howard County, gifts that last,", "He tipped his hat as he walked past."],
+    11: ["At Hendricks\u2019 door he stopped to say,", "\u2018What a fine and friendly day!\u2019"],
+    12: ["The bank kept every penny neat,", "He shuffled by on straw-stuffed feet."],
+    13: ["At Fired Arts with paint and clay,", "He colored all his cares away."],
+    14: ["The Coterie, so chic and bright,", "Dressed him up for Friday night."],
+    15: ["The farmers\u2019 bank, both safe and sound,", "Gave the straw man solid ground."],
+    16: ["At Pix Pots, with a twirl and spin,", "They shaped a grin upon his chin."],
+    17: ["The nursing students, kind and clever,", "Patched his straw to last forever."],
+    18: ["At the Y he jumped with all his might,", "And stretched his straw arms left and right."],
+    19: ["The Underdogs taught, strong and small,", "That the littlest fighter can stand tall."],
+    20: ["Tip Top washed him tip to toe,", "Till his straw hat shone with glow."],
+    21: ["At Crossroads Church, the bells rang sweet,", "And blessed each friend that he would meet."]
+  };
+
+  var canvas = document.getElementById("pageCanvas");
+  var ctx = canvas.getContext("2d");
+  var statusEl = document.getElementById("status");
+  var progLine = document.getElementById("progLine");
+  var albumLink = document.getElementById("albumLink");
+  var nameInput = document.getElementById("nameInput");
+  var pages = [];          // rendered 1080x1350 canvases, 24 of them
+  var photos = {};         // stop number -> HTMLImageElement (keepsake)
+  var pageIdx = 0;
+
+  try {
+    var savedName = localStorage.getItem("kokomoScarecrowsStorybookName") || "";
+    if (savedName) nameInput.value = savedName;
+  } catch (e) {}
+  nameInput.addEventListener("input", function () {
+    try { localStorage.setItem("kokomoScarecrowsStorybookName", nameInput.value); } catch (e) {}
+    renderNameplate();
+    showPage(pageIdx);
+  });
+
+  function status(msg) { statusEl.textContent = msg || ""; }
+
+  function rr(c, x, y, w, h, r) {
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+
+  function paper(c) {
+    c.fillStyle = PAPER;
+    c.fillRect(0, 0, W, H);
+    var g = c.createRadialGradient(CX, H / 2, H * 0.3, CX, H / 2, H * 0.75);
+    g.addColorStop(0, "rgba(0,0,0,0)");
+    g.addColorStop(1, "rgba(120,72,20,0.07)");
+    c.fillStyle = g;
+    c.fillRect(0, 0, W, H);
+  }
+
+  function divider(c, y) {
+    c.strokeStyle = GOLD; c.lineWidth = 3;
+    c.beginPath(); c.moveTo(330, y); c.lineTo(490, y); c.stroke();
+    c.beginPath(); c.moveTo(590, y); c.lineTo(750, y); c.stroke();
+    var cols = ["#c85a17", "#e8a33d", "#a83c1a"];
+    for (var i = 0; i < 3; i++) {
+      var x = 520 + i * 20;
+      c.save(); c.translate(x, y); c.rotate(-0.5 + i * 0.5);
+      c.fillStyle = cols[i];
+      c.beginPath(); c.ellipse(0, 0, 7, 11, 0, 0, Math.PI * 2); c.fill();
+      c.restore();
+    }
+  }
+
+  function fitFont(c, text, maxW, start, weight, family) {
+    var size = start;
+    while (size > 20) {
+      c.font = weight + " " + size + "px " + family;
+      if (c.measureText(text).width <= maxW) return size;
+      size -= 2;
+    }
+    return 20;
+  }
+
+  function outlined(c, text, x, y, font, fill) {
+    c.save();
+    c.font = font; c.textAlign = "center"; c.textBaseline = "middle";
+    c.shadowColor = "rgba(10,6,2,0.55)"; c.shadowBlur = 14; c.shadowOffsetY = 8;
+    c.lineWidth = 6; c.strokeStyle = "rgba(20,12,4,0.92)";
+    c.strokeText(text, x, y);
+    c.shadowColor = "transparent"; c.shadowBlur = 0; c.shadowOffsetY = 0;
+    c.fillStyle = fill;
+    c.fillText(text, x, y);
+    c.restore();
+  }
+
+  function newPage() {
+    var cv = document.createElement("canvas");
+    cv.width = W; cv.height = H;
+    return cv;
+  }
+
+  var coverImg = null, twilightImg = null;
+  function loadImg(src) {
+    return new Promise(function (res, rej) {
+      var i = new Image();
+      i.onload = function () { res(i); };
+      i.onerror = rej;
+      i.src = src;
+    });
+  }
+
+  function renderCover() {
+    var cv = newPage(), c = cv.getContext("2d");
+    if (coverImg) {
+      var s = Math.max(W / coverImg.naturalWidth, H / coverImg.naturalHeight);
+      var dw = coverImg.naturalWidth * s, dh = coverImg.naturalHeight * s;
+      c.drawImage(coverImg, (W - dw) / 2, (H - dh) / 2, dw, dh);
+    } else { paper(c); }
+    return cv;
+  }
+
+  function renderNameplate() {
+    var cv = newPage(), c = cv.getContext("2d");
+    paper(c);
+    c.textAlign = "center"; c.textBaseline = "middle";
+    c.fillStyle = INK;
+    c.font = "600 64px 'Cormorant Garamond', Georgia, serif";
+    c.fillText("This book belongs to", CX, 400);
+    var nm = (nameInput.value || "").trim();
+    if (nm) {
+      var sz = fitFont(c, nm, 860, 110, "600", "Fredoka, sans-serif");
+      c.fillStyle = GREEN;
+      c.font = "600 " + sz + "px Fredoka, sans-serif";
+      c.fillText(nm, CX, 540);
+    } else {
+      c.fillStyle = "#b8a888";
+      c.font = "500 44px Fredoka, sans-serif";
+      c.fillText("your name here", CX, 540);
+    }
+    c.strokeStyle = GOLD; c.lineWidth = 4;
+    c.beginPath(); c.moveTo(CX - 330, 660); c.lineTo(CX + 330, 660); c.stroke();
+    divider(c, 760);
+    c.fillStyle = VERSE;
+    c.font = "500 36px Fredoka, sans-serif";
+    c.fillText("who found every scarecrow on", CX, 830);
+    c.font = "600 36px Fredoka, sans-serif";
+    c.fillText("First Friday \u00b7 October 2026", CX, 876);
+    pages[1] = cv;
+  }
+
+  function drawPhotoSquare(c, img, x, y, s) {
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    var sx = 0, sy = 0, side = Math.min(iw, ih);
+    // keepsakes are 1080x1350 with hashtag ribbons top/bottom: crop the clean middle
+    if (Math.abs(iw / ih - 1080 / 1350) < 0.03 && ih > 1200) { sy = 135; side = 1080; }
+    c.save();
+    rr(c, x, y, s, s, 14);
+    c.clip();
+    c.drawImage(img, sx, sy, side, side, x, y, s, s);
+    c.restore();
+  }
+
+  function renderStop(n) {
+    var cv = newPage(), c = cv.getContext("2d");
+    paper(c);
+    c.textAlign = "center"; c.textBaseline = "middle";
+    var name = NAMES[n];
+    var sz = fitFont(c, name, 860, 60, "600", "Fredoka, sans-serif");
+    c.fillStyle = INK;
+    c.font = "600 " + sz + "px Fredoka, sans-serif";
+    c.fillText(name, CX, 84);
+    divider(c, 146);
+    var lp = COUPLETS[n];
+    c.fillStyle = VERSE;
+    c.font = "500 33px Fredoka, sans-serif";
+    c.fillText(lp[0], CX, 188);
+    c.fillText(lp[1], CX, 226);
+    // frame
+    var fx0 = CX - 440, fy0 = 280, fw = 880, fh = 880;
+    c.save();
+    c.shadowColor = "rgba(0,0,0,0.43)"; c.shadowBlur = 28; c.shadowOffsetY = 12;
+    c.fillStyle = GREEN;
+    rr(c, fx0, fy0, fw, fh, 30); c.fill();
+    c.restore();
+    c.strokeStyle = GOLD; c.lineWidth = 4;
+    rr(c, fx0 + 14, fy0 + 14, fw - 28, fh - 28, 22); c.stroke();
+    var img = photos[n];
+    if (img) {
+      drawPhotoSquare(c, img, fx0 + 23, fy0 + 23, 834);
+    } else {
+      c.save();
+      rr(c, fx0 + 23, fy0 + 23, 834, 834, 14);
+      c.setLineDash([18, 14]);
+      c.strokeStyle = "rgba(160,138,90,0.7)"; c.lineWidth = 4; c.stroke();
+      c.setLineDash([]);
+      c.fillStyle = "#8a7a63";
+      c.font = "500 34px Fredoka, sans-serif";
+      c.fillText("Your selfie at stop #" + n, CX, fy0 + 400);
+      c.font = "500 28px Fredoka, sans-serif";
+      c.fillStyle = "#a3937a";
+      c.fillText("snap it in My Album and it lands here", CX, fy0 + 450);
+      c.restore();
+    }
+    c.fillStyle = FOLIO;
+    c.font = "500 28px Fredoka, sans-serif";
+    c.fillText("\u2014 " + n + " \u2014", CX, 1296);
+    return cv;
+  }
+
+  function renderEnding() {
+    var cv = newPage(), c = cv.getContext("2d");
+    if (twilightImg) {
+      var s = Math.max(W / twilightImg.naturalWidth, H / twilightImg.naturalHeight);
+      var dw = twilightImg.naturalWidth * s, dh = twilightImg.naturalHeight * s;
+      c.drawImage(twilightImg, (W - dw) / 2, (H - dh) / 2, dw, dh);
+      c.fillStyle = "rgba(8,10,20,0.28)";
+      c.fillRect(0, 0, W, H);
+    } else { paper(c); }
+    outlined(c, "ONE HUNDRED", CX, 430, "700 100px 'Cormorant Garamond', Georgia, serif", CREAMTXT);
+    outlined(c, "AUTUMNS OF ART", CX, 548, "700 100px 'Cormorant Garamond', Georgia, serif", CREAMTXT);
+    c.strokeStyle = "rgba(201,162,47,0.86)"; c.lineWidth = 3;
+    c.beginPath(); c.moveTo(CX - 150, 645); c.lineTo(CX + 150, 645); c.stroke();
+    outlined(c, "The End", CX, 745, "700 120px 'Cormorant Garamond', Georgia, serif", CREAMTXT);
+    outlined(c, "First Friday \u00b7 October 2, 2026", CX, 855, "500 40px Fredoka, sans-serif", CREAMTXT);
+    return cv;
+  }
+
+  function showPage(i) {
+    pageIdx = Math.max(0, Math.min(pages.length - 1, i));
+    ctx.clearRect(0, 0, W, H);
+    if (pages[pageIdx]) ctx.drawImage(pages[pageIdx], 0, 0);
+    document.getElementById("pageCount").textContent = (pageIdx + 1) + " / " + pages.length;
+    document.getElementById("prevBtn").disabled = pageIdx === 0;
+    document.getElementById("nextBtn").disabled = pageIdx === pages.length - 1;
+  }
+
+  function renderAll() {
+    pages = [];
+    pages[0] = renderCover();
+    renderNameplate(); // fills pages[1]
+    for (var n = 1; n <= 21; n++) pages.push(renderStop(n));
+    pages.push(renderEnding());
+    showPage(Math.min(pageIdx, pages.length - 1));
+  }
+
+  async function init() {
+    status("Loading your book\u2026");
+    try {
+      await Promise.all([
+        document.fonts.load("600 60px Fredoka"),
+        document.fonts.load("500 33px Fredoka"),
+        document.fonts.load("700 100px 'Cormorant Garamond'"),
+        document.fonts.load("600 64px 'Cormorant Garamond'")
+      ]);
+    } catch (e) {}
+    try { coverImg = await loadImg("img/storybook-cover.jpg"); } catch (e) {}
+    try { twilightImg = await loadImg("img/storybook-twilight.jpg"); } catch (e) {}
+    var count = 0;
+    try {
+      var rows = await Journey.db.all();
+      var jobs = rows.map(function (r) {
+        return new Promise(function (res) {
+          var url = URL.createObjectURL(r.blob);
+          var img = new Image();
+          img.onload = function () { photos[r.stop] = img; count++; res(); };
+          img.onerror = function () { URL.revokeObjectURL(url); res(); };
+          img.src = url;
+        });
+      });
+      await Promise.all(jobs);
+    } catch (e) {}
+    progLine.innerHTML = "<strong>" + count + "</strong> of 21 selfies in your album";
+    albumLink.hidden = count >= 21;
+    renderAll();
+    status(count === 0 ? "No selfies yet \u2014 snap them in My Album and they\u2019ll fill your book." : "");
+  }
+
+  document.getElementById("prevBtn").addEventListener("click", function () { showPage(pageIdx - 1); });
+  document.getElementById("nextBtn").addEventListener("click", function () { showPage(pageIdx + 1); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") showPage(pageIdx - 1);
+    else if (e.key === "ArrowRight") showPage(pageIdx + 1);
+  });
+  var tx0 = null;
+  canvas.addEventListener("touchstart", function (e) { tx0 = e.changedTouches[0].clientX; }, { passive: true });
+  canvas.addEventListener("touchend", function (e) {
+    if (tx0 === null) return;
+    var dx = e.changedTouches[0].clientX - tx0;
+    if (dx < -40) showPage(pageIdx + 1);
+    else if (dx > 40) showPage(pageIdx - 1);
+    tx0 = null;
+  }, { passive: true });
+
+  function printable() {
+    var box = document.getElementById("printPages");
+    box.innerHTML = "";
+    pages.forEach(function (cv) {
+      var im = document.createElement("img");
+      im.src = cv.toDataURL("image/jpeg", 0.9);
+      box.appendChild(im);
+    });
+  }
+
+  document.getElementById("printBtn").addEventListener("click", function () {
+    printable();
+    window.print();
+  });
+
+  document.getElementById("pdfBtn").addEventListener("click", async function () {
+    var btn = this;
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      status("PDF library didn\u2019t load \u2014 use Print instead (it can save as PDF).");
+      printable();
+      window.print();
+      return;
+    }
+    btn.disabled = true;
+    status("Building your PDF\u2026");
+    try {
+      await new Promise(function (r) { setTimeout(r, 30); });
+      var jspdf = window.jspdf.jsPDF;
+      var pdf = new jspdf({ unit: "in", format: [8, 10], compress: true });
+      for (var i = 0; i < pages.length; i++) {
+        if (i > 0) pdf.addPage([8, 10]);
+        pdf.addImage(pages[i].toDataURL("image/jpeg", 0.82), "JPEG", 0, 0, 8, 10);
+      }
+      // facing-page spreads in readers that honor it
+      var ab = pdf.output("arraybuffer");
+      var bytes = new Uint8Array(ab);
+      var needle = new TextEncoder().encode("/Type /Catalog");
+      var insert = new TextEncoder().encode(" /PageLayout /TwoPageRight");
+      var at = -1;
+      outer:
+      for (var k = 0; k + needle.length < bytes.length; k++) {
+        for (var j = 0; j < needle.length; j++) {
+          if (bytes[k + j] !== needle[j]) continue outer;
+        }
+        at = k + needle.length; break;
+      }
+      var out = bytes;
+      if (at > 0) {
+        out = new Uint8Array(bytes.length + insert.length);
+        out.set(bytes.subarray(0, at), 0);
+        out.set(insert, at);
+        out.set(bytes.subarray(at), at + insert.length);
+      }
+      var blob = new Blob([out], { type: "application/pdf" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "scarecrow-selfie-storybook.pdf";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+      status("Your storybook downloaded!");
+    } catch (e) {
+      status("Couldn\u2019t build the PDF \u2014 try Print instead.");
+    }
+    btn.disabled = false;
+  });
+
+  init();
+})();
+</script>
+</body>
+</html>
