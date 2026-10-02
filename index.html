@@ -236,6 +236,7 @@
   function buildDigitStrip(id){
     var html = '';
     for (var d = 9; d >= 0; d--) html += '<div>' + d + '</div>';
+    html += '<div>9</div>'; /* wrap cell: lets the 0 -> 9 roll continue instead of snapping */
     document.getElementById(id).innerHTML = html;
   }
   function buildStrip(id, count, len){
@@ -264,7 +265,7 @@
     if (window.__wakeGetStarted) { try { window.__wakeGetStarted(); } catch (e) {} } }
   /* Tens reels hold their digit while the ones reel spins, then roll
      gradually into the next digit (no ticking sounds anywhere). */
-  var shownT = { H: -1, M: -1, S: -1 };
+  var shownT = { HT: -1, MT: -1, ST: -1 };
   function easeTens(key, target, dt){
     if (shownT[key] < 0) shownT[key] = target;
     shownT[key] += (target - shownT[key]) * Math.min(1, dt * 6);
@@ -314,9 +315,12 @@
     }
     lastT = T;
     var p = parts(diff);
-    setPos(strips.SO, posSO % 10);
-    setPos(strips.MO, posMO % 10);
-    setPos(strips.HO, posHO % 10);
+    /* Ones reels wrap 10 -> 0 invisibly: position 10 shows the wrap-cell "9",
+       identical to position 0, so the roll never snaps. */
+    function wrapOnes(v){ return v >= 10 ? v - 10 : v; }
+    setPos(strips.SO, wrapOnes(posSO));
+    setPos(strips.MO, wrapOnes(posMO));
+    setPos(strips.HO, wrapOnes(posHO));
     easeTens('ST', Math.floor(p.s / 10), dt);
     easeTens('MT', Math.floor(p.m / 10), dt);
     easeTens('HT', Math.floor(p.h / 10), dt);
