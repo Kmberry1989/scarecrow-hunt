@@ -36,7 +36,7 @@ window.Frames = (function(){
   }
 
   function drawTag(ctx, pill, pillStroke, textColor, baseFs, ph, py){
-    var tag = "#KokomoScarecrows2026  #FirstFridayKokomo";
+    var tag = "#KokomoScarecrows2026";
     var fs = baseFs;
     ctx.font = "800 " + fs + "px Georgia, serif";
     while (ctx.measureText(tag).width > W - 160 && fs > 24) {
